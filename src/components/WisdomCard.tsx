@@ -75,48 +75,57 @@ export function WisdomCard({
       duration: 2000
     });
   };
-  const handlePlayAudio = async () => {
-    if (isPlayingAudio && currentAudio) {
-      currentAudio.pause();
+  const handlePlayAudio = () => {
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
       setIsPlayingAudio(false);
-      setCurrentAudio(null);
       return;
     }
+
     try {
       setIsPlayingAudio(true);
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('text-to-speech', {
-        body: {
-          text: item.text,
-          voice: openAIVoice
-        }
-      });
-      if (error) throw error;
-      const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
-      setCurrentAudio(audio);
-      audio.onended = () => {
+      
+      const utterance = new SpeechSynthesisUtterance(item.text);
+      
+      // Configure voice settings based on audio_voice_type
+      switch (item.audio_voice_type) {
+        case 'child':
+          utterance.pitch = 1.5;
+          utterance.rate = 1.1;
+          break;
+        case 'youth':
+          utterance.pitch = 1.0;
+          utterance.rate = 1.0;
+          break;
+        case 'old':
+          utterance.pitch = 0.8;
+          utterance.rate = 0.9;
+          break;
+        default:
+          utterance.pitch = 1.0;
+          utterance.rate = 1.0;
+      }
+
+      utterance.onend = () => {
         setIsPlayingAudio(false);
-        setCurrentAudio(null);
       };
-      audio.onerror = () => {
+
+      utterance.onerror = () => {
         setIsPlayingAudio(false);
-        setCurrentAudio(null);
         toast({
           title: "Audio Error",
           description: "Failed to play audio",
           variant: "destructive"
         });
       };
-      await audio.play();
+
+      window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Error playing audio:', error);
       setIsPlayingAudio(false);
-      setCurrentAudio(null);
       toast({
         title: "Audio Error",
-        description: "Failed to generate or play audio",
+        description: "Failed to play audio",
         variant: "destructive"
       });
     }
