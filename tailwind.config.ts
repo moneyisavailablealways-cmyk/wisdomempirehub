@@ -61,7 +61,28 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Wisdom Empire custom colors
+				wisdom: {
+					gold: 'hsl(var(--wisdom-gold))',
+					blue: 'hsl(var(--wisdom-blue))',
+					cultural: 'hsl(var(--cultural-accent))',
+					earth: 'hsl(var(--earth-tone))'
 				}
+			},
+			backgroundImage: {
+				'gradient-wisdom': 'var(--gradient-wisdom)',
+				'gradient-cultural': 'var(--gradient-cultural)',
+				'gradient-hero': 'var(--gradient-hero)',
+			},
+			boxShadow: {
+				'wisdom': 'var(--shadow-wisdom)',
+				'cultural': 'var(--shadow-cultural)',
+				'elevated': 'var(--shadow-elevated)',
+			},
+			fontFamily: {
+				'wisdom': 'var(--font-wisdom)',
+				'cultural': 'var(--font-cultural)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

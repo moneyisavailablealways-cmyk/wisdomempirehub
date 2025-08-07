@@ -14,7 +14,138 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      idioms: {
+        Row: {
+          audio_voice_type: string | null
+          created_at: string
+          id: string
+          origin: string
+          subcategory: string
+          text: string
+          type: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin: string
+          subcategory: string
+          text: string
+          type?: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin?: string
+          subcategory?: string
+          text?: string
+          type?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      proverbs: {
+        Row: {
+          audio_voice_type: string | null
+          created_at: string
+          id: string
+          origin: string
+          subcategory: string
+          text: string
+          type: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin: string
+          subcategory: string
+          text: string
+          type?: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin?: string
+          subcategory?: string
+          text?: string
+          type?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      quotes: {
+        Row: {
+          audio_voice_type: string | null
+          created_at: string
+          id: string
+          origin: string
+          subcategory: string
+          text: string
+          type: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin: string
+          subcategory: string
+          text: string
+          type?: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin?: string
+          subcategory?: string
+          text?: string
+          type?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      similes: {
+        Row: {
+          audio_voice_type: string | null
+          created_at: string
+          id: string
+          origin: string
+          subcategory: string
+          text: string
+          type: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin: string
+          subcategory: string
+          text: string
+          type?: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_voice_type?: string | null
+          created_at?: string
+          id?: string
+          origin?: string
+          subcategory?: string
+          text?: string
+          type?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
