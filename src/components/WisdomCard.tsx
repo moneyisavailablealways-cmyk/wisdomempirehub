@@ -38,8 +38,12 @@ interface WisdomItem {
   subcategory: string;
   text: string;
   origin: string;
+  meaning?: string;
+  example?: string;
   video_url?: string;
   audio_voice_type?: 'child' | 'youth' | 'old';
+  bg_style?: string;
+  user_id?: string;
   created_at: string;
 }
 
@@ -63,8 +67,7 @@ export function WisdomCard({ item }: WisdomCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [explanation, setExplanation] = useState('');
+  const [showMeaning, setShowMeaning] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
@@ -144,36 +147,8 @@ export function WisdomCard({ item }: WisdomCardProps) {
     }
   };
 
-  const handleShowMeaning = async () => {
-    if (explanation) {
-      setShowExplanation(true);
-      return;
-    }
-
-    setIsLoadingExplanation(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('explain-wisdom', {
-        body: { 
-          text: item.text, 
-          type: item.type,
-          origin: item.origin
-        }
-      });
-
-      if (error) throw error;
-
-      setExplanation(data.explanation);
-      setShowExplanation(true);
-    } catch (error) {
-      console.error('Error getting explanation:', error);
-      toast({
-        title: "Explanation Error",
-        description: "Failed to generate explanation",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingExplanation(false);
-    }
+  const handleShowMeaning = () => {
+    setShowMeaning(!showMeaning);
   };
 
   const handleEdit = () => {
@@ -198,26 +173,120 @@ export function WisdomCard({ item }: WisdomCardProps) {
 
   return (
     <>
-      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
+      <Card className={`group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${item.bg_style || 'bg-card'} border border-border shadow-sm relative`}>
         <CardContent className="p-6 space-y-4">
-          {/* Header with type and origin badges */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
+          {/* Three-dot menu in top right */}
+          <div className="absolute top-4 right-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="opacity-70 hover:opacity-100">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleEdit} className="gap-2">
+                  <Edit className="h-4 w-4" />
+                  Edit text
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDownload} className="gap-2">
+                  <Download className="h-4 w-4" />
+                  Download card
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setAutoPlayEnabled(!autoPlayEnabled)} 
+                  className="gap-2"
+                >
+                  <Volume2 className="h-4 w-4" />
+                  {autoPlayEnabled ? 'Disable' : 'Enable'} Auto-play
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Top Tag */}
+          <div className="flex justify-start">
             <Badge className={getTypeColor(item.type)} variant="secondary">
-              {item.type.toUpperCase()} • {item.subcategory}
-            </Badge>
-            <Badge variant="outline" className="text-wisdom-cultural border-wisdom-cultural">
-              {item.origin}
+              {item.subcategory}
             </Badge>
           </div>
           
-          {/* Main wisdom text */}
-          <blockquote className="text-foreground font-cultural text-xl leading-relaxed font-medium py-4">
-            "{item.text}"
-          </blockquote>
+          {/* Main Body */}
+          <div className="space-y-3">
+            {/* Large, bold text */}
+            <blockquote className="text-foreground font-bold text-2xl leading-tight">
+              "{item.text}"
+            </blockquote>
+            
+            {/* Origin subtitle */}
+            <p className="text-muted-foreground text-sm font-medium">
+              — {item.origin}
+            </p>
+            
+            {/* Expandable meaning section */}
+            {(item.meaning || showMeaning) && (
+              <div className="pt-2 border-t border-border/50">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleShowMeaning}
+                  className="mb-3 text-primary hover:text-primary/80"
+                >
+                  {showMeaning ? 'Hide Meaning' : 'Show Meaning'}
+                </Button>
+                
+                {showMeaning && (
+                  <div className="space-y-3 text-sm">
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <h4 className="font-semibold mb-2">Meaning:</h4>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {item.meaning || 'No meaning available yet.'}
+                      </p>
+                    </div>
+                    
+                    {item.example && (
+                      <div className="bg-accent/50 p-4 rounded-lg">
+                        <h4 className="font-semibold mb-2">Example:</h4>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.example}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {/* Audio button in meaning section */}
+                    <div className="flex items-center gap-2 pt-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePlayAudio}
+                        disabled={isPlayingAudio}
+                        className="gap-2"
+                      >
+                        {isPlayingAudio ? (
+                          <>
+                            <VolumeX className="h-4 w-4" />
+                            Stop Audio
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 className="h-4 w-4" />
+                            Play Audio
+                          </>
+                        )}
+                      </Button>
+                      {item.audio_voice_type && (
+                        <Badge variant="outline" className="text-xs">
+                          {item.audio_voice_type} voice
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           
-          {/* Action buttons - Optimized layout */}
+          {/* Bottom Action Buttons */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            {/* Primary actions */}
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
@@ -228,6 +297,17 @@ export function WisdomCard({ item }: WisdomCardProps) {
               >
                 <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
               </Button>
+              
+              {item.video_url && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowVideo(true)}
+                  title="Watch video"
+                >
+                  <Youtube className="h-4 w-4" />
+                </Button>
+              )}
               
               <Button
                 variant="ghost"
@@ -242,35 +322,9 @@ export function WisdomCard({ item }: WisdomCardProps) {
                   <Volume2 className="h-4 w-4" />
                 )}
               </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleShowMeaning}
-                disabled={isLoadingExplanation}
-                title="Show meaning"
-              >
-                {isLoadingExplanation ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Bot className="h-4 w-4" />
-                )}
-              </Button>
             </div>
             
-            {/* Secondary actions */}
             <div className="flex items-center gap-1">
-              {item.video_url && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowVideo(true)}
-                  title="Watch video"
-                >
-                  <Youtube className="h-4 w-4" />
-                </Button>
-              )}
-              
               <Button
                 variant="ghost"
                 size="sm"
@@ -289,33 +343,8 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 text={item.text}
                 type={item.type}
                 origin={item.origin}
-                meaning={explanation}
+                meaning={item.meaning}
               />
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleEdit} className="gap-2">
-                    <Edit className="h-4 w-4" />
-                    Edit text
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleDownload} className="gap-2">
-                    <Download className="h-4 w-4" />
-                    Download card
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setAutoPlayEnabled(!autoPlayEnabled)} 
-                    className="gap-2"
-                  >
-                    <Volume2 className="h-4 w-4" />
-                    {autoPlayEnabled ? 'Disable' : 'Enable'} Auto-play
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </div>
         </CardContent>
@@ -341,25 +370,6 @@ export function WisdomCard({ item }: WisdomCardProps) {
         </Dialog>
       )}
 
-      {/* Explanation Dialog */}
-      <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Bot className="h-5 w-5" />
-              Meaning & Significance
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <blockquote className="text-foreground font-cultural text-lg italic border-l-4 border-wisdom-gold pl-4">
-              "{item.text}"
-            </blockquote>
-            <div className="text-muted-foreground leading-relaxed">
-              {explanation}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

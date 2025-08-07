@@ -17,32 +17,44 @@ export type Database = {
       idioms: {
         Row: {
           audio_voice_type: string | null
+          bg_style: string | null
           created_at: string
+          example: string | null
           id: string
+          meaning: string | null
           origin: string
           subcategory: string
           text: string
           type: string
+          user_id: string | null
           video_url: string | null
         }
         Insert: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin: string
           subcategory: string
           text: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Update: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin?: string
           subcategory?: string
           text?: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Relationships: []
@@ -50,32 +62,44 @@ export type Database = {
       proverbs: {
         Row: {
           audio_voice_type: string | null
+          bg_style: string | null
           created_at: string
+          example: string | null
           id: string
+          meaning: string | null
           origin: string
           subcategory: string
           text: string
           type: string
+          user_id: string | null
           video_url: string | null
         }
         Insert: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin: string
           subcategory: string
           text: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Update: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin?: string
           subcategory?: string
           text?: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Relationships: []
@@ -83,32 +107,44 @@ export type Database = {
       quotes: {
         Row: {
           audio_voice_type: string | null
+          bg_style: string | null
           created_at: string
+          example: string | null
           id: string
+          meaning: string | null
           origin: string
           subcategory: string
           text: string
           type: string
+          user_id: string | null
           video_url: string | null
         }
         Insert: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin: string
           subcategory: string
           text: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Update: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin?: string
           subcategory?: string
           text?: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Relationships: []
@@ -116,32 +152,44 @@ export type Database = {
       similes: {
         Row: {
           audio_voice_type: string | null
+          bg_style: string | null
           created_at: string
+          example: string | null
           id: string
+          meaning: string | null
           origin: string
           subcategory: string
           text: string
           type: string
+          user_id: string | null
           video_url: string | null
         }
         Insert: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin: string
           subcategory: string
           text: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Update: {
           audio_voice_type?: string | null
+          bg_style?: string | null
           created_at?: string
+          example?: string | null
           id?: string
+          meaning?: string | null
           origin?: string
           subcategory?: string
           text?: string
           type?: string
+          user_id?: string | null
           video_url?: string | null
         }
         Relationships: []
