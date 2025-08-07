@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,18 +17,19 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
+import { ShareMenu } from '@/components/ShareMenu';
 import { 
   Heart, 
-  Play, 
   Volume2, 
   Bot, 
-  Share, 
   MoreVertical,
   Edit,
   Download,
   Youtube,
   VolumeX,
-  Loader2
+  Loader2,
+  Bookmark,
+  BookmarkCheck
 } from 'lucide-react';
 
 interface WisdomItem {
@@ -60,17 +61,34 @@ export function WisdomCard({ item }: WisdomCardProps) {
   const { toast } = useToast();
   const { openAIVoice } = useSettings();
   const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
+
+  // Auto-play audio when enabled
+  useEffect(() => {
+    if (autoPlayEnabled && !isPlayingAudio) {
+      handlePlayAudio();
+    }
+  }, [autoPlayEnabled]);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
     toast({
       description: isLiked ? "Removed from favorites" : "Added to favorites ❤️",
+      duration: 2000,
+    });
+  };
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+    toast({
+      description: isBookmarked ? "Bookmark removed" : "Bookmarked! 📚",
       duration: 2000,
     });
   };
@@ -158,29 +176,6 @@ export function WisdomCard({ item }: WisdomCardProps) {
     }
   };
 
-  const handleShare = async () => {
-    const shareText = `"${item.text}" - ${item.type} from ${item.origin}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${item.type} from ${item.origin}`,
-          text: shareText,
-          url: window.location.href,
-        });
-      } catch (error) {
-        // User cancelled or error occurred
-      }
-    } else {
-      // Fallback to clipboard
-      await navigator.clipboard.writeText(shareText);
-      toast({
-        description: "Copied to clipboard! 📋",
-        duration: 2000,
-      });
-    }
-  };
-
   const handleEdit = () => {
     toast({
       description: "Edit functionality coming soon! ✏️",
@@ -220,9 +215,10 @@ export function WisdomCard({ item }: WisdomCardProps) {
             "{item.text}"
           </blockquote>
           
-          {/* Action buttons */}
+          {/* Action buttons - Optimized layout */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <div className="flex items-center gap-2">
+            {/* Primary actions */}
+            <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="sm"
@@ -230,20 +226,8 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 className={`gap-1 ${isLiked ? 'text-red-500 hover:text-red-600' : ''}`}
               >
                 <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                {isLiked ? 'Liked' : 'Like'}
+                <span className="hidden sm:inline">{isLiked ? 'Liked' : 'Like'}</span>
               </Button>
-              
-              {item.video_url && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowVideo(true)}
-                  className="gap-1"
-                >
-                  <Youtube className="h-4 w-4" />
-                  Watch
-                </Button>
-              )}
               
               <Button
                 variant="ghost"
@@ -257,7 +241,7 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 ) : (
                   <Volume2 className="h-4 w-4" />
                 )}
-                {isPlayingAudio ? 'Stop' : 'Listen'}
+                <span className="hidden sm:inline">{isPlayingAudio ? 'Stop' : 'Listen'}</span>
               </Button>
               
               <Button
@@ -272,20 +256,44 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 ) : (
                   <Bot className="h-4 w-4" />
                 )}
-                Meaning
+                <span className="hidden sm:inline">Meaning</span>
               </Button>
             </div>
             
+            {/* Secondary actions */}
             <div className="flex items-center gap-1">
+              {item.video_url && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowVideo(true)}
+                  className="gap-1"
+                >
+                  <Youtube className="h-4 w-4" />
+                  <span className="hidden sm:inline">Watch</span>
+                </Button>
+              )}
+              
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleShare}
-                className="gap-1"
+                onClick={handleBookmark}
+                className={`gap-1 ${isBookmarked ? 'text-blue-600' : ''}`}
               >
-                <Share className="h-4 w-4" />
-                Share
+                {isBookmarked ? (
+                  <BookmarkCheck className="h-4 w-4 fill-current" />
+                ) : (
+                  <Bookmark className="h-4 w-4" />
+                )}
+                <span className="hidden sm:inline">{isBookmarked ? 'Saved' : 'Save'}</span>
               </Button>
+              
+              <ShareMenu 
+                text={item.text}
+                type={item.type}
+                origin={item.origin}
+                meaning={explanation}
+              />
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -301,6 +309,13 @@ export function WisdomCard({ item }: WisdomCardProps) {
                   <DropdownMenuItem onClick={handleDownload} className="gap-2">
                     <Download className="h-4 w-4" />
                     Download card
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setAutoPlayEnabled(!autoPlayEnabled)} 
+                    className="gap-2"
+                  >
+                    <Volume2 className="h-4 w-4" />
+                    {autoPlayEnabled ? 'Disable' : 'Enable'} Auto-play
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
