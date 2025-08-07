@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
+import { AIAssistant } from '@/components/AIAssistant';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Quote } from 'lucide-react';
+
+const subcategories = [
+  'Life Advice', 'Motivation', 'Work & Business', 'Famous People'
+];
 
 const Quotes = () => {
   const { items, loading, error } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeSubcategory, setActiveSubcategory] = useState('all');
 
   const quotes = items.filter(item => item.type === 'quote');
-  const filteredQuotes = quotes.filter(item =>
-    item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  
+  const filteredQuotes = quotes.filter(item => {
+    const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSubcategory = activeSubcategory === 'all' || 
+      item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
+    
+    return matchesSearch && matchesSubcategory;
+  });
 
   if (error) {
     return (
@@ -35,17 +49,57 @@ const Quotes = () => {
             Inspiring words from notable figures and thinkers
           </p>
           
-          <div className="max-w-md">
+          {/* Search Bar */}
+          <div className="max-w-md mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search quotes..."
+                placeholder="Search any proverb, idiom, quote, or simile..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-card border-border"
               />
             </div>
           </div>
+
+          {/* Subcategory Navigation */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Categories</h3>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'}
+                size="sm"
+                onClick={() => setActiveSubcategory('all')}
+              >
+                All Quotes
+                <Badge variant="secondary" className="ml-2">
+                  {quotes.length}
+                </Badge>
+              </Button>
+              {subcategories.map((subcategory) => {
+                const count = quotes.filter(item => 
+                  item.subcategory.toLowerCase() === subcategory.toLowerCase()
+                ).length;
+                
+                return (
+                  <Button
+                    key={subcategory}
+                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
+                    size="sm"
+                    onClick={() => setActiveSubcategory(subcategory)}
+                  >
+                    {subcategory}
+                    <Badge variant="secondary" className="ml-2">
+                      {count}
+                    </Badge>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* AI Assistant */}
+          <AIAssistant category="Quotes" />
         </div>
 
         {loading ? (
@@ -59,6 +113,9 @@ const Quotes = () => {
         ) : filteredQuotes.length > 0 ? (
           <>
             <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold font-wisdom text-foreground mb-2">
+                {activeSubcategory === 'all' ? 'All Quotes' : `${activeSubcategory} Quotes`}
+              </h2>
               <p className="text-muted-foreground">
                 {filteredQuotes.length} {filteredQuotes.length === 1 ? 'quote' : 'quotes'} found
                 {searchTerm && ` for "${searchTerm}"`}
