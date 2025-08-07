@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { WisdomCard } from '@/components/WisdomCard';
 import { WisdomNavigation } from '@/components/WisdomNavigation';
+import { SettingsMenu } from '@/components/SettingsMenu';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Heart, Globe, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
@@ -78,6 +79,10 @@ const Index = () => {
               <Button variant="cultural" size="lg" className="flex-1">
                 Browse Categories
               </Button>
+            </div>
+            
+            <div className="absolute top-4 right-4">
+              <SettingsMenu />
             </div>
           </div>
         </div>
