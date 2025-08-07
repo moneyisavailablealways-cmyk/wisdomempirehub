@@ -223,10 +223,10 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleLike}
-                className={`gap-1 ${isLiked ? 'text-red-500 hover:text-red-600' : ''}`}
+                className={`${isLiked ? 'text-red-500 hover:text-red-600' : ''}`}
+                title={isLiked ? 'Unlike' : 'Like'}
               >
                 <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                <span className="hidden sm:inline">{isLiked ? 'Liked' : 'Like'}</span>
               </Button>
               
               <Button
@@ -234,14 +234,13 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 size="sm"
                 onClick={handlePlayAudio}
                 disabled={isPlayingAudio}
-                className="gap-1"
+                title={isPlayingAudio ? 'Stop audio' : 'Play audio'}
               >
                 {isPlayingAudio ? (
                   <VolumeX className="h-4 w-4" />
                 ) : (
                   <Volume2 className="h-4 w-4" />
                 )}
-                <span className="hidden sm:inline">{isPlayingAudio ? 'Stop' : 'Listen'}</span>
               </Button>
               
               <Button
@@ -249,14 +248,13 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 size="sm"
                 onClick={handleShowMeaning}
                 disabled={isLoadingExplanation}
-                className="gap-1"
+                title="Show meaning"
               >
                 {isLoadingExplanation ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Bot className="h-4 w-4" />
                 )}
-                <span className="hidden sm:inline">Meaning</span>
               </Button>
             </div>
             
@@ -267,10 +265,9 @@ export function WisdomCard({ item }: WisdomCardProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowVideo(true)}
-                  className="gap-1"
+                  title="Watch video"
                 >
                   <Youtube className="h-4 w-4" />
-                  <span className="hidden sm:inline">Watch</span>
                 </Button>
               )}
               
@@ -278,14 +275,14 @@ export function WisdomCard({ item }: WisdomCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleBookmark}
-                className={`gap-1 ${isBookmarked ? 'text-blue-600' : ''}`}
+                className={`${isBookmarked ? 'text-blue-600' : ''}`}
+                title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
               >
                 {isBookmarked ? (
                   <BookmarkCheck className="h-4 w-4 fill-current" />
                 ) : (
                   <Bookmark className="h-4 w-4" />
                 )}
-                <span className="hidden sm:inline">{isBookmarked ? 'Saved' : 'Save'}</span>
               </Button>
               
               <ShareMenu 

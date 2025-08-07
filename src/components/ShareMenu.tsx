@@ -123,9 +123,8 @@ export function ShareMenu({ text, type, origin, meaning }: ShareMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1">
+        <Button variant="ghost" size="sm" title="Share">
           <Share className="h-4 w-4" />
-          Share
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
