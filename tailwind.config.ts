@@ -74,11 +74,15 @@ export default {
 				'gradient-wisdom': 'var(--gradient-wisdom)',
 				'gradient-cultural': 'var(--gradient-cultural)',
 				'gradient-hero': 'var(--gradient-hero)',
+				'gradient-card': 'var(--gradient-card)',
+				'gradient-nav': 'var(--gradient-nav)',
 			},
 			boxShadow: {
 				'wisdom': 'var(--shadow-wisdom)',
 				'cultural': 'var(--shadow-cultural)',
 				'elevated': 'var(--shadow-elevated)',
+				'card': 'var(--shadow-card)',
+				'card-hover': 'var(--shadow-card-hover)',
 			},
 			fontFamily: {
 				'wisdom': 'var(--font-wisdom)',
