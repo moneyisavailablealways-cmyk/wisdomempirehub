@@ -49,6 +49,7 @@ export function WisdomCard({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [showMeaning, setShowMeaning] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
@@ -131,10 +132,16 @@ export function WisdomCard({
     }
   };
   const handleShowMeaning = async () => {
-    if (explanation) {
-      setShowExplanation(true);
+    if (showMeaning) {
+      setShowMeaning(false);
       return;
     }
+    
+    if (explanation) {
+      setShowMeaning(true);
+      return;
+    }
+    
     setIsLoadingExplanation(true);
     try {
       const {
@@ -149,7 +156,7 @@ export function WisdomCard({
       });
       if (error) throw error;
       setExplanation(data.explanation);
-      setShowExplanation(true);
+      setShowMeaning(true);
     } catch (error) {
       console.error('Error getting explanation:', error);
       toast({
@@ -176,7 +183,7 @@ export function WisdomCard({
   const getVideoEmbedUrl = (url: string) => {
     // Convert various YouTube URL formats to embed format
     const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-    return videoId ? `https://www.youtube.com/embed/${videoId[1]}?rel=0&modestbranding=1` : url;
+    return videoId ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=0&rel=0&modestbranding=1` : url;
   };
   return <>
       <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
@@ -196,6 +203,15 @@ export function WisdomCard({
             "{item.text}"
           </blockquote>
           
+          {/* Inline meaning section */}
+          {showMeaning && explanation && (
+            <div className="bg-muted/30 rounded-lg p-4 border-l-4 border-blue-500">
+              <div className="text-sm text-muted-foreground leading-relaxed">
+                {explanation}
+              </div>
+            </div>
+          )}
+          
           {/* Action buttons - Optimized layout */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
             {/* Primary actions */}
@@ -208,9 +224,20 @@ export function WisdomCard({
                 {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </Button>
               
-              <Button variant="ghost" size="sm" onClick={handleShowMeaning} disabled={isLoadingExplanation} title="Show meaning">
-                {isLoadingExplanation ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bot className="h-4 w-4" />}
-              </Button>
+              <button 
+                onClick={handleShowMeaning} 
+                disabled={isLoadingExplanation}
+                className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium"
+              >
+                {isLoadingExplanation ? (
+                  <span className="flex items-center gap-1">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Loading...
+                  </span>
+                ) : (
+                  showMeaning ? "Hide Meaning" : "Show Meaning"
+                )}
+              </button>
             </div>
             
             {/* Secondary actions */}
