@@ -13,6 +13,10 @@ import Quotes from "./pages/Quotes";
 import Idioms from "./pages/Idioms";
 import Similes from "./pages/Similes";
 import Donate from "./pages/Donate";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +39,10 @@ const App = () => (
                 <Route path="/idioms" element={<Idioms />} />
                 <Route path="/similes" element={<Similes />} />
                 <Route path="/donate" element={<Donate />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/faq" element={<FAQ />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

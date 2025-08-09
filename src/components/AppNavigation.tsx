@@ -9,6 +9,8 @@ import {
   MessageSquare, 
   Zap, 
   Heart,
+  Mail,
+  HelpCircle,
   Menu,
   X
 } from 'lucide-react';
@@ -21,6 +23,8 @@ const navigation = [
   { name: 'Idioms', href: '/idioms', icon: MessageSquare },
   { name: 'Similes', href: '/similes', icon: Zap },
   { name: 'Donate', href: '/donate', icon: Heart },
+  { name: 'Contact', href: '/contact', icon: Mail },
+  { name: 'FAQ', href: '/faq', icon: HelpCircle },
 ];
 
 export function AppNavigation() {

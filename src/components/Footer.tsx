@@ -55,6 +55,9 @@ const Footer = () => {
   }, {
     name: "Privacy Policy",
     path: "/privacy"
+  }, {
+    name: "FAQ",
+    path: "/faq"
   }];
   return <footer className="w-full border-t border-border bg-background">
       <div className="container mx-auto px-4 py-8 md:py-12 bg-blue-950">
