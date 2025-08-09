@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Wisdom Empire Design System - Warm & Inviting */
-    --background: 42 33% 97%;
+    --background: 212 12% 85%;
     --foreground: 15 5% 23%;
 
     --card: 42 33% 99%;
