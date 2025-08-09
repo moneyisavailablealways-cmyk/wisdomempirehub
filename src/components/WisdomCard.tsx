@@ -25,15 +25,15 @@ interface WisdomCardProps {
 const getTypeColor = (type: string) => {
   switch (type) {
     case 'proverb':
-      return 'bg-wisdom-blue text-primary-foreground';
+      return 'bg-black text-white';
     case 'quote':
-      return 'bg-wisdom-gold text-wisdom-blue';
+      return 'bg-black text-white';
     case 'idiom':
-      return 'bg-wisdom-cultural text-wisdom-blue';
+      return 'bg-black text-white';
     case 'simile':
-      return 'bg-secondary text-secondary-foreground';
+      return 'bg-black text-white';
     default:
-      return 'bg-primary text-primary-foreground';
+      return 'bg-black text-white';
   }
 };
 export function WisdomCard({
