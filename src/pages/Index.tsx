@@ -6,30 +6,30 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Zap, TrendingUp, Clock, Star } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
-
 const Index = () => {
-  const { items, loading, error } = useWisdomData();
+  const {
+    items,
+    loading,
+    error
+  } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Get daily items (using a simple hash based on date)
   const today = new Date().toDateString();
   const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-  
   const proverbs = items.filter(item => item.type === 'proverb');
   const quotes = items.filter(item => item.type === 'quote');
   const idioms = items.filter(item => item.type === 'idiom');
   const similes = items.filter(item => item.type === 'simile');
-  
   const proverbOfDay = proverbs[dateHash % proverbs.length];
   const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
   const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
-  
+
   // Most viewed (simulate with reverse chronological order)
   const mostViewed = [...items].reverse().slice(0, 6);
-  
+
   // Recently added (latest items)
   const recentlyAdded = [...items].slice(-6);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -37,28 +37,19 @@ const Index = () => {
       // In a real app, this would navigate to a search results page
     }
   };
-
   if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+    return <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Content</h1>
           <p className="text-muted-foreground">{error}</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
         <div className="absolute inset-0">
-          <img 
-            src={heroImage} 
-            alt="Wisdom Empire - Cultural Knowledge Hub" 
-            className="w-full h-full object-cover opacity-20"
-          />
+          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" />
         </div>
         
         <div className="relative container mx-auto px-4">
@@ -76,12 +67,7 @@ const Index = () => {
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  placeholder="Search any proverb, quote, idiom, simile..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-14 text-lg bg-background/90 backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold"
-                />
+                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-12 h-14 text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold bg-green-50" />
               </div>
             </form>
           </div>
@@ -95,8 +81,7 @@ const Index = () => {
           {/* Daily Items */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
-            {proverbOfDay && (
-              <Card className="border-wisdom-blue/20">
+            {proverbOfDay && <Card className="border-wisdom-blue/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-wisdom-blue">
                     <BookOpen className="h-5 w-5" />
@@ -106,12 +91,10 @@ const Index = () => {
                 <CardContent>
                   <WisdomCard item={proverbOfDay} />
                 </CardContent>
-              </Card>
-            )}
+              </Card>}
 
             {/* Quote of the Day */}
-            {quoteOfDay && (
-              <Card className="border-wisdom-gold/20">
+            {quoteOfDay && <Card className="border-wisdom-gold/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-wisdom-gold">
                     <Quote className="h-5 w-5" />
@@ -121,12 +104,10 @@ const Index = () => {
                 <CardContent>
                   <WisdomCard item={quoteOfDay} />
                 </CardContent>
-              </Card>
-            )}
+              </Card>}
 
             {/* Idiom of the Day */}
-            {idiomOfDay && (
-              <Card className="border-wisdom-cultural/20">
+            {idiomOfDay && <Card className="border-wisdom-cultural/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-wisdom-cultural">
                     <MessageSquare className="h-5 w-5" />
@@ -136,39 +117,30 @@ const Index = () => {
                 <CardContent>
                   <WisdomCard item={idiomOfDay} />
                 </CardContent>
-              </Card>
-            )}
+              </Card>}
           </div>
 
           {/* Most Viewed Section */}
-          {mostViewed.length > 0 && (
-            <div>
+          {mostViewed.length > 0 && <div>
               <div className="flex items-center gap-2 mb-6">
                 <TrendingUp className="h-6 w-6 text-wisdom-blue" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Most Viewed</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {mostViewed.map((item) => (
-                  <WisdomCard key={item.id} item={item} />
-                ))}
+                {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Recently Added Section */}
-          {recentlyAdded.length > 0 && (
-            <div>
+          {recentlyAdded.length > 0 && <div>
               <div className="flex items-center gap-2 mb-6">
                 <Clock className="h-6 w-6 text-wisdom-gold" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recentlyAdded.map((item) => (
-                  <WisdomCard key={item.id} item={item} />
-                ))}
+                {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Quick Navigation */}
           <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
@@ -208,8 +180,6 @@ const Index = () => {
           </Card>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
