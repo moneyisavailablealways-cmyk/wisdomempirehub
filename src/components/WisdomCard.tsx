@@ -25,7 +25,7 @@ interface WisdomCardProps {
 const getTypeColor = (type: string) => {
   switch (type) {
     case 'proverb':
-      return 'bg-black text-white';
+      return 'bg-gold text-white';
     case 'quote':
       return 'bg-black text-white';
     case 'idiom':
