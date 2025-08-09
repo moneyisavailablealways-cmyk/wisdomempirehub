@@ -204,7 +204,7 @@ export function WisdomCard({
             </div>}
           
           {/* Action buttons - Optimized layout */}
-          <div className="flex items-center justify-between pt-4 border-t border-border">
+          <div className="flex items-center justify-between pt-4 border-t border-border bg-zinc-800">
             {/* Primary actions */}
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="sm" onClick={handleLike} className={`${isLiked ? 'text-red-500 hover:text-red-600' : ''}`} title={isLiked ? 'Unlike' : 'Like'}>
