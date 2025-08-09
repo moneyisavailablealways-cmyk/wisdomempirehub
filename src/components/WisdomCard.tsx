@@ -82,12 +82,10 @@ export function WisdomCard({
       setIsPlayingAudio(false);
       return;
     }
-
     try {
       setIsPlayingAudio(true);
-      
       const utterance = new SpeechSynthesisUtterance(item.text);
-      
+
       // Configure voice settings based on audio_voice_type
       switch (item.audio_voice_type) {
         case 'child':
@@ -106,11 +104,9 @@ export function WisdomCard({
           utterance.pitch = 1.0;
           utterance.rate = 1.0;
       }
-
       utterance.onend = () => {
         setIsPlayingAudio(false);
       };
-
       utterance.onerror = () => {
         setIsPlayingAudio(false);
         toast({
@@ -119,7 +115,6 @@ export function WisdomCard({
           variant: "destructive"
         });
       };
-
       window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Error playing audio:', error);
@@ -136,12 +131,10 @@ export function WisdomCard({
       setShowMeaning(false);
       return;
     }
-    
     if (explanation) {
       setShowMeaning(true);
       return;
     }
-    
     setIsLoadingExplanation(true);
     try {
       const {
@@ -193,7 +186,7 @@ export function WisdomCard({
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-wisdom-cultural border-wisdom-cultural bg-amber-500">
+            <Badge variant="outline" className="text-wisdom-cultural border-wisdom-cultural bg-transparent">
               {item.origin}
             </Badge>
           </div>
@@ -204,13 +197,11 @@ export function WisdomCard({
           </blockquote>
           
           {/* Inline meaning section */}
-          {showMeaning && explanation && (
-            <div className="bg-muted/30 rounded-lg p-4 border-l-4 border-blue-500">
+          {showMeaning && explanation && <div className="bg-muted/30 rounded-lg p-4 border-l-4 border-blue-500">
               <div className="text-sm text-muted-foreground leading-relaxed">
                 {explanation}
               </div>
-            </div>
-          )}
+            </div>}
           
           {/* Action buttons - Optimized layout */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
@@ -224,19 +215,11 @@ export function WisdomCard({
                 {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </Button>
               
-              <button 
-                onClick={handleShowMeaning} 
-                disabled={isLoadingExplanation}
-                className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium"
-              >
-                {isLoadingExplanation ? (
-                  <span className="flex items-center gap-1">
+              <button onClick={handleShowMeaning} disabled={isLoadingExplanation} className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium">
+                {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Loading...
-                  </span>
-                ) : (
-                  showMeaning ? "Hide Meaning" : "Show Meaning"
-                )}
+                  </span> : showMeaning ? "Hide Meaning" : "Show Meaning"}
               </button>
             </div>
             
