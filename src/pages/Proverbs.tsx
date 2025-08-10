@@ -30,10 +30,10 @@ const Proverbs = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-zinc-100">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4 mx-[28px]">Proverbs</h1>
-          <p className="text-muted-foreground text-lg mb-6">
+          <h1 className="text-4xl font-wisdom mb-4 mx-[28px] text-center font-bold text-indigo-800">Proverbs</h1>
+          <p className="text-lg mb-6 text-center text-blue-700">
             Traditional sayings that convey wisdom through generations
           </p>
           
@@ -47,7 +47,7 @@ const Proverbs = () => {
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-950">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Proverbs
