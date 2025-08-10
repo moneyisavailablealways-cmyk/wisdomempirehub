@@ -82,8 +82,8 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
             {proverbOfDay && <Card className="border-wisdom-blue/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-blue bg-zinc-300">
+                <CardHeader className="bg-gray-100">
+                  <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950 mx-0 my-0 text-2xl">
                     <BookOpen className="h-5 w-5" />
                     Proverb of the Day
                   </CardTitle>
@@ -96,7 +96,7 @@ const Index = () => {
             {/* Quote of the Day */}
             {quoteOfDay && <Card className="border-wisdom-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-gold">
+                  <CardTitle className="flex items-center gap-2 text-zinc-950">
                     <Quote className="h-5 w-5" />
                     Quote of the Day
                   </CardTitle>
@@ -109,7 +109,7 @@ const Index = () => {
             {/* Idiom of the Day */}
             {idiomOfDay && <Card className="border-wisdom-cultural/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-cultural">
+                  <CardTitle className="flex items-center gap-2 text-zinc-950">
                     <MessageSquare className="h-5 w-5" />
                     Idiom of the Day
                   </CardTitle>
@@ -133,9 +133,9 @@ const Index = () => {
 
           {/* Recently Added Section */}
           {recentlyAdded.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-6 bg-slate-100">
                 <Clock className="h-6 w-6 text-wisdom-gold" />
-                <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
+                <h2 className="text-2xl font-bold font-wisdom text-neutral-950 text-center mx-[240px]">Recently Added</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
