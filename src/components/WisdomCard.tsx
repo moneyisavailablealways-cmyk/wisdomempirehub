@@ -237,7 +237,7 @@ export function WisdomCard({
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="bg-lime-800 hover:bg-lime-700">
+                  <Button variant="ghost" size="sm" className="bg-lime-800 hover:bg-lime-700 mx-0 my-0">
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
