@@ -49,7 +49,7 @@ export function WisdomCard({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [Meaning, setMeaning] = useState(false);
+  const [showMeaning, setShowMeaning] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
@@ -128,11 +128,11 @@ export function WisdomCard({
   };
   const handleMeaning = async () => {
     if (showMeaning) {
-      setMeaning(false);
+      setShowMeaning(false);
       return;
     }
     if (explanation) {
-      setMeaning(true);
+      setShowMeaning(true);
       return;
     }
     setIsLoadingExplanation(true);
@@ -149,7 +149,7 @@ export function WisdomCard({
       });
       if (error) throw error;
       setExplanation(data.explanation);
-      setMeaning(true);
+      setShowMeaning(true);
     } catch (error) {
       console.error('Error getting explanation:', error);
       toast({
@@ -219,7 +219,7 @@ export function WisdomCard({
                 {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Loading...
-                  </span> : Meaning ? "Hide" : "Meaning"}
+                  </span> : showMeaning ? "Hide" : "Meaning"}
               </button>
             </div>
             
