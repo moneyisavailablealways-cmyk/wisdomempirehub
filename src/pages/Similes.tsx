@@ -32,8 +32,8 @@ const Similes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-zinc-200">
         <div className="mb-8">
-          <h1 className="font-wisdom mb-4 text-gray-950 font-bold text-5xl">Similes</h1>
-          <p className="text-lg mb-6 text-gray-900">
+          <h1 className="font-wisdom mb-4 text-gray-950 font-bold text-5xl text-center">Similes</h1>
+          <p className="text-lg mb-6 text-gray-900 text-center">
             Comparative phrases that use "like" or "as" to create vivid descriptions
           </p>
           
@@ -47,7 +47,7 @@ const Similes = () => {
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-zinc-950">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-zinc-950 text-center">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Similes
