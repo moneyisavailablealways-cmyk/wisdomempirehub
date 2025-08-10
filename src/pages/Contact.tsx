@@ -3,10 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mail, Phone, MapPin, BookOpen, Quote, MessageSquare, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const Contact = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* SEO Meta Tags */}
       <title>Contact Us - Wisdom Empire</title>
       <meta name="description" content="Contact Wisdom Empire for questions, suggestions, or feedback about our proverb collection and features. Get in touch with our support team." />
@@ -52,8 +50,8 @@ const Contact = () => {
           </div>
 
           {/* Contact Information */}
-          <Card className="mb-8">
-            <CardContent className="p-8">
+          <Card className="mb-8 text-indigo-700">
+            <CardContent className="p-8 bg-gray-800">
               <p className="text-muted-foreground mb-6">
                 If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
               </p>
@@ -61,27 +59,27 @@ const Contact = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-800">
                     <h3 className="font-semibold text-foreground">Email</h3>
-                    <p className="text-muted-foreground">wisdomempire500@gmail.com</p>
+                    <p className="text-muted-foreground">support@yourwebsite.com</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-950">
                     <h3 className="font-semibold text-foreground">Phone</h3>
-                    <p className="text-muted-foreground">wisdomempire500@gmail.com</p>
+                    <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-800">
                     <h3 className="font-semibold text-foreground">Address</h3>
                     <p className="text-muted-foreground">
-                      Wisdom Empire 24 7<br />
-                      youtube.com/@WisdomEmpire500<br />
+                      Your Company Name<br />
+                      123 Inspiration Street<br />
                       City, State, ZIP
                     </p>
                   </div>
@@ -90,15 +88,13 @@ const Contact = () => {
               
               <div className="mt-8 p-4 bg-wisdom-cultural/10 rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  We aim to respond to all messages within the limited time possible.
+                  We aim to respond to all messages within 48 hours.
                 </p>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
