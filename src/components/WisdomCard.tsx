@@ -187,7 +187,7 @@ export function WisdomCard({
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-sky-900">
+            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-sky-900 rounded-none">
               {item.origin}
             </Badge>
           </div>
