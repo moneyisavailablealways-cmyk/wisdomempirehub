@@ -145,7 +145,7 @@ const Index = () => {
           {/* Quick Navigation */}
           <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
+              <h3 className="text-2xl font-bold font-wisdom text-center mb-6 text-zinc-950">Explore by Category</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                   <a href="/proverbs">
