@@ -38,10 +38,10 @@ const Proverbs = () => {
           </p>
           
           {/* Search Bar */}
-          <div className="max-w-md mb-6">
+          <div className="w-full max-w-md mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border px-[66px] my-[8px] py-0 mx-0" />
+              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 bg-card border-border" />
             </div>
           </div>
 
