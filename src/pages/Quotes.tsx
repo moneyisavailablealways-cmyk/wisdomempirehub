@@ -32,8 +32,8 @@ const Quotes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-wisdom mb-4 text-center text-gray-950">Quotes</h1>
-          <p className="text-lg mb-6 text-center text-blue-900">
+          <h1 className="text-4xl font-wisdom mb-4 text-center text-slate-50 font-extrabold">Quotes</h1>
+          <p className="text-lg mb-6 text-center text-slate-300">
             Inspiring words from notable figures and thinkers
           </p>
           
@@ -47,7 +47,7 @@ const Quotes = () => {
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-950">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Quotes
