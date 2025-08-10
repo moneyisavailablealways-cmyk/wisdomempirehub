@@ -32,8 +32,8 @@ const Idioms = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-zinc-200">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Idioms</h1>
-          <p className="text-muted-foreground text-lg mb-6">
+          <h1 className="font-bold font-wisdom mb-4 text-zinc-950 text-5xl text-center">Idioms</h1>
+          <p className="text-lg mb-6 text-blue-800 text-center">
             Cultural expressions with meanings that differ from literal interpretation
           </p>
           
@@ -47,7 +47,7 @@ const Idioms = () => {
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-neutral-950">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Idioms
@@ -77,7 +77,7 @@ const Idioms = () => {
               </div>)}
           </div> : filteredIdioms.length > 0 ? <>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-wisdom text-foreground mb-2">
+              <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-3xl">
                 {activeSubcategory === 'all' ? 'All Idioms' : `${activeSubcategory} Idioms`}
               </h2>
               <p className="text-muted-foreground">
