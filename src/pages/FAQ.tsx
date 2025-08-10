@@ -4,43 +4,34 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Quote, MessageSquare, Zap, HelpCircle, Volume2, Download, Edit, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-
 const FAQ = () => {
-  const faqs = [
-    {
-      id: "1",
-      icon: HelpCircle,
-      question: "How do I show or hide the meaning of a proverb?",
-      answer: "Click the \"Show Meaning\" link under the proverb. Click again to hide it."
-    },
-    {
-      id: "2", 
-      icon: Edit,
-      question: "Can I add my own proverbs?",
-      answer: "Yes! Registered users can submit and edit proverbs through the edit feature."
-    },
-    {
-      id: "3",
-      icon: Download,
-      question: "Can I download the proverbs?",
-      answer: "Yes, look for the download icon on each card to save a copy."
-    },
-    {
-      id: "4",
-      icon: Volume2,
-      question: "Why can't I hear the audio?",
-      answer: "Make sure your device volume is up and your browser allows audio playback."
-    },
-    {
-      id: "5",
-      icon: Users,
-      question: "Is the content free to use?",
-      answer: "All content is free for personal use. For commercial use, please contact us."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const faqs = [{
+    id: "1",
+    icon: HelpCircle,
+    question: "How do I show or hide the meaning of a proverb?",
+    answer: "Click the \"Show Meaning\" link under the proverb. Click again to hide it."
+  }, {
+    id: "2",
+    icon: Edit,
+    question: "Can I add my own proverbs?",
+    answer: "Yes! Registered users can submit and edit proverbs through the edit feature."
+  }, {
+    id: "3",
+    icon: Download,
+    question: "Can I download the proverbs?",
+    answer: "Yes, look for the download icon on each card to save a copy."
+  }, {
+    id: "4",
+    icon: Volume2,
+    question: "Why can't I hear the audio?",
+    answer: "Make sure your device volume is up and your browser allows audio playback."
+  }, {
+    id: "5",
+    icon: Users,
+    question: "Is the content free to use?",
+    answer: "All content is free for personal use. For commercial use, please contact us."
+  }];
+  return <div className="min-h-screen bg-background">
       {/* SEO Meta Tags */}
       <title>FAQ - Wisdom Empire</title>
       <meta name="description" content="Frequently Asked Questions about Wisdom Empire. Get answers about proverbs, quotes, idioms, and how to use our cultural knowledge platform." />
@@ -89,11 +80,10 @@ const FAQ = () => {
           <Card>
             <CardContent className="p-8">
               <Accordion type="single" collapsible className="w-full">
-                {faqs.map((faq) => {
-                  const IconComponent = faq.icon;
-                  return (
-                    <AccordionItem key={faq.id} value={faq.id} className="border-b border-border last:border-b-0">
-                      <AccordionTrigger className="text-left hover:no-underline py-6">
+                {faqs.map(faq => {
+                const IconComponent = faq.icon;
+                return <AccordionItem key={faq.id} value={faq.id} className="border-b border-border last:border-b-0">
+                      <AccordionTrigger className="text-left hover:no-underline py-6 bg-teal-950 hover:bg-teal-800">
                         <div className="flex items-center gap-3">
                           <IconComponent className="h-5 w-5 text-wisdom-gold flex-shrink-0" />
                           <span className="font-medium text-foreground">{faq.question}</span>
@@ -104,9 +94,8 @@ const FAQ = () => {
                           {faq.answer}
                         </div>
                       </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
+                    </AccordionItem>;
+              })}
               </Accordion>
             </CardContent>
           </Card>
@@ -125,8 +114,6 @@ const FAQ = () => {
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default FAQ;
