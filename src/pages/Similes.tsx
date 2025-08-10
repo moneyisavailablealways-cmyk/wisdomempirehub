@@ -33,7 +33,7 @@ const Similes = () => {
       <div className="container mx-auto px-4 py-8 bg-zinc-200">
         <div className="mb-8">
           <h1 className="font-wisdom mb-4 text-gray-950 font-bold text-5xl text-center">Similes</h1>
-          <p className="text-lg mb-6 text-gray-900 text-center">
+          <p className="text-lg mb-6 text-center text-indigo-800">
             Comparative phrases that use "like" or "as" to create vivid descriptions
           </p>
           
