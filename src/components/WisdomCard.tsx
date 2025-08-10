@@ -180,7 +180,7 @@ export function WisdomCard({
   };
   return <>
       <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-6 space-y-4 bg-indigo-800">
           {/* Header with type and origin badges */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Badge className={getTypeColor(item.type)} variant="secondary">
