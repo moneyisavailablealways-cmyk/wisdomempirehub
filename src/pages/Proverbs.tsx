@@ -30,8 +30,8 @@ const Proverbs = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-gray-200">
-        <div className="mb-8 bg-gray-800">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
           <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Proverbs</h1>
           <p className="text-muted-foreground text-lg mb-6">
             Traditional sayings that convey wisdom through generations

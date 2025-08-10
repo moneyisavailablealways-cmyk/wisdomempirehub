@@ -25,15 +25,15 @@ interface WisdomCardProps {
 const getTypeColor = (type: string) => {
   switch (type) {
     case 'proverb':
-      return 'bg-gold text-white';
+      return 'bg-ocean-blue text-primary-foreground';
     case 'quote':
-      return 'bg-black text-white';
+      return 'bg-ocean-coral text-primary-foreground';
     case 'idiom':
-      return 'bg-black text-white';
+      return 'bg-ocean-teal text-primary-foreground';
     case 'simile':
-      return 'bg-black text-white';
+      return 'bg-ocean-navy text-primary-foreground';
     default:
-      return 'bg-black text-white';
+      return 'bg-ocean-slate text-primary-foreground';
   }
 };
 export function WisdomCard({
@@ -187,7 +187,7 @@ export function WisdomCard({
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-wisdom-cultural border-wisdom-cultural bg-transparent">
+            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-transparent">
               {item.origin}
             </Badge>
           </div>
@@ -220,7 +220,7 @@ export function WisdomCard({
                 {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Loading...
-                  </span> : showMeaning ? "Hide Meaning" : "Show Meaning"}
+                  </span> : showMeaning ? "Hide" : "Meaning"}
               </button>
             </div>
             

@@ -8,59 +8,61 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Wisdom Empire Design System - Warm & Inviting */
-    --background: 212 12% 85%;
-    --foreground: 15 5% 23%;
+    /* Modern Ocean Design System - Fresh & Contemporary */
+    --background: 210 20% 98%;
+    --foreground: 222 84% 5%;
 
-    --card: 42 33% 99%;
-    --card-foreground: 15 5% 23%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 84% 5%;
 
-    --popover: 42 33% 99%;
-    --popover-foreground: 15 5% 23%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 84% 5%;
 
-    /* Warm golden yellow as primary */
-    --primary: 45 89% 61%;
-    --primary-foreground: 15 5% 23%;
+    /* Ocean blue as primary */
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
 
-    /* Muted olive green for secondary */
-    --secondary: 88 20% 63%;
-    --secondary-foreground: 15 5% 23%;
+    /* Teal for secondary */
+    --secondary: 172 66% 50%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 42 25% 95%;
-    --muted-foreground: 30 3% 35%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Medium blue for links and accent */
-    --accent: 217 82% 51%;
-    --accent-foreground: 42 33% 97%;
+    /* Coral for accent */
+    --accent: 346 87% 43%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 42 33% 97%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 42 20% 88%;
-    --input: 42 20% 88%;
-    --ring: 45 89% 61%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
 
-    /* Enhanced wisdom design tokens */
-    --wisdom-gold: 45 89% 61%;
-    --wisdom-blue: 217 82% 51%;
-    --cultural-accent: 88 20% 63%;
-    --earth-tone: 42 33% 97%;
+    /* Modern design tokens */
+    --ocean-blue: 221 83% 53%;
+    --ocean-teal: 172 66% 50%;
+    --ocean-coral: 346 87% 43%;
+    --ocean-navy: 225 39% 21%;
+    --ocean-mint: 164 76% 74%;
+    --ocean-slate: 215 16% 47%;
     
-    /* Warm gradients with natural depth */
-    --gradient-wisdom: linear-gradient(135deg, hsl(45 89% 61%) 0%, hsl(42 70% 65%) 50%, hsl(88 20% 63%) 100%);
-    --gradient-cultural: linear-gradient(135deg, hsl(88 20% 63%) 0%, hsl(90 25% 68%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(45 89% 61%) 0%, hsl(42 70% 65%) 30%, hsl(88 20% 63%) 70%, hsl(42 33% 97%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(42 33% 99%) 0%, hsl(42 25% 96%) 100%);
-    --gradient-nav: linear-gradient(90deg, hsl(45 89% 61%) 0%, hsl(42 70% 65%) 100%);
+    /* Contemporary gradients */
+    --gradient-wisdom: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 50%, hsl(346 87% 43%) 100%);
+    --gradient-cultural: linear-gradient(135deg, hsl(172 66% 50%) 0%, hsl(164 76% 74%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 30%, hsl(346 87% 43%) 70%, hsl(164 76% 74%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --gradient-nav: linear-gradient(90deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 100%);
     
-    /* Soft shadows for warm aesthetic */
-    --shadow-wisdom: 0 10px 40px -10px hsl(45 89% 61% / 0.15);
-    --shadow-cultural: 0 8px 30px -8px hsl(88 20% 63% / 0.2);
-    --shadow-elevated: 0 25px 80px -15px hsl(45 89% 61% / 0.1);
-    --shadow-card: 0 4px 20px -4px hsl(42 15% 75% / 0.12);
-    --shadow-card-hover: 0 8px 35px -8px hsl(45 89% 61% / 0.18);
+    /* Modern shadows */
+    --shadow-wisdom: 0 10px 40px -10px hsl(221 83% 53% / 0.2);
+    --shadow-cultural: 0 8px 30px -8px hsl(172 66% 50% / 0.15);
+    --shadow-elevated: 0 25px 80px -15px hsl(221 83% 53% / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(215 16% 47% / 0.1);
+    --shadow-card-hover: 0 8px 35px -8px hsl(221 83% 53% / 0.2);
     
-    /* Modern typography system */
+    /* Clean typography system */
     --font-wisdom: 'Inter', system-ui, sans-serif;
     --font-cultural: 'Playfair Display', serif;
 
