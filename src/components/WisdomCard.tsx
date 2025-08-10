@@ -126,7 +126,7 @@ export function WisdomCard({
       });
     }
   };
-  const handleMeaning = async () => {
+  const handleShowMeaning = async () => {
     if (showMeaning) {
       setShowMeaning(false);
       return;
@@ -180,7 +180,7 @@ export function WisdomCard({
   };
   return <>
       <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-6 space-y-4 bg-emerald-800">
           {/* Header with type and origin badges */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Badge className={getTypeColor(item.type)} variant="secondary">
@@ -204,7 +204,7 @@ export function WisdomCard({
             </div>}
           
           {/* Action buttons - Optimized layout */}
-          <div className="flex items-center justify-between pt-4 border-t border-border bg-zinc-800">
+          <div className="flex items-center justify-between pt-4 border-t border-border bg-emerald-950">
             {/* Primary actions */}
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="sm" onClick={handleLike} className={`${isLiked ? 'text-red-500 hover:text-red-600' : ''}`} title={isLiked ? 'Unlike' : 'Like'}>
@@ -215,11 +215,11 @@ export function WisdomCard({
                 {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </Button>
               
-              <button onClick={handleMeaning} disabled={isLoadingExplanation} className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium">
+              <button onClick={handleShowMeaning} disabled={isLoadingExplanation} className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium">
                 {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Loading...
-                  </span> : showMeaning ? "Hide" : "Meaning"}
+                  </span> : showMeaning ? "Hide Meaning" : "Show Meaning"}
               </button>
             </div>
             
