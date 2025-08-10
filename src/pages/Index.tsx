@@ -94,7 +94,7 @@ const Index = () => {
               </Card>}
 
             {/* Quote of the Day */}
-            {quoteOfDay && <Card className="border-wisdom-gold/20">
+            {quoteOfDay && <Card className="border-wisdom-gold/20 bg-gray-800">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-zinc-950">
                     <Quote className="h-5 w-5" />
