@@ -76,14 +76,14 @@ const Index = () => {
 
       {/* Daily Content Sections */}
       <section className="container mx-auto px-4 py-12">
-        <div className="space-y-12 bg-gray-100">
+        <div className="space-y-12 bg-slate-600">
           
           {/* Daily Items */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
             {proverbOfDay && <Card className="border-wisdom-blue/20">
-                <CardHeader className="bg-gray-100">
-                  <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950 mx-0 my-0 text-2xl">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-wisdom-blue bg-zinc-300">
                     <BookOpen className="h-5 w-5" />
                     Proverb of the Day
                   </CardTitle>
@@ -96,7 +96,7 @@ const Index = () => {
             {/* Quote of the Day */}
             {quoteOfDay && <Card className="border-wisdom-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
+                  <CardTitle className="flex items-center gap-2 text-wisdom-gold">
                     <Quote className="h-5 w-5" />
                     Quote of the Day
                   </CardTitle>
@@ -109,7 +109,7 @@ const Index = () => {
             {/* Idiom of the Day */}
             {idiomOfDay && <Card className="border-wisdom-cultural/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
+                  <CardTitle className="flex items-center gap-2 text-wisdom-cultural">
                     <MessageSquare className="h-5 w-5" />
                     Idiom of the Day
                   </CardTitle>
@@ -122,9 +122,9 @@ const Index = () => {
 
           {/* Most Viewed Section */}
           {mostViewed.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 bg-zinc-100">
+              <div className="flex items-center gap-2 mb-6">
                 <TrendingUp className="h-6 w-6 text-wisdom-blue" />
-                <h2 className="font-bold font-wisdom text-zinc-950 mx-[240px] text-left text-3xl">Most Viewed</h2>
+                <h2 className="text-2xl font-bold font-wisdom text-foreground">Most Viewed</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
@@ -133,9 +133,9 @@ const Index = () => {
 
           {/* Recently Added Section */}
           {recentlyAdded.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 bg-slate-100">
+              <div className="flex items-center gap-2 mb-6">
                 <Clock className="h-6 w-6 text-wisdom-gold" />
-                <h2 className="text-2xl font-bold font-wisdom text-neutral-950 text-center mx-[240px]">Recently Added</h2>
+                <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
@@ -145,7 +145,7 @@ const Index = () => {
           {/* Quick Navigation */}
           <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold font-wisdom text-center mb-6 text-zinc-950">Explore by Category</h3>
+              <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                   <a href="/proverbs">
