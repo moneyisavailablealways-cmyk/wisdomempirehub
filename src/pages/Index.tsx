@@ -75,7 +75,7 @@ const Index = () => {
       </section>
 
       {/* Daily Content Sections */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 py-12 bg-gray-200">
         <div className="space-y-12">
           
           {/* Daily Items */}
