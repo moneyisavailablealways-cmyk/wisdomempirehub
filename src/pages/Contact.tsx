@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Mail, Phone, MapPin, BookOpen, Quote, MessageSquare, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const Contact = () => {
-  return <div className="min-h-screen bg-slate-500">
+  return <div className="min-h-screen bg-background">
       {/* SEO Meta Tags */}
       <title>Contact Us - Wisdom Empire</title>
       <meta name="description" content="Contact Wisdom Empire for questions, suggestions, or feedback about our proverb collection and features. Get in touch with our support team." />
@@ -50,7 +50,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Information */}
-          <Card className="mb-8">
+          <Card className="mb-8 text-indigo-700">
             <CardContent className="p-8">
               <p className="text-muted-foreground mb-6">
                 If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
@@ -59,7 +59,7 @@ const Contact = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-800">
                     <h3 className="font-semibold text-foreground">Email</h3>
                     <p className="text-muted-foreground">support@yourwebsite.com</p>
                   </div>
@@ -67,7 +67,7 @@ const Contact = () => {
                 
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-950">
                     <h3 className="font-semibold text-foreground">Phone</h3>
                     <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
                   </div>
@@ -75,7 +75,7 @@ const Contact = () => {
                 
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-wisdom-gold mt-1" />
-                  <div>
+                  <div className="text-green-800">
                     <h3 className="font-semibold text-foreground">Address</h3>
                     <p className="text-muted-foreground">
                       Your Company Name<br />
