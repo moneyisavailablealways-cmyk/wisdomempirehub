@@ -179,8 +179,8 @@ export function WisdomCard({
     return videoId ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=0&rel=0&modestbranding=1` : url;
   };
   return <>
-      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-border shadow-sm bg-amber-300">
-        <CardContent className="p-6 space-y-4 bg-indigo-800">
+      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
+        <CardContent className="p-6 space-y-4">
           {/* Header with type and origin badges */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Badge className={getTypeColor(item.type)} variant="secondary">
@@ -204,7 +204,7 @@ export function WisdomCard({
             </div>}
           
           {/* Action buttons - Optimized layout */}
-          <div className="flex items-center justify-between pt-4 border-t border-border bg-zinc-800 mx-0 px-0 my-0 py-0">
+          <div className="flex items-center justify-between pt-4 border-t border-border bg-zinc-800">
             {/* Primary actions */}
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="sm" onClick={handleLike} className={`${isLiked ? 'text-red-500 hover:text-red-600' : ''}`} title={isLiked ? 'Unlike' : 'Like'}>
@@ -218,8 +218,8 @@ export function WisdomCard({
               <button onClick={handleShowMeaning} disabled={isLoadingExplanation} className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium">
                 {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    Loading...
-                  </span> : showMeaning ? "Hide Meaning" : "Show Meaning"}
+                    Loading...]
+                  </span> : showMeaning ? "Hide" : "Meaning"}
               </button>
             </div>
             
@@ -237,7 +237,7 @@ export function WisdomCard({
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="bg-lime-800 hover:bg-lime-700 mx-0 my-0">
+                  <Button variant="ghost" size="sm">
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
