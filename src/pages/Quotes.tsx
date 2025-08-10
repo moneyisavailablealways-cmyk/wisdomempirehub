@@ -32,7 +32,7 @@ const Quotes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="text-4xl font-wisdom mb-4 text-center text-slate-50 font-extrabold">Quotes</h1>
+          <h1 className="text-4xl font-wisdom mb-4 text-center font-extrabold text-slate-950">Quotes</h1>
           <p className="text-lg mb-6 text-center text-slate-300">
             Inspiring words from notable figures and thinkers
           </p>
