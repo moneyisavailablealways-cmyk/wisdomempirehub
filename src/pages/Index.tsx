@@ -83,12 +83,12 @@ const Index = () => {
             {/* Proverb of the Day */}
             {proverbOfDay && <Card className="border-wisdom-blue/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-blue bg-zinc-300">
+                  <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950">
                     <BookOpen className="h-5 w-5" />
                     Proverb of the Day
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="bg-slate-900 rounded-xl">
                   <WisdomCard item={proverbOfDay} />
                 </CardContent>
               </Card>}
@@ -96,25 +96,25 @@ const Index = () => {
             {/* Quote of the Day */}
             {quoteOfDay && <Card className="border-wisdom-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-gold">
+                  <CardTitle className="flex items-center gap-2 text-zinc-950">
                     <Quote className="h-5 w-5" />
                     Quote of the Day
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="bg-slate-900 rounded-xl">
                   <WisdomCard item={quoteOfDay} />
                 </CardContent>
               </Card>}
 
             {/* Idiom of the Day */}
-            {idiomOfDay && <Card className="border-wisdom-cultural/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-wisdom-cultural">
+            {idiomOfDay && <Card className="border-wisdom-cultural/20 bg-gray-900">
+                <CardHeader className="bg-white">
+                  <CardTitle className="flex items-center gap-2 text-zinc-950">
                     <MessageSquare className="h-5 w-5" />
                     Idiom of the Day
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="bg-slate-950">
                   <WisdomCard item={idiomOfDay} />
                 </CardContent>
               </Card>}
