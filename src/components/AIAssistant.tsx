@@ -53,7 +53,7 @@ export function AIAssistant({
     }
   };
   return <Card className="border-wisdom-gold/20 bg-wisdom-gold/5">
-      <CardContent className="p-6 bg-emerald-600 rounded-3xl px-[20px]">
+      <CardContent className="p-6 bg-emerald-600 rounded-3xl my-0 py-0 px-0">
         <div className="flex items-center gap-2 mb-4 bg-zinc-950 my-[15px] rounded-3xl mx-[26px]">
           <Bot className="h-5 w-5 text-wisdom-gold bg-zinc-950 py-[17px] px-[10px] mx-0" />
           <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">AI Assistant</h3>
