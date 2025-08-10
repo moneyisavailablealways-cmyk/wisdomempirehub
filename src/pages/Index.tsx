@@ -25,19 +25,11 @@ const Index = () => {
   const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
   const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
 
-  // Filter items based on search term
-  const filteredItems = items.filter(item => 
-    !searchTerm || 
-    item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   // Most viewed (simulate with reverse chronological order)
-  const mostViewed = (searchTerm ? filteredItems : [...items]).reverse().slice(0, 6);
+  const mostViewed = [...items].reverse().slice(0, 6);
 
   // Recently added (latest items)
-  const recentlyAdded = (searchTerm ? filteredItems : [...items]).slice(-6);
+  const recentlyAdded = [...items].slice(-6);
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -75,7 +67,7 @@ const Index = () => {
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-12 h-14 text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-ocean-blue bg-card" />
+                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-12 h-14 text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold bg-green-50" />
               </div>
             </form>
           </div>
@@ -89,9 +81,9 @@ const Index = () => {
           {/* Daily Items */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
-            {proverbOfDay && <Card className="border-ocean-blue/20">
+            {proverbOfDay && <Card className="border-wisdom-blue/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-ocean-blue">
+                  <CardTitle className="flex items-center gap-2 text-wisdom-blue bg-zinc-300">
                     <BookOpen className="h-5 w-5" />
                     Proverb of the Day
                   </CardTitle>
@@ -102,9 +94,9 @@ const Index = () => {
               </Card>}
 
             {/* Quote of the Day */}
-            {quoteOfDay && <Card className="border-ocean-coral/20">
+            {quoteOfDay && <Card className="border-wisdom-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-ocean-coral">
+                  <CardTitle className="flex items-center gap-2 text-wisdom-gold">
                     <Quote className="h-5 w-5" />
                     Quote of the Day
                   </CardTitle>
@@ -115,9 +107,9 @@ const Index = () => {
               </Card>}
 
             {/* Idiom of the Day */}
-            {idiomOfDay && <Card className="border-ocean-teal/20">
+            {idiomOfDay && <Card className="border-wisdom-cultural/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-ocean-teal">
+                  <CardTitle className="flex items-center gap-2 text-wisdom-cultural">
                     <MessageSquare className="h-5 w-5" />
                     Idiom of the Day
                   </CardTitle>
@@ -131,7 +123,7 @@ const Index = () => {
           {/* Most Viewed Section */}
           {mostViewed.length > 0 && <div>
               <div className="flex items-center gap-2 mb-6">
-                <TrendingUp className="h-6 w-6 text-ocean-blue" />
+                <TrendingUp className="h-6 w-6 text-wisdom-blue" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Most Viewed</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -142,7 +134,7 @@ const Index = () => {
           {/* Recently Added Section */}
           {recentlyAdded.length > 0 && <div>
               <div className="flex items-center gap-2 mb-6">
-                <Clock className="h-6 w-6 text-ocean-coral" />
+                <Clock className="h-6 w-6 text-wisdom-gold" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -151,7 +143,7 @@ const Index = () => {
             </div>}
 
           {/* Quick Navigation */}
-          <Card className="bg-gradient-to-r from-ocean-blue/5 to-ocean-coral/5 border-ocean-blue/20">
+          <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
