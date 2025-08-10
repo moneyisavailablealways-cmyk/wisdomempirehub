@@ -2,10 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Globe, BookOpen, Users, Star } from 'lucide-react';
-
 const Donate = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -16,14 +14,14 @@ const Donate = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-wisdom-blue">
+            <Card className="border-border bg-gray-950">
+              <CardHeader className="bg-sky-800">
+                <CardTitle className="flex items-center gap-2 text-zinc-50">
                   <Globe className="h-5 w-5" />
                   Our Mission
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 bg-teal-950">
                 <p className="text-muted-foreground">
                   Wisdom Empire is dedicated to preserving and sharing the rich cultural heritage 
                   of humanity through proverbs, quotes, idioms, and similes from every corner of the world.
@@ -46,13 +44,13 @@ const Donate = () => {
             </Card>
 
             <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-wisdom-blue">
+              <CardHeader className="bg-sky-800">
+                <CardTitle className="flex items-center gap-2 text-zinc-50">
                   <Star className="h-5 w-5" />
                   How You Help
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 bg-teal-950">
                 <p className="text-muted-foreground">
                   Your donations help us maintain our platform, expand our content library, 
                   and develop new features like AI-powered explanations and audio content.
@@ -105,8 +103,6 @@ const Donate = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Donate;
