@@ -54,7 +54,7 @@ export function AIAssistant({
   };
   return <Card className="border-wisdom-gold/20 bg-wisdom-gold/5">
       <CardContent className="p-6 bg-emerald-600 rounded-3xl my-0 py-0 px-0">
-        <div className="flex items-center gap-2 mb-4 bg-zinc-950 my-[15px] rounded-3xl mx-[26px]">
+        <div className="flex items-center gap-2 mb-4 bg-zinc-950 my-[15px] mx-[26px] rounded-none">
           <Bot className="h-5 w-5 text-wisdom-gold bg-zinc-950 py-[17px] px-[10px] mx-0" />
           <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">AI Assistant</h3>
         </div>
@@ -62,7 +62,7 @@ export function AIAssistant({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
             <Input placeholder="Ask for meaning, or submit a missing proverb, quote, idiom, or simile" value={input} onChange={e => setInput(e.target.value)} className="pr-12" disabled={isLoading} />
-            <Button type="submit" size="sm" className="absolute right-1 top-1 h-8 w-8 p-0" disabled={isLoading || !input.trim()}>
+            <Button type="submit" size="sm" disabled={isLoading || !input.trim()} className="absolute right-1 top-1 h-8 w-8 p-0 text-zinc-950">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
