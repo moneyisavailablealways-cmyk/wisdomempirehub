@@ -122,9 +122,9 @@ const Index = () => {
 
           {/* Most Viewed Section */}
           {mostViewed.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-6 bg-zinc-100">
                 <TrendingUp className="h-6 w-6 text-wisdom-blue" />
-                <h2 className="text-2xl font-bold font-wisdom text-foreground">Most Viewed</h2>
+                <h2 className="font-bold font-wisdom text-zinc-950 mx-[240px] text-left text-3xl">Most Viewed</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
