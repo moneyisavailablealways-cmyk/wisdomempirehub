@@ -30,7 +30,7 @@ const Quotes = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-slate-700">
+      <div className="container mx-auto px-4 py-8 bg-zinc-200">
         <div className="mb-8">
           <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Quotes</h1>
           <p className="text-muted-foreground text-lg mb-6">
