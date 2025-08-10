@@ -53,10 +53,10 @@ export function AIAssistant({
     }
   };
   return <Card className="border-wisdom-gold/20 bg-wisdom-gold/5">
-      <CardContent className="p-6 bg-emerald-600 rounded-3xl">
-        <div className="flex items-center gap-2 mb-4 bg-zinc-950 my-[15px] mx-[240px] rounded-3xl">
-          <Bot className="h-5 w-5 text-wisdom-gold bg-zinc-950 mx-[97px] py-[17px] px-[10px]" />
-          <h3 className="font-semibold text-slate-50 mx-[8px]">AI Assistant</h3>
+      <CardContent className="p-6 bg-emerald-600 rounded-3xl px-[20px]">
+        <div className="flex items-center gap-2 mb-4 bg-zinc-950 my-[15px] rounded-3xl mx-[26px]">
+          <Bot className="h-5 w-5 text-wisdom-gold bg-zinc-950 py-[17px] px-[10px] mx-0" />
+          <h3 className="font-semibold text-slate-50 mx-[22px] px-0">AI Assistant</h3>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
