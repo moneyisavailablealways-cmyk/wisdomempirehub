@@ -3,10 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mail, Phone, MapPin, BookOpen, Quote, MessageSquare, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const Contact = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-slate-500">
       {/* SEO Meta Tags */}
       <title>Contact Us - Wisdom Empire</title>
       <meta name="description" content="Contact Wisdom Empire for questions, suggestions, or feedback about our proverb collection and features. Get in touch with our support team." />
@@ -97,8 +95,6 @@ const Contact = () => {
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
