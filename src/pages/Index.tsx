@@ -76,7 +76,7 @@ const Index = () => {
 
       {/* Daily Content Sections */}
       <section className="container mx-auto px-4 py-12">
-        <div className="space-y-12">
+        <div className="space-y-12 bg-zinc-400">
           
           {/* Daily Items */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

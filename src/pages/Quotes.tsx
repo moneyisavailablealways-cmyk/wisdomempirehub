@@ -32,22 +32,22 @@ const Quotes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-zinc-300">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Quotes</h1>
-          <p className="text-muted-foreground text-lg mb-6">
+          <h1 className="font-bold font-wisdom mb-4 text-zinc-950 text-4xl text-center">Quotes</h1>
+          <p className="text-lg mb-6 text-center text-blue-900">
             Inspiring words from notable figures and thinkers
           </p>
           
           {/* Search Bar */}
           <div className="max-w-md mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border" />
+            <div className="relative mx-0">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground mx-[240px]" />
+              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border mx-[240px]" />
             </div>
           </div>
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-950">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Quotes
@@ -77,10 +77,10 @@ const Quotes = () => {
               </div>)}
           </div> : filteredQuotes.length > 0 ? <>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-wisdom text-foreground mb-2">
+              <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
                 {activeSubcategory === 'all' ? 'All Quotes' : `${activeSubcategory} Quotes`}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-zinc-600">
                 {filteredQuotes.length} {filteredQuotes.length === 1 ? 'quote' : 'quotes'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>

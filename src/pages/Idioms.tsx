@@ -32,22 +32,22 @@ const Idioms = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-zinc-200">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Idioms</h1>
-          <p className="text-muted-foreground text-lg mb-6">
+          <h1 className="font-bold font-wisdom mb-4 text-zinc-950 text-5xl text-center">Idioms</h1>
+          <p className="text-lg mb-6 text-blue-800 text-center">
             Cultural expressions with meanings that differ from literal interpretation
           </p>
           
           {/* Search Bar */}
           <div className="max-w-md mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border" />
+            <div className="relative mx-[20px]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground mx-[240px] my-0" />
+              <Input placeholder="Search any proverb, idiom, quote, or simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-card border-border mx-[236px]" />
             </div>
           </div>
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-neutral-950">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Idioms
@@ -77,7 +77,7 @@ const Idioms = () => {
               </div>)}
           </div> : filteredIdioms.length > 0 ? <>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-wisdom text-foreground mb-2">
+              <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-3xl">
                 {activeSubcategory === 'all' ? 'All Idioms' : `${activeSubcategory} Idioms`}
               </h2>
               <p className="text-muted-foreground">
