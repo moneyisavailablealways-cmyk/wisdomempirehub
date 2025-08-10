@@ -82,7 +82,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
             {proverbOfDay && <Card className="border-wisdom-blue/20">
-                <CardHeader>
+                <CardHeader className="bg-zinc-400">
                   <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950">
                     <BookOpen className="h-5 w-5" />
                     Proverb of the Day
