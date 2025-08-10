@@ -80,7 +80,7 @@ const Similes = () => {
               <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-4xl">
                 {activeSubcategory === 'all' ? 'All Similes' : `${activeSubcategory} Similes`}
               </h2>
-              <p className="text-gray-950">
+              <p className="text-zinc-700">
                 {filteredSimiles.length} {filteredSimiles.length === 1 ? 'simile' : 'similes'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
