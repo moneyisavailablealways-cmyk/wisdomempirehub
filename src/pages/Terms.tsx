@@ -51,7 +51,7 @@ const Terms = () => {
 
           <div className="space-y-8 bg-slate-900">
             {/* Introduction */}
-            <Card>
+            <Card className="">
               <CardContent className="p-8 bg-teal-950">
                 <p className="text-muted-foreground">
                   Welcome to [Your Website/App Name]! By accessing or using our services, you agree to the following terms:
