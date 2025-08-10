@@ -30,10 +30,10 @@ const Idioms = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-zinc-200">
+      <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
           <h1 className="font-bold font-wisdom mb-4 text-zinc-950 text-5xl text-center">Idioms</h1>
-          <p className="text-lg mb-6 text-blue-800 text-center">
+          <p className="text-lg mb-6 text-center text-gray-50">
             Cultural expressions with meanings that differ from literal interpretation
           </p>
           
@@ -47,7 +47,7 @@ const Idioms = () => {
 
           {/* Subcategory Navigation */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-neutral-950">Categories</h3>
+            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
             <div className="flex flex-wrap gap-2">
               <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Idioms
