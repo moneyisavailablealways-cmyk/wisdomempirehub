@@ -6,6 +6,14 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Quote } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 const subcategories = ['Life Advice', 'Motivation', 'Work & Business', 'Famous People'];
 const Quotes = () => {
   const {
@@ -15,12 +23,25 @@ const Quotes = () => {
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const quotes = items.filter(item => item.type === 'quote');
   const filteredQuotes = quotes.filter(item => {
     const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
     return matchesSearch && matchesSubcategory;
   });
+
+  // Reset to page 1 when search or filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeSubcategory]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentQuotes = filteredQuotes.slice(startIndex, endIndex);
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -87,8 +108,41 @@ const Quotes = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredQuotes.map(item => <WisdomCard key={item.id} item={item} />)}
+              {currentQuotes.map(item => <WisdomCard key={item.id} item={item} />)}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex flex-col items-center space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </p>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) setCurrentPage(currentPage - 1);
+                        }}
+                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                        }}
+                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
           </> : <div className="text-center py-16">
             <div className="max-w-md mx-auto space-y-4">
               <Quote className="h-16 w-16 text-muted-foreground mx-auto" />
