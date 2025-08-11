@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
+import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, MessageSquare } from 'lucide-react';
 import {
@@ -68,7 +69,10 @@ const Idioms = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="font-bold font-wisdom mb-4 text-zinc-950 text-5xl text-center">Idioms</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="font-bold font-wisdom text-zinc-950 text-5xl text-center">Idioms</h1>
+            <DownloadButton category="idioms" />
+          </div>
           <p className="text-lg mb-6 text-center text-gray-50">
             Cultural expressions with meanings that differ from literal interpretation
           </p>

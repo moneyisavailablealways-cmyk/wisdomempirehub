@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
+import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Quote } from 'lucide-react';
 import {
@@ -68,7 +69,10 @@ const Quotes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="text-4xl font-wisdom mb-4 text-center font-extrabold text-slate-950">Quotes</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-4xl font-wisdom text-center font-extrabold text-slate-950">Quotes</h1>
+            <DownloadButton category="quotes" />
+          </div>
           <p className="text-lg mb-6 text-center text-slate-300">
             Inspiring words from notable figures and thinkers
           </p>

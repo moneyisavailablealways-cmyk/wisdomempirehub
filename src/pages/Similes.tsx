@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
+import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Zap } from 'lucide-react';
 import {
@@ -68,7 +69,10 @@ const Similes = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="font-wisdom mb-4 text-gray-950 font-bold text-5xl mx-[17px] text-center">Similes</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="font-wisdom text-gray-950 font-bold text-5xl mx-[17px] text-center">Similes</h1>
+            <DownloadButton category="similes" />
+          </div>
           <p className="text-lg mb-6 text-center text-gray-50">Comparative phrases that use "like" or "as" to create vivid descriptions and imagery</p>
           
           {/* Search Bar */}

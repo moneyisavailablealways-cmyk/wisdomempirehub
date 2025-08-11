@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
+import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen } from 'lucide-react';
 import {
@@ -68,7 +69,10 @@ const Proverbs = () => {
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 bg-slate-500">
         <div className="mb-8">
-          <h1 className="font-wisdom mb-4 mx-[28px] text-center font-bold text-5xl text-gray-950">Proverbs</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="font-wisdom mx-[28px] text-center font-bold text-5xl text-gray-950">Proverbs</h1>
+            <DownloadButton category="proverbs" />
+          </div>
           <p className="text-lg mb-6 text-center text-zinc-50">
             Traditional sayings that convey wisdom through generations
           </p>
