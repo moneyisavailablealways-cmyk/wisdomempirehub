@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      donations: {
+        Row: {
+          amount: number
+          created_at: string
+          email: string
+          id: string
+          name: string
+          payment_method: string
+          status: string
+          stripe_session_id: string | null
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          payment_method: string
+          status?: string
+          stripe_session_id?: string | null
+          tier: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          payment_method?: string
+          status?: string
+          stripe_session_id?: string | null
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       idioms: {
         Row: {
           audio_voice_type: string | null
