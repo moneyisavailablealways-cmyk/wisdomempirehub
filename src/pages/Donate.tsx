@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Globe, BookOpen, Users, Star, CreditCard, Wallet, ArrowLeft, Download, CheckCircle } from 'lucide-react';
+import { DonationForm } from '@/components/DonationForm';
 const Donate = () => {
-  const [currentSection, setCurrentSection] = useState<'initial' | 'tiers' | 'payment' | 'thankyou'>('initial');
+  const [currentSection, setCurrentSection] = useState<'initial' | 'tiers' | 'payment' | 'form' | 'thankyou'>('initial');
   const [selectedTier, setSelectedTier] = useState<{ name: string; amount: string; description: string } | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'stripe' | 'paypal' | 'crypto' | null>(null);
 
   const donationTiers = [
     {
@@ -48,8 +50,14 @@ const Donate = () => {
     setCurrentSection('payment');
   };
 
-  const handlePaymentComplete = () => {
-    setCurrentSection('thankyou');
+  const handlePaymentMethodSelect = (method: 'stripe' | 'paypal' | 'crypto') => {
+    setSelectedPaymentMethod(method);
+    setCurrentSection('form');
+  };
+
+  const handleDonationSuccess = (donationId: string) => {
+    // Redirect to success page
+    window.location.href = `/donate/success?donation_id=${donationId}`;
   };
 
   const handleBackToTiers = () => {
@@ -58,6 +66,10 @@ const Donate = () => {
 
   const handleBackToInitial = () => {
     setCurrentSection('initial');
+  };
+
+  const handleBackToPayment = () => {
+    setCurrentSection('payment');
   };
 
   const renderInitialSection = () => (
@@ -225,7 +237,7 @@ const Donate = () => {
 
       <div className="max-w-md mx-auto space-y-4">
         <Card className="border border-ocean-blue/20 hover:border-ocean-blue/40 transition-colors cursor-pointer">
-          <CardContent className="p-6 flex items-center justify-between" onClick={handlePaymentComplete}>
+          <CardContent className="p-6 flex items-center justify-between" onClick={() => handlePaymentMethodSelect('stripe')}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <CreditCard className="h-6 w-6 text-blue-600" />
@@ -239,7 +251,7 @@ const Donate = () => {
         </Card>
 
         <Card className="border border-ocean-teal/20 hover:border-ocean-teal/40 transition-colors cursor-pointer">
-          <CardContent className="p-6 flex items-center justify-between" onClick={handlePaymentComplete}>
+          <CardContent className="p-6 flex items-center justify-between" onClick={() => handlePaymentMethodSelect('paypal')}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <div className="h-6 w-6 bg-gradient-to-r from-blue-600 to-blue-800 rounded flex items-center justify-center text-white font-bold text-xs">PP</div>
@@ -253,7 +265,7 @@ const Donate = () => {
         </Card>
 
         <Card className="border border-ocean-coral/20 hover:border-ocean-coral/40 transition-colors cursor-pointer">
-          <CardContent className="p-6 flex items-center justify-between" onClick={handlePaymentComplete}>
+          <CardContent className="p-6 flex items-center justify-between" onClick={() => handlePaymentMethodSelect('crypto')}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <Wallet className="h-6 w-6 text-orange-600" />
@@ -268,6 +280,21 @@ const Donate = () => {
       </div>
     </div>
   );
+
+  const renderFormSection = () => {
+    if (!selectedTier || !selectedPaymentMethod) {
+      return null;
+    }
+
+    return (
+      <DonationForm
+        tier={selectedTier}
+        paymentMethod={selectedPaymentMethod}
+        onBack={handleBackToPayment}
+        onSuccess={handleDonationSuccess}
+      />
+    );
+  };
 
   const renderThankYouSection = () => (
     <div className="text-center space-y-8">
@@ -330,6 +357,7 @@ const Donate = () => {
           {currentSection === 'initial' && renderInitialSection()}
           {currentSection === 'tiers' && renderTiersSection()}
           {currentSection === 'payment' && renderPaymentSection()}
+          {currentSection === 'form' && renderFormSection()}
           {currentSection === 'thankyou' && renderThankYouSection()}
         </div>
       </div>
