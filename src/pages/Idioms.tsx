@@ -6,7 +6,7 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, MessageSquare } from 'lucide-react';
-const subcategories = ['Success', 'Relationship', 'Emotions', 'Work', 'Time', 'Friendship'];
+const subcategories = ['Success', 'Relationship', 'Emotions', 'Work', 'Time', 'Friendship', 'Life'];
 const Idioms = () => {
   const {
     items,

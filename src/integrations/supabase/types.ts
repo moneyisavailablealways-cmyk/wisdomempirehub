@@ -18,6 +18,51 @@ export type Database = {
         Row: {
           audio_voice_type: string | null
           bg_style: string | null
+          created_at: string | null
+          example: string | null
+          id: string
+          meaning: string | null
+          origin: string | null
+          subcategory: string | null
+          text: string | null
+          type: string | null
+          user_id: string | null
+          video_url: string | null
+        }
+        Insert: {
+          audio_voice_type?: string | null
+          bg_style?: string | null
+          created_at?: string | null
+          example?: string | null
+          id?: string
+          meaning?: string | null
+          origin?: string | null
+          subcategory?: string | null
+          text?: string | null
+          type?: string | null
+          user_id?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          audio_voice_type?: string | null
+          bg_style?: string | null
+          created_at?: string | null
+          example?: string | null
+          id?: string
+          meaning?: string | null
+          origin?: string | null
+          subcategory?: string | null
+          text?: string | null
+          type?: string | null
+          user_id?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      idiomss: {
+        Row: {
+          audio_voice_type: string | null
+          bg_style: string | null
           created_at: string
           example: string | null
           id: string

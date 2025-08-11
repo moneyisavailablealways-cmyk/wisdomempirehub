@@ -6,7 +6,7 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Zap } from 'lucide-react';
-const subcategories = ['Emotion'];
+const subcategories = ['Emotion', 'People', 'Animals', 'Nature', 'Behavior', 'Appearance'];
 const Similes = () => {
   const {
     items,
