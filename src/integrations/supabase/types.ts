@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      donation_tiers: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          stripe_link: string
+          tier_name: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          stripe_link: string
+          tier_name: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          stripe_link?: string
+          tier_name?: string
+        }
+        Relationships: []
+      }
       donations: {
         Row: {
           amount: number
@@ -24,7 +48,7 @@ export type Database = {
           payment_method: string
           status: string
           stripe_session_id: string | null
-          tier: string
+          tier_id: string | null
           updated_at: string
         }
         Insert: {
@@ -36,7 +60,7 @@ export type Database = {
           payment_method: string
           status?: string
           stripe_session_id?: string | null
-          tier: string
+          tier_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -48,10 +72,18 @@ export type Database = {
           payment_method?: string
           status?: string
           stripe_session_id?: string | null
-          tier?: string
+          tier_id?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "donations_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "donation_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       idioms: {
         Row: {
