@@ -25,18 +25,20 @@ const Index = () => {
   const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
   const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
 
+  // Filter all items based on search term
+  const filteredItems = items.filter(item => {
+    if (!searchTerm.trim()) return false;
+    const searchLower = searchTerm.toLowerCase();
+    return item.text.toLowerCase().includes(searchLower) ||
+           item.origin.toLowerCase().includes(searchLower) ||
+           item.subcategory.toLowerCase().includes(searchLower);
+  });
+
   // Most viewed (simulate with reverse chronological order)
   const mostViewed = [...items].reverse().slice(0, 6);
 
   // Recently added (latest items)
   const recentlyAdded = [...items].slice(-6);
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      // For now, we'll filter and show results here
-      // In a real app, this would navigate to a search results page
-    }
-  };
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -64,22 +66,51 @@ const Index = () => {
             </div>
             
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="w-full max-w-2xl mx-auto px-4 sm:px-0">
+            <div className="w-full max-w-2xl mx-auto px-4 sm:px-0">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold bg-green-50" />
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Daily Content Sections */}
+      {/* Search Results or Daily Content Sections */}
       <section className="container mx-auto px-4 py-12">
-        <div className="space-y-12 bg-slate-600">
-          
-          {/* Daily Items */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {searchTerm.trim() ? (
+          /* Search Results */
+          <div className="space-y-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold font-wisdom mb-2">Search Results</h2>
+              <p className="text-muted-foreground text-lg">
+                {filteredItems.length} {filteredItems.length === 1 ? 'result' : 'results'} found for "{searchTerm}"
+              </p>
+            </div>
+            
+            {filteredItems.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredItems.map(item => (
+                  <WisdomCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="max-w-md mx-auto space-y-4">
+                  <Search className="h-16 w-16 text-muted-foreground mx-auto" />
+                  <h3 className="text-xl font-semibold">No Results Found</h3>
+                  <p className="text-muted-foreground">
+                    Try different keywords or browse our categories below.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-12 bg-slate-600">
+            
+            {/* Daily Items */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Proverb of the Day */}
             {proverbOfDay && <Card className="border-wisdom-blue/20 bg-gray-900">
                 <CardHeader className="bg-zinc-300">
@@ -178,7 +209,8 @@ const Index = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+          </div>
+        )}
       </section>
     </div>;
 };
