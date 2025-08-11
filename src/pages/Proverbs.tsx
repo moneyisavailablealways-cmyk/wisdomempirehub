@@ -26,11 +26,26 @@ const Proverbs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const proverbs = items.filter(item => item.type === 'proverb');
-  const filteredProverbs = proverbs.filter(item => {
-    const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
-    return matchesSearch && matchesSubcategory;
-  });
+  
+  // Apply filters in order: category first, then search, then sort
+  const filteredProverbs = proverbs
+    .filter(item => {
+      // 1. Apply category filter first
+      const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
+      return matchesSubcategory;
+    })
+    .filter(item => {
+      // 2. Apply search filter second (only on category-filtered results)
+      if (!searchTerm) return true;
+      const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSearch;
+    })
+    .sort((a, b) => {
+      // 3. Sort consistently by id for stable pagination
+      return a.id.localeCompare(b.id);
+    });
 
   // Reset to page 1 when search or filter changes
   React.useEffect(() => {
@@ -113,7 +128,7 @@ const Proverbs = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4">
+              <div className="mt-8 flex flex-col items-center space-y-4 md:relative md:bottom-auto fixed bottom-4 left-0 right-0 z-10 md:z-auto bg-background/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-4 md:p-0 border-t md:border-t-0">
                 <p className="text-sm text-muted-foreground">
                   Page {currentPage} of {totalPages}
                 </p>
@@ -148,7 +163,9 @@ const Proverbs = () => {
               <BookOpen className="h-16 w-16 text-muted-foreground mx-auto" />
               <h3 className="text-xl font-semibold text-foreground">No Proverbs Found</h3>
               <p className="text-muted-foreground">
-                {searchTerm ? `No results found for "${searchTerm}". Try a different search term.` : 'No proverbs available yet.'}
+                {searchTerm || activeSubcategory !== 'all' 
+                  ? `No results found. Try a different keyword or category.`
+                  : 'No proverbs available yet.'}
               </p>
             </div>
           </div>}
