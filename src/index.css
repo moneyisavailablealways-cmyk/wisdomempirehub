@@ -18,49 +18,49 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 84% 5%;
 
-    /* Ocean blue as primary */
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    /* Wisdom Empire Gold as primary */
+    --primary: 45 100% 65%;
+    --primary-foreground: 220 39% 11%;
 
-    /* Teal for secondary */
-    --secondary: 172 66% 50%;
-    --secondary-foreground: 210 40% 98%;
+    /* Navy for secondary */
+    --secondary: 220 39% 18%;
+    --secondary-foreground: 45 100% 85%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 220 20% 47%;
 
-    /* Coral for accent */
-    --accent: 346 87% 43%;
-    --accent-foreground: 210 40% 98%;
+    /* Light gold for accent */
+    --accent: 45 100% 70%;
+    --accent-foreground: 220 39% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 221 83% 53%;
+    --ring: 45 100% 65%;
 
-    /* Modern design tokens */
-    --ocean-blue: 221 83% 53%;
-    --ocean-teal: 172 66% 50%;
-    --ocean-coral: 346 87% 43%;
-    --ocean-navy: 225 39% 21%;
-    --ocean-mint: 164 76% 74%;
-    --ocean-slate: 215 16% 47%;
+    /* Wisdom Empire design tokens */
+    --wisdom-blue: 220 39% 11%;
+    --wisdom-gold: 45 100% 65%;
+    --wisdom-cultural: 45 95% 75%;
+    --wisdom-navy: 220 39% 18%;
+    --wisdom-light-gold: 45 100% 80%;
+    --wisdom-dark-blue: 220 50% 8%;
     
-    /* Contemporary gradients */
-    --gradient-wisdom: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 50%, hsl(346 87% 43%) 100%);
-    --gradient-cultural: linear-gradient(135deg, hsl(172 66% 50%) 0%, hsl(164 76% 74%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 30%, hsl(346 87% 43%) 70%, hsl(164 76% 74%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
-    --gradient-nav: linear-gradient(90deg, hsl(221 83% 53%) 0%, hsl(172 66% 50%) 100%);
+    /* Wisdom Empire gradients */
+    --gradient-wisdom: linear-gradient(135deg, hsl(220 39% 11%) 0%, hsl(45 100% 65%) 100%);
+    --gradient-cultural: linear-gradient(135deg, hsl(45 100% 70%) 0%, hsl(45 95% 75%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220 39% 11%) 0%, hsl(220 39% 18%) 30%, hsl(45 100% 65%) 70%, hsl(45 100% 80%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(45 100% 98%) 100%);
+    --gradient-nav: linear-gradient(90deg, hsl(220 39% 11%) 0%, hsl(45 100% 65%) 100%);
     
-    /* Modern shadows */
-    --shadow-wisdom: 0 10px 40px -10px hsl(221 83% 53% / 0.2);
-    --shadow-cultural: 0 8px 30px -8px hsl(172 66% 50% / 0.15);
-    --shadow-elevated: 0 25px 80px -15px hsl(221 83% 53% / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(215 16% 47% / 0.1);
-    --shadow-card-hover: 0 8px 35px -8px hsl(221 83% 53% / 0.2);
+    /* Wisdom Empire shadows */
+    --shadow-wisdom: 0 10px 40px -10px hsl(45 100% 65% / 0.2);
+    --shadow-cultural: 0 8px 30px -8px hsl(45 95% 75% / 0.15);
+    --shadow-elevated: 0 25px 80px -15px hsl(220 39% 11% / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(220 20% 47% / 0.1);
+    --shadow-card-hover: 0 8px 35px -8px hsl(45 100% 65% / 0.2);
     
     /* Clean typography system */
     --font-wisdom: 'Inter', system-ui, sans-serif;
@@ -86,26 +86,26 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 50% 8%;
+    --foreground: 45 100% 85%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 39% 11%;
+    --card-foreground: 45 100% 85%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 39% 11%;
+    --popover-foreground: 45 100% 85%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 45 100% 65%;
+    --primary-foreground: 220 39% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 39% 18%;
+    --secondary-foreground: 45 100% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 39% 18%;
+    --muted-foreground: 45 60% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 100% 70%;
+    --accent-foreground: 220 39% 8%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
