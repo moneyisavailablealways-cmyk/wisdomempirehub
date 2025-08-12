@@ -30,33 +30,32 @@ const App = () => (
       <TooltipProvider>
         <AuthProvider>
           <SettingsProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <div className="min-h-screen bg-background flex flex-col">
-              <AppNavigation />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/proverbs" element={<Proverbs />} />
-                  <Route path="/quotes" element={<Quotes />} />
-                <Route path="/idioms" element={<Idioms />} />
-                <Route path="/similes" element={<Similes />} />
-                <Route path="/donate" element={<Donate />} />
-                <Route path="/donate/success" element={<DonateSuccess />} />
-                <Route path="/contact" element={<Contact />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/faq" element={<FAQ />} />
-                  <Route path="/auth" element={<Auth />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </BrowserRouter>
-        </SettingsProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="min-h-screen bg-background flex flex-col">
+                <AppNavigation />
+                <main className="flex-1">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/proverbs" element={<Proverbs />} />
+                    <Route path="/quotes" element={<Quotes />} />
+                    <Route path="/idioms" element={<Idioms />} />
+                    <Route path="/similes" element={<Similes />} />
+                    <Route path="/donate" element={<Donate />} />
+                    <Route path="/donate/success" element={<DonateSuccess />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </BrowserRouter>
+          </SettingsProvider>
         </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
