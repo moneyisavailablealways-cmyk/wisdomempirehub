@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { CreditCard, User, Mail, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-
 interface DonationFormProps {
   tier: {
     name: string;
@@ -17,37 +16,40 @@ interface DonationFormProps {
   onBack: () => void;
   onSuccess: (donationId: string) => void;
 }
-
-export const DonationForm = ({ tier, paymentMethod, onBack, onSuccess }: DonationFormProps) => {
+export const DonationForm = ({
+  tier,
+  paymentMethod,
+  onBack,
+  onSuccess
+}: DonationFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    email: ''
   });
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.name || !formData.email) {
       toast.error('Please fill in all required fields');
       return;
     }
-
     setLoading(true);
-
     try {
       const donationData = {
         ...formData,
         tier: tier.name,
-        amount: tier.amount,
+        amount: tier.amount
       };
-
-      const { data, error } = await supabase.functions.invoke('create-donation-payment', {
-        body: { donationData, paymentMethod }
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('create-donation-payment', {
+        body: {
+          donationData,
+          paymentMethod
+        }
       });
-
       if (error) throw error;
-
       if (data.success && data.paymentUrl) {
         // For Stripe, redirect to Stripe Checkout
         if (paymentMethod === 'stripe') {
@@ -66,30 +68,38 @@ export const DonationForm = ({ tier, paymentMethod, onBack, onSuccess }: Donatio
       setLoading(false);
     }
   };
-
   const getPaymentMethodDisplay = () => {
     switch (paymentMethod) {
       case 'stripe':
-        return { name: 'Credit Card', icon: CreditCard, description: 'Secure payment via Stripe' };
+        return {
+          name: 'Credit Card',
+          icon: CreditCard,
+          description: 'Secure payment via Stripe'
+        };
       case 'paypal':
-        return { name: 'PayPal', icon: CreditCard, description: 'Pay with your PayPal account' };
+        return {
+          name: 'PayPal',
+          icon: CreditCard,
+          description: 'Pay with your PayPal account'
+        };
       case 'crypto':
-        return { name: 'Cryptocurrency', icon: CreditCard, description: 'Pay with crypto wallet' };
+        return {
+          name: 'Cryptocurrency',
+          icon: CreditCard,
+          description: 'Pay with crypto wallet'
+        };
       default:
-        return { name: 'Payment', icon: CreditCard, description: 'Secure payment' };
+        return {
+          name: 'Payment',
+          icon: CreditCard,
+          description: 'Secure payment'
+        };
     }
   };
-
   const paymentDisplay = getPaymentMethodDisplay();
-
-  return (
-    <div className="max-w-md mx-auto space-y-6">
+  return <div className="max-w-md mx-auto space-y-6">
       <div className="text-center">
-        <Button 
-          variant="ghost" 
-          onClick={onBack}
-          className="mb-4 text-ocean-blue hover:text-ocean-teal"
-        >
+        <Button variant="ghost" onClick={onBack} className="mb-4 text-ocean-blue hover:text-ocean-teal">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Payment Methods
         </Button>
@@ -104,50 +114,36 @@ export const DonationForm = ({ tier, paymentMethod, onBack, onSuccess }: Donatio
         </CardHeader>
         <CardContent className="p-6">
           <div className="mb-4 p-4 bg-ocean-blue/5 rounded-lg">
-            <h3 className="font-semibold text-ocean-blue">{tier.name}</h3>
-            <p className="text-2xl font-bold text-ocean-teal">{tier.amount}</p>
-            <p className="text-sm text-muted-foreground">{tier.description}</p>
+            <h3 className="font-semibold text-ocean-blue text-zinc-950 text-2xl">{tier.name}</h3>
+            <p className="text-2xl font-bold text-ocean-teal text-green-900">{tier.amount}</p>
+            <p className="text-sm text-red-950">{tier.description}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="name" className="flex items-center gap-2">
+              <Label htmlFor="name" className="flex items-center gap-2 bg-zinc-950">
                 <User className="h-4 w-4" />
                 Full Name *
               </Label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Enter your full name"
-                required
-                className="mt-1"
-              />
+              <Input id="name" type="text" value={formData.name} onChange={e => setFormData({
+              ...formData,
+              name: e.target.value
+            })} placeholder="Enter your full name" required className="mt-1" />
             </div>
 
             <div>
-              <Label htmlFor="email" className="flex items-center gap-2">
+              <Label htmlFor="email" className="flex items-center gap-2 bg-zinc-950">
                 <Mail className="h-4 w-4" />
                 Email Address *
               </Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Enter your email address"
-                required
-                className="mt-1"
-              />
+              <Input id="email" type="email" value={formData.email} onChange={e => setFormData({
+              ...formData,
+              email: e.target.value
+            })} placeholder="Enter your email address" required className="mt-1" />
             </div>
 
             <div className="pt-4">
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue" disabled={loading}>
                 {loading ? 'Processing...' : `Donate ${tier.amount} via ${paymentDisplay.name}`}
               </Button>
             </div>
@@ -158,6 +154,5 @@ export const DonationForm = ({ tier, paymentMethod, onBack, onSuccess }: Donatio
           </form>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
