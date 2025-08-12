@@ -56,7 +56,7 @@ export function AppNavigation() {
             <div className="flex items-center gap-8">
               <NavLink to="/" className="flex items-center gap-2">
                 <div className="text-2xl font-bold font-wisdom text-wisdom-blue">
-                  Wisdom 
+                  Wisdom Empire
                 </div>
               </NavLink>
               
