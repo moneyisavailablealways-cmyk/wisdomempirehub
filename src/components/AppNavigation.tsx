@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { SettingsMenu } from '@/components/SettingsMenu';
+import { AuthButton } from '@/components/AuthButton';
 import { 
   Home, 
   BookOpen, 
@@ -55,8 +56,13 @@ export function AppNavigation() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <NavLink to="/" className="flex items-center gap-2">
-                <div className="text-2xl font-bold font-wisdom text-wisdom-blue">
-                  Wisdom
+                <img 
+                  src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" 
+                  alt="Wisdom Empire" 
+                  className="h-8 w-8 object-contain"
+                />
+                <div className="text-2xl font-bold font-wisdom text-wisdom-gold">
+                  Wisdom Empire
                 </div>
               </NavLink>
               
@@ -67,7 +73,10 @@ export function AppNavigation() {
               </div>
             </div>
             
-            <SettingsMenu />
+            <div className="flex items-center gap-2">
+              <SettingsMenu />
+              <AuthButton />
+            </div>
           </div>
         </div>
       </nav>
@@ -77,13 +86,19 @@ export function AppNavigation() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <NavLink to="/" className="flex items-center gap-2">
-              <div className="text-xl font-bold font-wisdom text-wisdom-blue">
-                Wisdom
+              <img 
+                src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" 
+                alt="Wisdom Empire" 
+                className="h-6 w-6 object-contain"
+              />
+              <div className="text-xl font-bold font-wisdom text-wisdom-gold">
+                Wisdom Empire
               </div>
             </NavLink>
             
             <div className="flex items-center gap-2">
               <SettingsMenu />
+              <AuthButton />
               <Button
                 variant="ghost"
                 size="sm"
