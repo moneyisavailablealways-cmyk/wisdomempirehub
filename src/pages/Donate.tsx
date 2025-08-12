@@ -147,7 +147,7 @@ const Donate = () => {
           </CardContent>
         </Card>
 
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground bg-cyan-950">
           <p>
             Wisdom Empire is committed to transparency. All donations go directly towards 
             platform maintenance, content development, and educational initiatives.
