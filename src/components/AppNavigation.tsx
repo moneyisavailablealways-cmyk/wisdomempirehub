@@ -55,13 +55,8 @@ export function AppNavigation() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <NavLink to="/" className="flex items-center gap-2">
-                <img 
-                  src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" 
-                  alt="Wisdom Empire Logo" 
-                  className="h-10 w-10"
-                />
-                <div className="text-2xl font-bold font-wisdom text-wisdom-gold">
-                  Wisdom Empire
+                <div className="text-2xl font-bold font-wisdom text-wisdom-blue">
+                  Wisdom >>
                 </div>
               </NavLink>
               
@@ -82,12 +77,7 @@ export function AppNavigation() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <NavLink to="/" className="flex items-center gap-2">
-              <img 
-                src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" 
-                alt="Wisdom Empire Logo" 
-                className="h-8 w-8"
-              />
-              <div className="text-xl font-bold font-wisdom text-wisdom-gold">
+              <div className="text-xl font-bold font-wisdom text-wisdom-blue">
                 Wisdom Empire
               </div>
             </NavLink>
