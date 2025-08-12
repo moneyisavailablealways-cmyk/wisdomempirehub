@@ -52,6 +52,7 @@ export function WisdomCard({
   const [showMeaning, setShowMeaning] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isPlayingMeaningAudio, setIsPlayingMeaningAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
@@ -127,9 +128,56 @@ export function WisdomCard({
       });
     }
   };
+  const handlePlayMeaningAudio = () => {
+    if (isPlayingMeaningAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingMeaningAudio(false);
+      return;
+    }
+    
+    if (!explanation) return;
+    
+    try {
+      setIsPlayingMeaningAudio(true);
+      const utterance = new SpeechSynthesisUtterance(explanation);
+      
+      // Use standard voice settings for meaning
+      utterance.pitch = 1.0;
+      utterance.rate = 0.9; // Slightly slower for better comprehension
+      
+      utterance.onend = () => {
+        setIsPlayingMeaningAudio(false);
+      };
+      
+      utterance.onerror = () => {
+        setIsPlayingMeaningAudio(false);
+        toast({
+          title: "Audio Error",
+          description: "Failed to play meaning audio",
+          variant: "destructive"
+        });
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error('Error playing meaning audio:', error);
+      setIsPlayingMeaningAudio(false);
+      toast({
+        title: "Audio Error",
+        description: "Failed to play meaning audio",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleShowMeaning = async () => {
     if (showMeaning) {
       setShowMeaning(false);
+      // Stop meaning audio when hiding
+      if (isPlayingMeaningAudio) {
+        window.speechSynthesis.cancel();
+        setIsPlayingMeaningAudio(false);
+      }
       return;
     }
     if (explanation) {
@@ -199,8 +247,20 @@ export function WisdomCard({
           
           {/* Inline meaning section */}
           {showMeaning && explanation && <div className="bg-muted/30 rounded-lg p-4 border-l-4 border-blue-500">
-              <div className="text-sm text-muted-foreground leading-relaxed">
-                {explanation}
+              <div className="flex items-start gap-2">
+                <div className="text-sm text-muted-foreground leading-relaxed flex-1">
+                  {explanation}
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handlePlayMeaningAudio} 
+                  disabled={isPlayingMeaningAudio}
+                  title={isPlayingMeaningAudio ? 'Stop meaning audio' : 'Play meaning audio'}
+                  className="shrink-0"
+                >
+                  {isPlayingMeaningAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                </Button>
               </div>
             </div>}
           
