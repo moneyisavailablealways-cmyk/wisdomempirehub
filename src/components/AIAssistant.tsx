@@ -149,7 +149,7 @@ export function AIAssistant({
       </Button>;
   }
   return <div className={`transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 animate-fade-in' : 'opacity-0'}`} ref={responseRef}>
-      <Card className="border-wisdom-gold/20 bg-wisdom-gold/5">
+      <Card className="border-wisdom-gold/20 bg-violet-300">
         <CardContent className="p-6 bg-emerald-600 rounded-3xl my-0 py-0 px-0 relative">
           <div className="flex items-center justify-between mb-4 my-[15px] mx-[26px] rounded-none bg-emerald-600">
             <div className="flex items-center gap-2">
