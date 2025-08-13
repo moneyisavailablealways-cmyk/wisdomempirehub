@@ -3,10 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Quote, MessageSquare, Zap, Shield, Eye, Lock, UserCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const Privacy = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* SEO Meta Tags */}
       <title>Privacy Policy - Wisdom Empire</title>
       <meta name="description" content="Privacy Policy for Wisdom Empire. Learn how we collect, use, and protect your personal information while using our cultural knowledge platform." />
@@ -54,7 +52,7 @@ const Privacy = () => {
           <div className="space-y-8">
             {/* Introduction */}
             <Card>
-              <CardContent className="p-8">
+              <CardContent className="p-8 bg-slate-900">
                 <p className="text-muted-foreground mb-4">
                   Your privacy matters to us. This Privacy Policy explains how we collect, use, and protect your personal information.
                 </p>
@@ -63,13 +61,13 @@ const Privacy = () => {
 
             {/* Information We Collect */}
             <Card>
-              <CardHeader>
+              <CardHeader className="bg-slate-900">
                 <CardTitle className="flex items-center gap-2">
                   <Eye className="h-5 w-5 text-wisdom-gold" />
                   Information We Collect
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-slate-900">
                 <ul className="space-y-3 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-wisdom-gold">•</span>
@@ -85,13 +83,13 @@ const Privacy = () => {
 
             {/* How We Use Information */}
             <Card>
-              <CardHeader>
+              <CardHeader className="bg-slate-900">
                 <CardTitle className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-wisdom-gold" />
                   How We Use Your Information
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-slate-900">
                 <ul className="space-y-3 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-wisdom-gold">•</span>
@@ -111,13 +109,13 @@ const Privacy = () => {
 
             {/* Sharing Information */}
             <Card>
-              <CardHeader>
+              <CardHeader className="bg-slate-900">
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-wisdom-gold" />
                   Sharing of Information
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-slate-900">
                 <div className="space-y-4 text-muted-foreground">
                   <p>We do not sell your personal data. We may share information only:</p>
                   <ul className="space-y-3">
@@ -136,13 +134,13 @@ const Privacy = () => {
 
             {/* Your Choices */}
             <Card>
-              <CardHeader>
+              <CardHeader className="bg-slate-900">
                 <CardTitle className="flex items-center gap-2">
                   <Lock className="h-5 w-5 text-wisdom-gold" />
                   Your Choices
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-slate-900">
                 <ul className="space-y-3 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-wisdom-gold">•</span>
@@ -158,8 +156,6 @@ const Privacy = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Privacy;
