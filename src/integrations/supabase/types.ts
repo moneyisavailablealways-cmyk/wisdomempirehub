@@ -295,6 +295,27 @@ export type Database = {
         }
         Relationships: []
       }
+      simile: {
+        Row: {
+          id: string | null
+          Origin: string | null
+          Proverb: string | null
+          subcategory: string | null
+        }
+        Insert: {
+          id?: string | null
+          Origin?: string | null
+          Proverb?: string | null
+          subcategory?: string | null
+        }
+        Update: {
+          id?: string | null
+          Origin?: string | null
+          Proverb?: string | null
+          subcategory?: string | null
+        }
+        Relationships: []
+      }
       similes: {
         Row: {
           audio_voice_type: string | null
