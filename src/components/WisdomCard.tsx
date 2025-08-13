@@ -88,23 +88,23 @@ export function WisdomCard({
       setIsPlayingAudio(true);
       const utterance = new SpeechSynthesisUtterance(item.text);
 
-      // Configure voice settings based on audio_voice_type
+      // Configure voice settings based on audio_voice_type with consistent medium speed
       switch (item.audio_voice_type) {
         case 'child':
           utterance.pitch = 1.5;
-          utterance.rate = 1.1;
+          utterance.rate = 0.95; // Consistent medium speed
           break;
         case 'youth':
           utterance.pitch = 1.0;
-          utterance.rate = 1.0;
+          utterance.rate = 0.95; // Consistent medium speed
           break;
         case 'old':
           utterance.pitch = 0.8;
-          utterance.rate = 0.9;
+          utterance.rate = 0.9; // Slightly slower for old voice
           break;
         default:
           utterance.pitch = 1.0;
-          utterance.rate = 1.0;
+          utterance.rate = 0.95; // Consistent medium speed
       }
       utterance.onend = () => {
         setIsPlayingAudio(false);
@@ -141,9 +141,9 @@ export function WisdomCard({
       setIsPlayingMeaningAudio(true);
       const utterance = new SpeechSynthesisUtterance(explanation);
       
-      // Use standard voice settings for meaning
+      // Use standard voice settings for meaning with consistent speed
       utterance.pitch = 1.0;
-      utterance.rate = 0.9; // Slightly slower for better comprehension
+      utterance.rate = 0.95; // Consistent medium speed for better comprehension
       
       utterance.onend = () => {
         setIsPlayingMeaningAudio(false);
