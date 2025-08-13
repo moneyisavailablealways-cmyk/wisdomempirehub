@@ -78,7 +78,7 @@ const FAQ = () => {
 
           {/* FAQ Accordion */}
           <Card>
-            <CardContent className="p-8">
+            <CardContent className="p-8 bg-blue-800">
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map(faq => {
                 const IconComponent = faq.icon;
@@ -102,7 +102,7 @@ const FAQ = () => {
 
           {/* Contact Section */}
           <Card className="mt-8">
-            <CardContent className="p-8 text-center">
+            <CardContent className="p-8 text-center bg-zinc-600">
               <h3 className="text-xl font-semibold text-foreground mb-4">Still have questions?</h3>
               <p className="text-muted-foreground mb-6">
                 Can't find what you're looking for? Get in touch with our support team.
