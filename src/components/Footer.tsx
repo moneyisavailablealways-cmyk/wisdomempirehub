@@ -20,7 +20,7 @@ const Footer = () => {
   }, {
     name: "X (Twitter)",
     icon: Twitter,
-    url: "https://x.com",
+    url: "https://x.com/wisdomempirehub",
     color: "text-gray-900 dark:text-white"
   }, {
     name: "Telegram",
@@ -30,7 +30,7 @@ const Footer = () => {
   }, {
     name: "YouTube",
     icon: Youtube,
-    url: "https://youtube.com",
+    url: "https://youtube.com/wisdomempirehub",
     color: "text-red-600"
   }, {
     name: "TikTok",
@@ -40,7 +40,7 @@ const Footer = () => {
   }, {
     name: "Instagram",
     icon: Instagram,
-    url: "https://instagram.com",
+    url: "https://instagram.com/wisdomempirehb",
     color: "text-pink-600"
   }];
   const quickLinks = [{
