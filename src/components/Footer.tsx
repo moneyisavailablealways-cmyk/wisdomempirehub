@@ -25,7 +25,7 @@ const Footer = () => {
   }, {
     name: "Telegram",
     icon: Send,
-    url: "https://telegram.org",
+    url: "https://t.me/wisdomempire247",
     color: "text-blue-500"
   }, {
     name: "YouTube",
