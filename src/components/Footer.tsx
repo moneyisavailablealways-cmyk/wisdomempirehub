@@ -30,7 +30,7 @@ const Footer = () => {
   }, {
     name: "YouTube",
     icon: Youtube,
-    url: "https://www.youtube.com/@WisdomEmpirehub",
+    url: "https://youtube.com",
     color: "text-red-600"
   }, {
     name: "TikTok",
@@ -40,7 +40,7 @@ const Footer = () => {
   }, {
     name: "Instagram",
     icon: Instagram,
-    url: "https://instagram.com",
+    url: "@wisdomempirehub",
     color: "text-pink-600"
   }];
   const quickLinks = [{
