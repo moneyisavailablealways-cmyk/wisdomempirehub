@@ -10,8 +10,8 @@ const Footer = () => {
   }, {
     name: "WhatsApp",
     icon: MessageCircle,
-    url: "https://whatsapp.com",
-    color: "thttps://whatsapp.com/channel/0029VbApDxq6LwHgjLUyYU3Mext-green-600"
+    url: "thttps://whatsapp.com/channel/0029VbApDxq6LwHgjLUyYU3",
+    color: "Mext-green-600"
   }, {
     name: "IMO",
     icon: Phone,
@@ -40,7 +40,7 @@ const Footer = () => {
   }, {
     name: "Instagram",
     icon: Instagram,
-    url: "@wisdomempirehub",
+    url: "https://instagram.com",
     color: "text-pink-600"
   }];
   const quickLinks = [{
