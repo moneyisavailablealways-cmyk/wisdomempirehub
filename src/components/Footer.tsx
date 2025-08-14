@@ -32,12 +32,12 @@ const Footer = () => {
     icon: Youtube,
     url: "https://youtube.com",
     color: "text-red-600"
-  }, {/*
+  }, {
     name: "TikTok",
     icon: Camera,
     url: "https://tiktok.com",
     color: "text-black dark:text-white"
-  */}, {
+  }, {
     name: "Instagram",
     icon: Instagram,
     url: "https://instagram.com",
@@ -96,7 +96,7 @@ const Footer = () => {
             <div className="grid grid-cols-4 gap-3 max-w-48">
               {socialLinks.map(social => {
               const IconComponent = social.icon;
-              return <a key={social.name} {social.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-md border border-border hover:border-primary/50 hover:bg-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 group" aria-label={`Follow us on ${social.name}`}>
+              return <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-md border border-border hover:border-primary/50 hover:bg-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 group" aria-label={`Follow us on ${social.name}`}>
                     <IconComponent size={20} className={`${social.color} group-hover:scale-110 transition-transform duration-200`} />
                   </a>;
             })}
