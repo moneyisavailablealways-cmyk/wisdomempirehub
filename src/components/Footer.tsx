@@ -35,7 +35,7 @@ const Footer = () => {
   }, {
     name: "TikTok",
     icon: Camera,
-    url: "https://tiktok.com",
+    url: "https://www.tiktok.com/@wisdomempirehub?is_from_webapp=1&sender_device=pc",
     color: "text-black dark:text-white"
   }, {
     name: "Instagram",
