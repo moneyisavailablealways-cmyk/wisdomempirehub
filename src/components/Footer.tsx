@@ -20,7 +20,7 @@ const Footer = () => {
   }, {
     name: "X (Twitter)",
     icon: Twitter,
-    url: "https://x.com",
+    url: "@wisdomEmpireHub",
     color: "text-gray-900 dark:text-white"
   }, {
     name: "Telegram",
