@@ -10,7 +10,7 @@ const Footer = () => {
   }, {
     name: "WhatsApp",
     icon: MessageCircle,
-    url: "https://whatsapp.com/channel/0029VbApDxq6LwHgjLUyYU3M",
+    url: "https://whatsapp.com",
     color: "text-green-600"
   }, {
     name: "IMO",
@@ -96,7 +96,7 @@ const Footer = () => {
             <div className="grid grid-cols-4 gap-3 max-w-48">
               {socialLinks.map(social => {
               const IconComponent = social.icon;
-              return <a key={social.name} href="https://www.tiktok.com/@wisdomempirehub?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="p-2 rounded-md border border-border hover:border-primary/50 hover:bg-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 group" aria-label={`Follow us on ${social.name}`}>
+              return <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-md border border-border hover:border-primary/50 hover:bg-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 group" aria-label={`Follow us on ${social.name}`}>
                     <IconComponent size={20} className={`${social.color} group-hover:scale-110 transition-transform duration-200`} />
                   </a>;
             })}
