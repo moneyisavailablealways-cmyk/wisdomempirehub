@@ -47,6 +47,9 @@ export const DonationForm = ({
         body: {
           donationData,
           paymentMethod
+        },
+        headers: {
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ''}`
         }
       });
       if (error) throw error;

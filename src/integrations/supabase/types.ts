@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -50,6 +50,7 @@ export type Database = {
           stripe_session_id: string | null
           tier_id: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           amount: number
@@ -62,6 +63,7 @@ export type Database = {
           stripe_session_id?: string | null
           tier_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -74,6 +76,7 @@ export type Database = {
           stripe_session_id?: string | null
           tier_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -295,28 +298,52 @@ export type Database = {
         }
         Relationships: []
       }
-      simile: {
+      similes: {
         Row: {
-          id: string | null
-          Origin: string | null
-          Proverb: string | null
-          subcategory: string | null
+          audio_voice_type: string | null
+          bg_tyle: string | null
+          created_at: string
+          example: string | null
+          id: string
+          meaning: string | null
+          origin: string
+          subcategory: string
+          text: string
+          type: string
+          user_id: string | null
+          video_url: string | null
         }
         Insert: {
-          id?: string | null
-          Origin?: string | null
-          Proverb?: string | null
-          subcategory?: string | null
+          audio_voice_type?: string | null
+          bg_tyle?: string | null
+          created_at?: string
+          example?: string | null
+          id?: string
+          meaning?: string | null
+          origin: string
+          subcategory: string
+          text: string
+          type?: string
+          user_id?: string | null
+          video_url?: string | null
         }
         Update: {
-          id?: string | null
-          Origin?: string | null
-          Proverb?: string | null
-          subcategory?: string | null
+          audio_voice_type?: string | null
+          bg_tyle?: string | null
+          created_at?: string
+          example?: string | null
+          id?: string
+          meaning?: string | null
+          origin?: string
+          subcategory?: string
+          text?: string
+          type?: string
+          user_id?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
-      similes: {
+      similesrrrrrrrrrr: {
         Row: {
           audio_voice_type: string | null
           bg_style: string | null

@@ -16,6 +16,21 @@ serve(async (req) => {
   try {
     const { donationData, paymentMethod } = await req.json();
     
+    // Get user from auth header if present
+    const authHeader = req.headers.get("Authorization");
+    let userId = null;
+    
+    if (authHeader) {
+      const supabaseClient = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+      );
+      
+      const token = authHeader.replace("Bearer ", "");
+      const { data: { user } } = await supabaseClient.auth.getUser(token);
+      userId = user?.id || null;
+    }
+    
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2023-10-16",
@@ -47,7 +62,8 @@ serve(async (req) => {
         tier: donationData.tier,
         amount: amount / 100, // Store as decimal
         payment_method: paymentMethod,
-        status: 'pending'
+        status: 'pending',
+        user_id: userId // Associate with authenticated user if available
       })
       .select()
       .single();
