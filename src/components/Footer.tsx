@@ -34,7 +34,7 @@ const Footer = () => {
     color: "text-red-600"
   }, {
     name: "TikTok",
-    icon: Tiktok,
+    icon: Camera,
     url: "https://tiktok.com",
     color: "text-black dark:text-white"
   }, {
