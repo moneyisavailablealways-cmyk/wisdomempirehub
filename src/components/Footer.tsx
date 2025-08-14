@@ -40,7 +40,7 @@ const Footer = () => {
   }, {
     name: "Instagram",
     icon: Instagram,
-    url: "https://instagram.com/@wisdomempirehb",
+    url: "https://www.instagram.com/wisdomempirehb?igsh=MTVoZTN0empzN3NsNg==",
     color: "text-pink-600"
   }];
   const quickLinks = [{
