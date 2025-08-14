@@ -30,7 +30,7 @@ const Footer = () => {
   }, {
     name: "YouTube",
     icon: Youtube,
-    url: "https://youtube.com/wisdomempirehub",
+    url: "https://youtube.com/@wisdomempirehub",
     color: "text-red-600"
   }, {
     name: "TikTok",
