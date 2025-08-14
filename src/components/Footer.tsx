@@ -20,7 +20,7 @@ const Footer = () => {
   }, {
     name: "X (Twitter)",
     icon: Twitter,
-    url: "@wisdomEmpireHub",
+    url: "https://x.com",
     color: "text-gray-900 dark:text-white"
   }, {
     name: "Telegram",
@@ -30,7 +30,7 @@ const Footer = () => {
   }, {
     name: "YouTube",
     icon: Youtube,
-    url: "https://youtube.com",
+    url: "https://www.youtube.com/@WisdomEmpirehub",
     color: "text-red-600"
   }, {
     name: "TikTok",
