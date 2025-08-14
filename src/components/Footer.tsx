@@ -5,7 +5,7 @@ const Footer = () => {
   const socialLinks = [{
     name: "Facebook",
     icon: Facebook,
-    url: "https://facebook.com",
+    url: "https://www.facebook.com/share/16kqbQgqTn/",
     color: "text-blue-600"
   }, {
     name: "WhatsApp",
