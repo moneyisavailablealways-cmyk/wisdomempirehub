@@ -11,7 +11,7 @@ const Footer = () => {
     name: "WhatsApp",
     icon: MessageCircle,
     url: "https://whatsapp.com",
-    color: "text-green-600"
+    color: "thttps://whatsapp.com/channel/0029VbApDxq6LwHgjLUyYU3Mext-green-600"
   }, {
     name: "IMO",
     icon: Phone,
