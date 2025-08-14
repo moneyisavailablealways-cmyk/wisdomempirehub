@@ -15,7 +15,7 @@ const Footer = () => {
   }, {
     name: "IMO",
     icon: Phone,
-    url: "https://imo.im",
+    url: "https://profile.imo.im/profileshare/shr.AAAAAAAAAAAAAAAAAAAAAF6ys9nXMmzgL2PXSNiiJMBg4vjWZokSnW288QzFnRcH",
     color: "text-purple-600"
   }, {
     name: "X (Twitter)",
