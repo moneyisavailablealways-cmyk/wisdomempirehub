@@ -10,7 +10,7 @@ const Footer = () => {
   }, {
     name: "WhatsApp",
     icon: MessageCircle,
-    url: "=",
+    url: "https://whatsapp.com",
     color: "text-green-600"
   }, {
     name: "IMO",
