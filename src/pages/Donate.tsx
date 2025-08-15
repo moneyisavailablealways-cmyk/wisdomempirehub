@@ -167,7 +167,7 @@ const Donate = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {donationTiers.map((tier, index) => <Card key={index} className={`${tier.gradient} text-white border-0 hover:scale-105 transition-all duration-300 cursor-pointer shadow-card hover:shadow-card-hover`} onClick={() => handleTierSelect(tier)}>
-            <CardContent className="p-6 text-center">
+            <CardContent className="p-6 text-center bg-lime-900">
               <div className="mb-4">
                 <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
                 <div className="text-3xl font-bold mb-3">{tier.amount}</div>
