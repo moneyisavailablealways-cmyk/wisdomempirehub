@@ -15,7 +15,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-const subcategories = ['Emotion', 'People', 'Animals', 'Nature', 'Behavior', 'Appearance'];
+const predefinedCategories = ['animals', 'nature', 'emotions', 'people', 'behavior', 'appearance'];
+
 const Similes = () => {
   const {
     items,
@@ -23,41 +24,25 @@ const Similes = () => {
     error
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+
   const similes = items.filter(item => item.type === 'simile');
   
-  // Apply filters in order: category first, then search, then sort
-  const filteredSimiles = similes
-    .filter(item => {
-      // 1. Apply category filter first
-      const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
-      return matchesSubcategory;
-    })
-    .filter(item => {
-      // 2. Apply search filter second (only on category-filtered results)
-      if (!searchTerm) return true;
-      const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
-    })
-    .sort((a, b) => {
-      // 3. Sort consistently by id for stable pagination
-      return a.id.localeCompare(b.id);
-    });
+  // Group similes by predefined categories
+  const groupedSimiles = predefinedCategories.reduce((acc, category) => {
+    acc[category] = similes.filter(item => 
+      item.subcategory.toLowerCase().includes(category.toLowerCase()) ||
+      item.text.toLowerCase().includes(category.toLowerCase())
+    );
+    return acc;
+  }, {} as Record<string, typeof similes>);
 
-  // Reset to page 1 when search or filter changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeSubcategory]);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredSimiles.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentSimiles = filteredSimiles.slice(startIndex, endIndex);
+  // Apply search filter to all similes
+  const filteredSimiles = similes.filter(item => {
+    if (!searchTerm) return true;
+    return item.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+  });
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -83,94 +68,92 @@ const Similes = () => {
             </div>
           </div>
 
-          {/* Subcategory Navigation */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
-            <div className="flex flex-wrap gap-2">
-              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
-                All Similes
-                <Badge variant="secondary" className="ml-2">
-                  {similes.length}
-                </Badge>
-              </Button>
-              {subcategories.map(subcategory => {
-              const count = similes.filter(item => item.subcategory.toLowerCase() === subcategory.toLowerCase()).length;
-              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory(subcategory)}>
-                    {subcategory}
-                    <Badge variant="secondary" className="ml-2">
-                      {count}
-                    </Badge>
-                  </Button>;
-            })}
+          {/* Search Results Summary */}
+          {searchTerm && (
+            <div className="mb-6 text-center">
+              <p className="text-zinc-50">
+                Found {filteredSimiles.length} similes matching "{searchTerm}"
+              </p>
             </div>
-          </div>
+          )}
 
           {/* AI Assistant */}
           <AIAssistant category="Similes" />
         </div>
 
-        {loading ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => <div key={i} className="animate-pulse">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="animate-pulse">
                 <div className="bg-muted h-64 rounded-lg"></div>
-              </div>)}
-          </div> : filteredSimiles.length > 0 ? <>
-            <div className="text-center mb-8">
-              <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-4xl">
-                {activeSubcategory === 'all' ? 'All Similes' : `${activeSubcategory} Similes`}
-              </h2>
-              <p className="text-gray-950">
-                {filteredSimiles.length} {filteredSimiles.length === 1 ? 'simile' : 'similes'} found
-                {searchTerm && ` for "${searchTerm}"`}
-              </p>
+              </div>
+            ))}
+          </div>
+        ) : searchTerm ? (
+          // Show search results
+          filteredSimiles.length > 0 ? (
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-4xl">
+                  Search Results
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSimiles.map(item => (
+                  <WisdomCard key={item.id} item={item} />
+                ))}
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentSimiles.map(item => <WisdomCard key={item.id} item={item} />)}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4 md:relative md:bottom-auto fixed bottom-4 left-0 right-0 z-10 md:z-auto bg-background/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-4 md:p-0 border-t md:border-t-0">
-                <p className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
+          ) : (
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto space-y-4">
+                <Zap className="h-16 w-16 text-muted-foreground mx-auto" />
+                <h3 className="text-xl font-semibold text-foreground">No Similes Found</h3>
+                <p className="text-muted-foreground">
+                  No results found for "{searchTerm}". Try a different keyword.
                 </p>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1) setCurrentPage(currentPage - 1);
-                        }}
-                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                      />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                        }}
-                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+              </div>
+            </div>
+          )
+        ) : (
+          // Show grouped categories
+          <div className="space-y-12">
+            {predefinedCategories.map(category => {
+              const categorySimiles = groupedSimiles[category];
+              if (categorySimiles.length === 0) return null;
+              
+              return (
+                <div key={category} className="space-y-6">
+                  <div className="text-center">
+                    <h2 className="font-bold font-wisdom mb-2 text-zinc-950 text-4xl capitalize">
+                      {category} Similes
+                    </h2>
+                    <p className="text-gray-950">
+                      {categorySimiles.length} {categorySimiles.length === 1 ? 'simile' : 'similes'}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {categorySimiles.map(item => (
+                      <WisdomCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {similes.length === 0 && (
+              <div className="text-center py-16">
+                <div className="max-w-md mx-auto space-y-4">
+                  <Zap className="h-16 w-16 text-muted-foreground mx-auto" />
+                  <h3 className="text-xl font-semibold text-foreground">No Similes Available</h3>
+                  <p className="text-muted-foreground">
+                    No similes have been added yet.
+                  </p>
+                </div>
               </div>
             )}
-          </> : <div className="text-center py-16">
-            <div className="max-w-md mx-auto space-y-4">
-              <Zap className="h-16 w-16 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold text-foreground">No Similes Found</h3>
-              <p className="text-muted-foreground">
-                {searchTerm || activeSubcategory !== 'all' 
-                  ? `No results found. Try a different keyword or category.`
-                  : 'No similes available yet.'}
-              </p>
-            </div>
-          </div>}
+          </div>
+        )}
       </div>
     </div>;
 };
