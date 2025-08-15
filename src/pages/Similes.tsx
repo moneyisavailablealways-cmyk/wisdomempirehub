@@ -40,6 +40,7 @@ const Similes = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -75,6 +76,35 @@ const Similes = () => {
       setLoading(false);
     }
   };
+
+  const fetchCategoryCounts = async () => {
+    try {
+      const counts: Record<string, number> = {};
+      
+      // Get total count for "all"
+      const { count: totalCount } = await supabase
+        .from('similes')
+        .select('*', { count: 'exact', head: true });
+      counts.all = totalCount || 0;
+
+      // Get counts for each specific category
+      for (const category of categories.slice(1)) { // Skip 'all' category
+        const { count } = await supabase
+          .from('similes')
+          .select('*', { count: 'exact', head: true })
+          .eq('subcategory', category.key);
+        counts[category.key] = count || 0;
+      }
+
+      setCategoryCounts(counts);
+    } catch (err) {
+      console.error('Error fetching category counts:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategoryCounts();
+  }, []);
 
   useEffect(() => {
     fetchSimiles(selectedCategory, currentPage);
@@ -129,7 +159,7 @@ const Similes = () => {
                 onClick={() => handleCategoryChange(category.key)}
                 className="px-4 py-2"
               >
-                {category.label}
+                {category.label} {categoryCounts[category.key] !== undefined && `(${categoryCounts[category.key]})`}
               </Button>
             ))}
           </div>
