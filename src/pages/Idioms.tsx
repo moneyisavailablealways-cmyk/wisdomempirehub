@@ -25,7 +25,7 @@ const Idioms = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 30;
   const idioms = items.filter(item => item.type === 'idiom');
   
   // Apply filters in order: category first, then search, then sort
