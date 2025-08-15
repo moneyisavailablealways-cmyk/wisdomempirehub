@@ -31,7 +31,7 @@ const categories = [
   { key: 'appearance', label: 'Appearance' }
 ];
 
-const ITEMS_PER_PAGE = 27;
+const ITEMS_PER_PAGE = 30;
 
 const Similes = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
