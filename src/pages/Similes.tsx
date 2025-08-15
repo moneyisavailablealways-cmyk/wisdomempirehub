@@ -49,6 +49,7 @@ const Similes = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   const fetchSimiles = async (category: string, page: number) => {
     try {
@@ -79,6 +80,39 @@ const Similes = () => {
       setLoading(false);
     }
   };
+  const fetchCategoryCounts = async () => {
+    try {
+      const counts: Record<string, number> = {};
+      
+      // Fetch total count for 'all'
+      const { count: totalCount } = await supabase
+        .from('similes')
+        .select('*', { count: 'exact', head: true });
+      counts['all'] = totalCount || 0;
+      
+      // Fetch counts for each specific category
+      for (const category of categories.slice(1)) { // Skip 'all' category
+        const { count } = await supabase
+          .from('similes')
+          .select('*', { count: 'exact', head: true })
+          .eq('subcategory', category.key);
+        counts[category.key] = count || 0;
+      }
+      
+      setCategoryCounts(counts);
+    } catch (err) {
+      console.error('Error fetching category counts:', err);
+    }
+  };
+
+  const getCategoryCount = (categoryKey: string): number => {
+    return categoryCounts[categoryKey] || 0;
+  };
+
+  useEffect(() => {
+    fetchCategoryCounts();
+  }, []);
+
   useEffect(() => {
     fetchSimiles(selectedCategory, currentPage);
   }, [selectedCategory, currentPage]);
@@ -117,9 +151,19 @@ const Similes = () => {
 
           {/* Category Buttons */}
           <div className="flex flex-wrap gap-2 mb-6 justify-center">
-            {categories.map(category => <Button key={category.key} variant={selectedCategory === category.key ? "default" : "outline"} onClick={() => handleCategoryChange(category.key)} className="px-4 py-2">
+            {categories.map(category => (
+              <Button 
+                key={category.key} 
+                variant={selectedCategory === category.key ? "default" : "outline"} 
+                onClick={() => handleCategoryChange(category.key)} 
+                className="px-4 py-2 flex items-center gap-2"
+              >
                 {category.label}
-              </Button>)}
+                <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-primary-foreground bg-primary/20 rounded-full border border-primary/30">
+                  {getCategoryCount(category.key)}
+                </span>
+              </Button>
+            ))}
           </div>
 
           {/* AI Assistant */}
