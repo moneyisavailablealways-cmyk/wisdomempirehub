@@ -23,15 +23,15 @@ interface SimileItem {
 
 const categories = [
   { key: 'all', label: 'All Similes' },
-  { key: 'Emotions', label: 'Emotion' },
-  { key: 'People', label: 'People' },
-  { key: 'Animals', label: 'Animals' },
-  { key: 'Nature', label: 'Nature' },
-  { key: 'Behavior', label: 'Behavior' },
-  { key: 'Appearance', label: 'Appearance' }
+  { key: 'emotions', label: 'Emotion' },
+  { key: 'people', label: 'People' },
+  { key: 'animals', label: 'Animals' },
+  { key: 'nature', label: 'Nature' },
+  { key: 'behavior', label: 'Behavior' },
+  { key: 'appearance', label: 'Appearance' }
 ];
 
-const ITEMS_PER_PAGE = 15;
+const ITEMS_PER_PAGE = 27;
 
 const Similes = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
