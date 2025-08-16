@@ -101,6 +101,7 @@ const Proverbs = () => {
   // Handlers
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setActiveSubcategory(category);
     setCurrentPage(1); // Reset to first page
   };
   
@@ -147,7 +148,7 @@ const Proverbs = () => {
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
             <div className="flex flex-wrap gap-2">
-              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
+              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange('all')}>
                 All Proverbs
                 <Badge variant="secondary" className="ml-2">
                   {proverbs.length}
@@ -155,7 +156,7 @@ const Proverbs = () => {
               </Button>
               {subcategories.map(subcategory => {
               const count = proverbs.filter(item => item.subcategory.toLowerCase() === subcategory.toLowerCase()).length;
-              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory(subcategory)}>
+              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange(subcategory)}>
                     {subcategory}
                     <Badge variant="secondary" className="ml-2">
                       {count}
