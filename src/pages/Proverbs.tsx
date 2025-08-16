@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +6,7 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
+import { supabase } from '@/integrations/supabase/client';
 import { Search, BookOpen } from 'lucide-react';
 import {
   Pagination,
@@ -15,7 +16,23 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+
+interface ProverbItem {
+  id: string;
+  text: string;
+  origin: string;
+  subcategory: string;
+  type: 'proverb';
+  meaning?: string;
+  example?: string;
+  bg_style?: string;
+  audio_voice_type?: 'child' | 'youth' | 'old';
+  video_url?: string;
+  created_at: string;
+}
+
 const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Trust', 'Friendship'];
+
 const Proverbs = () => {
   const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,9 +40,26 @@ const Proverbs = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeSubcategory, setActiveSubcategory] = useState('all');
   
   const ITEMS_PER_PAGE = 50; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  
+  // Filter and paginate proverbs
+  const filteredProverbs = proverbs.filter(item => {
+    const matchesSearch = searchTerm === '' || 
+      item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.meaning && item.meaning.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesCategory = activeSubcategory === 'all' || 
+      item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
+    
+    return matchesSearch && matchesCategory;
+  });
+  
+  const currentProverbs = filteredProverbs;
   
   // Fetch function
   const fetchProverbs = async (category: string, page: number) => {
