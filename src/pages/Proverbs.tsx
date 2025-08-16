@@ -36,7 +36,7 @@ const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Tr
 const Proverbs = () => {
   // State
   const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +44,7 @@ const Proverbs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   
-  const ITEMS_PER_PAGE = 50; // Adjust as needed
+  const ITEMS_PER_PAGE = 3000; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   
   // Fetch function
