@@ -44,7 +44,7 @@ const Proverbs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   
-  const ITEMS_PER_PAGE = 3000; // Adjust as needed
+  const ITEMS_PER_PAGE = 30; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   
   // Fetch function
