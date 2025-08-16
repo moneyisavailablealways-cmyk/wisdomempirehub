@@ -35,7 +35,7 @@ const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Tr
 
 const Proverbs = () => {
   const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +43,7 @@ const Proverbs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   
-  const ITEMS_PER_PAGE = 50; // Adjust as needed
+  const ITEMS_PER_PAGE = 30; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   
   // Filter and paginate proverbs
@@ -101,7 +101,6 @@ const Proverbs = () => {
   // Handlers
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setActiveSubcategory(category);
     setCurrentPage(1); // Reset to first page
   };
   
@@ -148,7 +147,7 @@ const Proverbs = () => {
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
             <div className="flex flex-wrap gap-2">
-              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange('all')}>
+              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
                 All Proverbs
                 <Badge variant="secondary" className="ml-2">
                   {proverbs.length}
@@ -156,7 +155,7 @@ const Proverbs = () => {
               </Button>
               {subcategories.map(subcategory => {
               const count = proverbs.filter(item => item.subcategory.toLowerCase() === subcategory.toLowerCase()).length;
-              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange(subcategory)}>
+              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory(subcategory)}>
                     {subcategory}
                     <Badge variant="secondary" className="ml-2">
                       {count}
