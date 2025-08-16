@@ -34,93 +34,43 @@ interface ProverbItem {
 const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Trust', 'Friendship'];
 
 const Proverbs = () => {
-  // State
-  const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  const {items,loading, error} = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+  const proverbs = items.filter(item => item.type === 'proverb');
   
-  const ITEMS_PER_PAGE = 30; // Adjust as needed
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-  
-  // Fetch function
-  const fetchProverbs = async (category: string, page: number) => {
-    try {
-      setLoading(true);
-      setError(null);
-  
-      const start = (page - 1) * ITEMS_PER_PAGE;
-      const end = start + ITEMS_PER_PAGE - 1;
-  
-      let query = supabase
-        .from("proverbs")
-        .select("*", { count: "exact" })
-        .order("id", { ascending: true }) // keep pagination consistent
-        .range(start, end);
-  
-      if (category.toLowerCase() !== "all") {
-        query = query.eq("subcategory", category);
-      }
-  
-      const { data, error: queryError, count } = await query;
-  
-      if (queryError) throw queryError;
-  
-      setProverbs((data || []) as ProverbItem[]);
-      setTotalCount(count || 0);
-    } catch (err) {
-      console.error("Error fetching proverbs:", err);
-      setError(err instanceof Error ? err.message : "Failed to load proverbs");
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Effects
-  useEffect(() => {
-    fetchProverbs(selectedCategory, currentPage);
-  }, [selectedCategory, currentPage]);
-  
-  // Handlers
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setActiveSubcategory(category);
-    setCurrentPage(1); // Reset to first page
-  };
-  
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-  
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
+  // Apply filters in order: category first, then search, then sort
+  const filteredProverbs = proverbs
+    .filter(item => {
+      // 1. Apply category filter first
+      const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
+      return matchesSubcategory;
+    })
+    .filter(item => {
+      // 2. Apply search filter second (only on category-filtered results)
+      if (!searchTerm) return true;
+      const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSearch;
+    })
+    .sort((a, b) => {
+      // 3. Sort consistently by id for stable pagination
+      return a.id.localeCompare(b.id);
+    });
 
-  const filteredProverbs = useMemo(() => {
-    let items = proverbs;
-    if (activeSubcategory.toLowerCase() !== 'all') {
-      items = items.filter(item => item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase());
-    }
-    if (searchTerm.trim()) {
-      const t = searchTerm.toLowerCase();
-      items = items.filter(item =>
-        item.text.toLowerCase().includes(t) ||
-        item.meaning?.toLowerCase().includes(t) ||
-        item.origin?.toLowerCase().includes(t)
-      );
-    }
-    return items;
-  }, [proverbs, activeSubcategory, searchTerm]);
+  // Reset to page 1 when search or filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeSubcategory]);
 
-  const currentProverbs = filteredProverbs;
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProverbs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProverbs = filteredProverbs.slice(startIndex, endIndex);
 
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
