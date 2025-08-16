@@ -34,32 +34,16 @@ interface ProverbItem {
 const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Trust', 'Friendship'];
 
 const Proverbs = () => {
+  // State
   const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
   
-  const ITEMS_PER_PAGE = 30; // Adjust as needed
+  const ITEMS_PER_PAGE = 50; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-  
-  // Filter and paginate proverbs
-  const filteredProverbs = proverbs.filter(item => {
-    const matchesSearch = searchTerm === '' || 
-      item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.meaning && item.meaning.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = activeSubcategory === 'all' || 
-      item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
-    
-    return matchesSearch && matchesCategory;
-  });
-  
-  const currentProverbs = filteredProverbs;
   
   // Fetch function
   const fetchProverbs = async (category: string, page: number) => {
@@ -71,12 +55,13 @@ const Proverbs = () => {
       const end = start + ITEMS_PER_PAGE - 1;
   
       let query = supabase
-        .from('proverbs')
-        .select('*', { count: 'exact' })
+        .from("proverbs")
+        .select("*", { count: "exact" })
+        .order("id", { ascending: true }) // keep pagination consistent
         .range(start, end);
   
-      if (category !== 'all') {
-        query = query.eq('subcategory', category);
+      if (category.toLowerCase() !== "all") {
+        query = query.eq("subcategory", category);
       }
   
       const { data, error: queryError, count } = await query;
@@ -86,8 +71,8 @@ const Proverbs = () => {
       setProverbs((data || []) as ProverbItem[]);
       setTotalCount(count || 0);
     } catch (err) {
-      console.error('Error fetching proverbs:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load proverbs');
+      console.error("Error fetching proverbs:", err);
+      setError(err instanceof Error ? err.message : "Failed to load proverbs");
     } finally {
       setLoading(false);
     }
@@ -106,13 +91,13 @@ const Proverbs = () => {
   
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   };
   
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
