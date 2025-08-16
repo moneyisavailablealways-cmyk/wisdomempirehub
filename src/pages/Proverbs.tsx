@@ -39,6 +39,10 @@ const Proverbs = () => {
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const handleCategoryChange = (category: string) => {
+    setActiveSubcategory(category);
+    setCurrentPage(1);
+  };
   const proverbs = items.filter(item => item.type === 'proverb');
   
   // Apply filters in order: category first, then search, then sort
