@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,6 +41,8 @@ const Proverbs = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeSubcategory, setActiveSubcategory] = useState('all');
   
   const ITEMS_PER_PAGE = 50; // Adjust as needed
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -86,6 +88,7 @@ const Proverbs = () => {
   // Handlers
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setActiveSubcategory(category);
     setCurrentPage(1); // Reset to first page
   };
   
@@ -100,6 +103,24 @@ const Proverbs = () => {
       setCurrentPage((prev) => prev + 1);
     }
   };
+
+  const filteredProverbs = useMemo(() => {
+    let items = proverbs;
+    if (activeSubcategory.toLowerCase() !== 'all') {
+      items = items.filter(item => item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase());
+    }
+    if (searchTerm.trim()) {
+      const t = searchTerm.toLowerCase();
+      items = items.filter(item =>
+        item.text.toLowerCase().includes(t) ||
+        item.meaning?.toLowerCase().includes(t) ||
+        item.origin?.toLowerCase().includes(t)
+      );
+    }
+    return items;
+  }, [proverbs, activeSubcategory, searchTerm]);
+
+  const currentProverbs = filteredProverbs;
 
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
@@ -132,7 +153,7 @@ const Proverbs = () => {
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">Categories</h3>
             <div className="flex flex-wrap gap-2">
-              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory('all')}>
+              <Button variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange('all')}>
                 All Proverbs
                 <Badge variant="secondary" className="ml-2">
                   {proverbs.length}
@@ -140,7 +161,7 @@ const Proverbs = () => {
               </Button>
               {subcategories.map(subcategory => {
               const count = proverbs.filter(item => item.subcategory.toLowerCase() === subcategory.toLowerCase()).length;
-              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => setActiveSubcategory(subcategory)}>
+              return <Button key={subcategory} variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'} size="sm" onClick={() => handleCategoryChange(subcategory)}>
                     {subcategory}
                     <Badge variant="secondary" className="ml-2">
                       {count}
