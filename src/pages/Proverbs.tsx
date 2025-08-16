@@ -17,47 +17,71 @@ import {
 } from '@/components/ui/pagination';
 const subcategories = ['Success', 'Time', 'Love', 'Money', 'Wisdom', 'Fear', 'Trust', 'Friendship'];
 const Proverbs = () => {
-  const {
-    items,
-    loading,
-    error
-  } = useWisdomData();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [proverbs, setProverbs] = useState<ProverbItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
-  const proverbs = items.filter(item => item.type === 'proverb');
+  const [totalCount, setTotalCount] = useState(0);
   
-  // Apply filters in order: category first, then search, then sort
-  const filteredProverbs = proverbs
-    .filter(item => {
-      // 1. Apply category filter first
-      const matchesSubcategory = activeSubcategory === 'all' || item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
-      return matchesSubcategory;
-    })
-    .filter(item => {
-      // 2. Apply search filter second (only on category-filtered results)
-      if (!searchTerm) return true;
-      const matchesSearch = item.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           item.origin.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
-    })
-    .sort((a, b) => {
-      // 3. Sort consistently by id for stable pagination
-      return a.id.localeCompare(b.id);
-    });
+  const ITEMS_PER_PAGE = 50; // Adjust as needed
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  
+  // Fetch function
+  const fetchProverbs = async (category: string, page: number) => {
+    try {
+      setLoading(true);
+      setError(null);
+  
+      const start = (page - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE - 1;
+  
+      let query = supabase
+        .from('proverbs')
+        .select('*', { count: 'exact' })
+        .range(start, end);
+  
+      if (category !== 'all') {
+        query = query.eq('subcategory', category);
+      }
+  
+      const { data, error: queryError, count } = await query;
+  
+      if (queryError) throw queryError;
+  
+      setProverbs((data || []) as ProverbItem[]);
+      setTotalCount(count || 0);
+    } catch (err) {
+      console.error('Error fetching proverbs:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load proverbs');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Effects
+  useEffect(() => {
+    fetchProverbs(selectedCategory, currentPage);
+  }, [selectedCategory, currentPage]);
+  
+  // Handlers
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to first page
+  };
+  
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-  // Reset to page 1 when search or filter changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeSubcategory]);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredProverbs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentProverbs = filteredProverbs.slice(startIndex, endIndex);
   if (error) {
     return <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
