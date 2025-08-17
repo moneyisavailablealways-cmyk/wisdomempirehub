@@ -5,8 +5,15 @@ import { Badge } from '@/components/ui/badge';
 import { WisdomCard } from '@/components/WisdomCard';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
-import { useWisdomData } from '@/hooks/useWisdomData';
+import { supabase } from '@/lib/supabaseClient';
 import { Search, Zap } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 const subcategories = [
   'Emotion',
@@ -17,56 +24,57 @@ const subcategories = [
   'Appearance',
 ];
 
+const ITEMS_PER_PAGE = 12;
+
 const Similes = () => {
-  const { items, loading, error } = useWisdomData();
+  const [similes, setSimiles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubcategory, setActiveSubcategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const [totalCount, setTotalCount] = useState(0);
 
-  const similes = items.filter((item) => item.type === 'simile');
+  // --- Fetch similes from Supabase with server-side pagination ---
+  const fetchSimiles = async () => {
+    setLoading(true);
+    setError(null);
 
-  const filteredSimiles = similes
-    .filter((item) => {
-      const matchesCategory =
-        activeSubcategory === 'all' ||
-        item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase();
-      return matchesCategory;
-    })
-    .filter((item) => {
-      if (!searchTerm) return true;
-      const lowerSearch = searchTerm.toLowerCase();
-      return (
-        item.text.toLowerCase().includes(lowerSearch) ||
-        item.origin.toLowerCase().includes(lowerSearch) ||
-        item.subcategory?.toLowerCase().includes(lowerSearch)
-      );
-    })
-    .sort((a, b) => a.id.localeCompare(b.id));
+    try {
+      let query = supabase
+        .from('wisdom')
+        .select('*', { count: 'exact' })
+        .eq('type', 'simile');
 
-  const totalPages = Math.ceil(filteredSimiles.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentSimiles = filteredSimiles.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+      if (activeSubcategory !== 'all') {
+        query = query.eq('subcategory', activeSubcategory);
+      }
 
+      if (searchTerm) {
+        query = query.ilike('text', `%${searchTerm}%`);
+      }
+
+      const from = (currentPage - 1) * ITEMS_PER_PAGE;
+      const to = from + ITEMS_PER_PAGE - 1;
+
+      const { data, error, count } = await query.range(from, to);
+
+      if (error) throw error;
+      setSimiles(data || []);
+      setTotalCount(count || 0);
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch similes');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Fetch similes when page, category, or search changes ---
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeSubcategory]);
+    fetchSimiles();
+  }, [currentPage, activeSubcategory, searchTerm]);
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">
-            Error Loading Similes
-          </h1>
-          <p className="text-muted-foreground">{error}</p>
-        </div>
-      </div>
-    );
-  }
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,9 +82,7 @@ const Similes = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="font-wisdom text-5xl font-bold text-gray-900">
-              Similes
-            </h1>
+            <h1 className="font-wisdom text-5xl font-bold text-gray-900">Similes</h1>
             <DownloadButton category="similes" />
           </div>
           <p className="text-lg text-center text-muted-foreground mb-6">
@@ -98,9 +104,7 @@ const Similes = () => {
 
           {/* Category Filter */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center">
-              Categories
-            </h3>
+            <h3 className="text-lg font-semibold mb-3 text-center">Categories</h3>
             <div className="flex flex-wrap gap-2 justify-center">
               <Button
                 variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'}
@@ -109,28 +113,22 @@ const Similes = () => {
               >
                 All Similes
                 <Badge variant="secondary" className="ml-2">
-                  {similes.length}
+                  {totalCount}
                 </Badge>
               </Button>
-              {subcategories.map((subcategory) => {
-                const count = similes.filter(
-                  (item) =>
-                    item.subcategory?.toLowerCase() === subcategory.toLowerCase()
-                ).length;
-                return (
-                  <Button
-                    key={subcategory}
-                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
-                    size="sm"
-                    onClick={() => setActiveSubcategory(subcategory)}
-                  >
-                    {subcategory}
-                    <Badge variant="secondary" className="ml-2">
-                      {count}
-                    </Badge>
-                  </Button>
-                );
-              })}
+              {subcategories.map((subcategory) => (
+                <Button
+                  key={subcategory}
+                  variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
+                  size="sm"
+                  onClick={() => setActiveSubcategory(subcategory)}
+                >
+                  {subcategory}
+                  <Badge variant="secondary" className="ml-2">
+                    {/* Optionally, you can show count per subcategory using a separate query */}
+                  </Badge>
+                </Button>
+              ))}
             </div>
           </div>
 
@@ -147,48 +145,51 @@ const Similes = () => {
               </div>
             ))}
           </div>
-        ) : filteredSimiles.length > 0 ? (
+        ) : similes.length > 0 ? (
           <>
-            {/* Results Header */}
             <div className="text-center mb-8">
               <h2 className="font-bold font-wisdom text-4xl mb-2">
-                {activeSubcategory === 'all'
-                  ? 'All Similes'
-                  : `${activeSubcategory} Similes`}
+                {activeSubcategory === 'all' ? 'All Similes' : `${activeSubcategory} Similes`}
               </h2>
-              <p className="text-muted-foreground">
-                {filteredSimiles.length} {filteredSimiles.length === 1 ? 'simile' : 'similes'} found
-                {searchTerm && ` for "${searchTerm}"`}
-              </p>
+              <p className="text-muted-foreground">{totalCount} similes found{searchTerm && ` for "${searchTerm}"`}</p>
             </div>
 
-            {/* Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentSimiles.map((item) => (
+              {similes.map((item) => (
                 <WisdomCard key={item.id} item={item} />
               ))}
             </div>
 
-            {/* Prev / Next Pagination */}
+            {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex justify-center gap-4 items-center">
-                <Button
-                  variant="outline"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                >
-                  Previous
-                </Button>
-                <span className="text-muted-foreground">
+              <div className="mt-8 flex flex-col items-center space-y-4">
+                <p className="text-sm text-muted-foreground">
                   Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                >
-                  Next
-                </Button>
+                </p>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) setCurrentPage(currentPage - 1);
+                        }}
+                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                        }}
+                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
             )}
           </>
