@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 type WisdomItem = {
   id: string;
@@ -36,7 +36,7 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
   const fetchAllData = async () => {
     setLoading(true);
 
-    const categories = ["idioms", "proverbs", "quotes", "similes"];
+    const categories = ["idioms", "proverbs", "quotes", "similes"] as const;
     const subcategoryMap: Record<string, Record<string, number>> = {};
     const totalMap: Record<string, number> = {};
 
@@ -59,7 +59,7 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
         }
 
         if (data && data.length > 0) {
-          allItems = [...allItems, ...data];
+          allItems = [...allItems, ...(data as unknown as WisdomItem[])];
           from += limit;
           if (data.length < limit) finished = true;
         } else {
@@ -156,4 +156,3 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
 };
 
 export default SubcategoryList;
-v
