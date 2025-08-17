@@ -17,7 +17,7 @@ type WisdomItem = {
   subcategory: string;
   created_at: string;
 };
-const subcategories = ["Success", "Time", "Love", "Money", "Wisdom", "Fear", "Trust", "Friendship"];
+const subcategories = ["success", "Time", "Love", "Money", "Wisdom", "Fear", "Trust", "Friendship"];
 const Proverbs = () => {
   const [proverbs, setProverbs] = useState<WisdomItem[]>([]);
   const [loading, setLoading] = useState(true);
