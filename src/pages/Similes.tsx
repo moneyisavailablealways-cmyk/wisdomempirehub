@@ -10,7 +10,7 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Zap } from "lucide-react";
 
-const subcategories = ["Emotion", "People", "Animals", "Nature", "Behavior", "Appearance"];
+const subcategories = ["Emotions", "People", "Animals", "Nature", "Behavior", "Appearance"];
 
 const itemsPerPage = 12;
 
