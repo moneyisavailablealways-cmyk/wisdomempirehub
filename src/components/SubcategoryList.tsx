@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/integration/supabase/client";
+import { supabase } from "../integration/supabase/client";
 
 interface SubcategoryListProps {
   table: string;
