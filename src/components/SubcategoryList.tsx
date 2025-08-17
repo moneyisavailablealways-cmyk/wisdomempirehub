@@ -3,15 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
-
-type WisdomItem = {
-  id: string;
-  type: string; // idiom, proverb, simile, quote
-  text: string;
-  origin: string;
-  subcategory: string;
-};
+import { supabase } from "@/lib/supabaseClient";
 
 interface SubcategoryListProps {
   activeCategory: "idioms" | "proverbs" | "quotes" | "similes" | "all";
@@ -26,70 +18,42 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
   activeSubcategory,
   setActiveSubcategory,
 }) => {
-  const [subcategoryCounts, setSubcategoryCounts] = useState<
-    Record<string, Record<string, number>>
-  >({});
-  const [totalCounts, setTotalCounts] = useState<Record<string, number>>({});
+  const [subcategoryCounts, setSubcategoryCounts] = useState<Record<string, number>>({});
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all items from all tables
-  const fetchAllData = async () => {
+  const fetchSubcategories = async () => {
+    if (activeCategory === "all") return;
+
     setLoading(true);
 
-    const categories = ["idioms", "proverbs", "quotes", "similes"] as const;
-    const subcategoryMap: Record<string, Record<string, number>> = {};
-    const totalMap: Record<string, number> = {};
+    const { data, error, count } = await supabase
+      .from(activeCategory)
+      .select("subcategory", { count: "exact" });
 
-    for (const category of categories) {
-      let allItems: WisdomItem[] = [];
-      let from = 0;
-      const limit = 1000;
-      let finished = false;
-
-      while (!finished) {
-        const { data, error } = await supabase
-          .from(category)
-          .select("*")
-          .range(from, from + limit - 1);
-
-        if (error) {
-          console.error(`Error fetching ${category}:`, error);
-          finished = true;
-          continue;
-        }
-
-        if (data && data.length > 0) {
-          allItems = [...allItems, ...(data as unknown as WisdomItem[])];
-          from += limit;
-          if (data.length < limit) finished = true;
-        } else {
-          finished = true;
-        }
-      }
-
-      // Count per subcategory
-      const counts: Record<string, number> = {};
-      allItems.forEach((item) => {
-        const sub = item.subcategory?.trim() || "Uncategorized";
-        counts[sub] = (counts[sub] || 0) + 1;
-      });
-
-      subcategoryMap[category] = counts;
-      totalMap[category] = allItems.length;
+    if (error) {
+      console.error(`Error fetching ${activeCategory}:`, error);
+      setLoading(false);
+      return;
     }
 
-    setSubcategoryCounts(subcategoryMap);
-    setTotalCounts(totalMap);
+    // Count per subcategory
+    const counts: Record<string, number> = {};
+    data?.forEach((item: any) => {
+      const sub = item.subcategory?.trim() || "Uncategorized";
+      counts[sub] = (counts[sub] || 0) + 1;
+    });
+
+    setSubcategoryCounts(counts);
+    setTotalCount(count || 0);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchAllData();
-  }, []);
+    fetchSubcategories();
+  }, [activeCategory]);
 
-  if (loading) {
-    return <div className="text-muted-foreground">Loading categories...</div>;
-  }
+  if (loading) return <div className="text-muted-foreground">Loading categories...</div>;
 
   const categories = ["idioms", "proverbs", "quotes", "similes"];
 
@@ -113,7 +77,7 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
           >
             {cat.charAt(0).toUpperCase() + cat.slice(1)}
             <Badge variant="secondary" className="ml-2">
-              {totalCounts[cat] || 0}
+              {activeCategory === cat ? totalCount : "-"}
             </Badge>
           </Button>
         ))}
@@ -129,26 +93,23 @@ const SubcategoryList: React.FC<SubcategoryListProps> = ({
           >
             All {activeCategory}
             <Badge variant="secondary" className="ml-2">
-              {totalCounts[activeCategory] || 0}
+              {totalCount}
             </Badge>
           </Button>
 
-          {subcategoryCounts[activeCategory] &&
-            Object.entries(subcategoryCounts[activeCategory]).map(
-              ([sub, count]) => (
-                <Button
-                  key={sub}
-                  variant={activeSubcategory === sub ? "wisdom" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveSubcategory(sub)}
-                >
-                  {sub}
-                  <Badge variant="secondary" className="ml-2">
-                    {count}
-                  </Badge>
-                </Button>
-              )
-            )}
+          {Object.entries(subcategoryCounts).map(([sub, count]) => (
+            <Button
+              key={sub}
+              variant={activeSubcategory === sub ? "wisdom" : "outline"}
+              size="sm"
+              onClick={() => setActiveSubcategory(sub)}
+            >
+              {sub}
+              <Badge variant="secondary" className="ml-2">
+                {count}
+              </Badge>
+            </Button>
+          ))}
         </div>
       )}
     </div>
