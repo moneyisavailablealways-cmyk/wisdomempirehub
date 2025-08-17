@@ -7,13 +7,6 @@ import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 
 const subcategories = [
   'Success',
@@ -33,43 +26,31 @@ const Proverbs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Ensure we only take proverbs
   const proverbs = items.filter((item) => item.type === 'proverb');
 
-  // Apply filters
   const filteredProverbs = proverbs
     .filter((item) => {
       const sub = item.subcategory?.toLowerCase() || '';
-      return (
-        activeSubcategory === 'all' ||
-        sub === activeSubcategory.toLowerCase()
-      );
+      return activeSubcategory === 'all' || sub === activeSubcategory.toLowerCase();
     })
     .filter((item) => {
       if (!searchTerm) return true;
-      const text = item.text?.toLowerCase() || '';
-      const origin = item.origin?.toLowerCase() || '';
-      const sub = item.subcategory?.toLowerCase() || '';
+      const lowerSearch = searchTerm.toLowerCase();
       return (
-        text.includes(searchTerm.toLowerCase()) ||
-        origin.includes(searchTerm.toLowerCase()) ||
-        sub.includes(searchTerm.toLowerCase())
+        item.text.toLowerCase().includes(lowerSearch) ||
+        item.origin.toLowerCase().includes(lowerSearch) ||
+        item.subcategory?.toLowerCase().includes(lowerSearch)
       );
     })
-    .sort((a, b) => (a.id > b.id ? 1 : -1)); // stable numeric/id sort
+    .sort((a, b) => a.id.localeCompare(b.id));
 
-  // Reset to page 1 when filters change
+  const totalPages = Math.ceil(filteredProverbs.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProverbs = filteredProverbs.slice(startIndex, startIndex + itemsPerPage);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeSubcategory]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredProverbs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProverbs = filteredProverbs.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
 
   if (error) {
     return (
@@ -86,16 +67,16 @@ const Proverbs = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-slate-500">
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="font-wisdom mx-[28px] text-center font-bold text-5xl text-gray-950">
+            <h1 className="font-wisdom text-5xl font-bold text-gray-950 text-center">
               Proverbs
             </h1>
             <DownloadButton category="proverbs" />
           </div>
-          <p className="text-lg mb-6 text-center text-zinc-50">
+          <p className="text-lg mb-6 text-center text-muted-foreground">
             Traditional sayings that convey wisdom through generations
           </p>
 
@@ -112,9 +93,9 @@ const Proverbs = () => {
             </div>
           </div>
 
-          {/* Subcategories */}
+          {/* Categories */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">
+            <h3 className="text-lg font-semibold mb-3 text-center">
               Categories
             </h3>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -130,16 +111,12 @@ const Proverbs = () => {
               </Button>
               {subcategories.map((subcategory) => {
                 const count = proverbs.filter(
-                  (item) =>
-                    item.subcategory?.toLowerCase() ===
-                    subcategory.toLowerCase()
+                  (item) => item.subcategory?.toLowerCase() === subcategory.toLowerCase()
                 ).length;
                 return (
                   <Button
                     key={subcategory}
-                    variant={
-                      activeSubcategory === subcategory ? 'wisdom' : 'outline'
-                    }
+                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
                     size="sm"
                     onClick={() => setActiveSubcategory(subcategory)}
                   >
@@ -169,14 +146,13 @@ const Proverbs = () => {
         ) : filteredProverbs.length > 0 ? (
           <>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
+              <h2 className="text-2xl font-bold font-wisdom mb-2">
                 {activeSubcategory === 'all'
                   ? 'All Proverbs'
                   : `${activeSubcategory} Proverbs`}
               </h2>
               <p className="text-muted-foreground">
-                {filteredProverbs.length}{' '}
-                {filteredProverbs.length === 1 ? 'proverb' : 'proverbs'} found
+                {filteredProverbs.length} {filteredProverbs.length === 1 ? 'proverb' : 'proverbs'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
             </div>
@@ -187,61 +163,38 @@ const Proverbs = () => {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Prev / Next Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4 md:relative fixed bottom-4 left-0 right-0 z-10 md:z-auto bg-background/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-4 md:p-0 border-t md:border-t-0">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-8 flex justify-center gap-4 items-center">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                >
+                  Previous
+                </Button>
+                <span className="text-muted-foreground">
                   Page {currentPage} of {totalPages}
-                </p>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1) setCurrentPage(currentPage - 1);
-                        }}
-                        className={
-                          currentPage === 1
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages)
-                            setCurrentPage(currentPage + 1);
-                        }}
-                        className={
-                          currentPage === totalPages
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                >
+                  Next
+                </Button>
               </div>
             )}
           </>
         ) : (
           <div className="text-center py-16">
-            <div className="max-w-md mx-auto space-y-4">
-              <BookOpen className="h-16 w-16 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold text-foreground">
-                No Proverbs Found
-              </h3>
-              <p className="text-muted-foreground">
-                {searchTerm || activeSubcategory !== 'all'
-                  ? `No results found. Try a different keyword or category.`
-                  : 'No proverbs available yet.'}
-              </p>
-            </div>
+            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto" />
+            <h3 className="text-xl font-semibold">No Proverbs Found</h3>
+            <p className="text-muted-foreground">
+              {searchTerm || activeSubcategory !== 'all'
+                ? 'No results found. Try a different keyword or category.'
+                : 'No proverbs available yet.'}
+            </p>
           </div>
         )}
       </div>
