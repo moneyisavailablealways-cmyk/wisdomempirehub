@@ -21,7 +21,7 @@ type WisdomItem = {
 
 const subcategories = [
   "Emotions",
-  "success",
+  "Success",
   "Time",
   "Friendship",
   "Relationship",
