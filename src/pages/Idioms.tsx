@@ -2,7 +2,7 @@ import React from 'react';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 import { SubcategoryList } from '@/components/SubcategoryList'; 
-import { useEffect, useState } from 'react';
+
 
 const subcategoryMap: Record<string, string[]> = {
   idioms: ['Success','Relationship','Work','Emotions','Time','Friendship','Life'],
