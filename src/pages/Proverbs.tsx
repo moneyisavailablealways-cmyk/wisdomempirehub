@@ -18,6 +18,8 @@ const Proverbs = () => {
           {/* AI Assistant */}
           <AIAssistant category="Proverbs" />
         </div>
+
+        {/* Subcategories and items */}
         <SubcategoryList table="proverbs" />
       </div>
     </div>
