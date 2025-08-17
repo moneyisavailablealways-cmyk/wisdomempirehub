@@ -99,7 +99,7 @@ const Proverbs = () => {
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-300">Proverbs</h1>
+          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Proverbs</h1>
           <p className="text-lg mb-4 text-slate-50">
             Traditional sayings that convey wisdom through generations
           </p>
