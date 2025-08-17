@@ -33,20 +33,18 @@ const Idioms = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // ✅ only idioms
+  // ✅ Only idioms
   const idioms = items.filter((item) => item.type === 'idiom');
 
-  // ✅ filtering logic
+  // ✅ Filtering logic
   const filteredIdioms = idioms
     .filter((item) => {
-      // Category filter
       const matchesCategory =
         activeSubcategory === 'all' ||
         item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase();
       return matchesCategory;
     })
     .filter((item) => {
-      // Search filter
       if (!searchTerm) return true;
       const lowerSearch = searchTerm.toLowerCase();
       return (
@@ -55,14 +53,14 @@ const Idioms = () => {
         item.subcategory?.toLowerCase().includes(lowerSearch)
       );
     })
-    .sort((a, b) => a.id.localeCompare(b.id)); // stable sort for pagination
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   // ✅ Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeSubcategory]);
 
-  // ✅ pagination
+  // ✅ Pagination
   const totalPages = Math.ceil(filteredIdioms.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentIdioms = filteredIdioms.slice(
@@ -70,7 +68,7 @@ const Idioms = () => {
     startIndex + itemsPerPage
   );
 
-  // ✅ error state
+  // ✅ Error state
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -96,8 +94,7 @@ const Idioms = () => {
             <DownloadButton category="idioms" />
           </div>
           <p className="text-lg mb-6 text-center text-muted-foreground">
-            Cultural expressions with meanings that differ from literal
-            interpretation
+            Cultural expressions with meanings that differ from literal interpretation
           </p>
 
           {/* ✅ Search Bar */}
@@ -132,8 +129,7 @@ const Idioms = () => {
               {subcategories.map((subcategory) => {
                 const count = idioms.filter(
                   (item) =>
-                    item.subcategory?.toLowerCase() ===
-                    subcategory.toLowerCase()
+                    item.subcategory?.toLowerCase() === subcategory.toLowerCase()
                 ).length;
                 return (
                   <Button
@@ -160,7 +156,7 @@ const Idioms = () => {
 
         {/* ✅ Content */}
         {loading ? (
-          // skeleton loading
+          // Skeleton loading
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="animate-pulse">
@@ -170,7 +166,7 @@ const Idioms = () => {
           </div>
         ) : filteredIdioms.length > 0 ? (
           <>
-            {/* results header */}
+            {/* Results Header */}
             <div className="text-center mb-8">
               <h2 className="font-bold font-wisdom mb-2 text-zinc-900 text-3xl">
                 {activeSubcategory === 'all'
@@ -184,14 +180,14 @@ const Idioms = () => {
               </p>
             </div>
 
-            {/* idioms grid */}
+            {/* Idioms Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentIdioms.map((item) => (
                 <WisdomCard key={item.id} item={item} />
               ))}
             </div>
 
-            {/* pagination */}
+            {/* ✅ Pagination with numbers */}
             {totalPages > 1 && (
               <div className="mt-8 flex flex-col items-center space-y-4">
                 <p className="text-sm text-muted-foreground">
@@ -204,8 +200,7 @@ const Idioms = () => {
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          if (currentPage > 1)
-                            setCurrentPage((p) => p - 1);
+                          if (currentPage > 1) setCurrentPage((p) => p - 1);
                         }}
                         className={
                           currentPage === 1
@@ -214,13 +209,28 @@ const Idioms = () => {
                         }
                       />
                     </PaginationItem>
+
+                    {[...Array(totalPages)].map((_, i) => (
+                      <PaginationItem key={i}>
+                        <PaginationLink
+                          href="#"
+                          isActive={currentPage === i + 1}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage(i + 1);
+                          }}
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
                     <PaginationItem>
                       <PaginationNext
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          if (currentPage < totalPages)
-                            setCurrentPage((p) => p + 1);
+                          if (currentPage < totalPages) setCurrentPage((p) => p + 1);
                         }}
                         className={
                           currentPage === totalPages
@@ -235,7 +245,7 @@ const Idioms = () => {
             )}
           </>
         ) : (
-          // empty state
+          // Empty state
           <div className="text-center py-16">
             <div className="max-w-md mx-auto space-y-4">
               <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto" />
