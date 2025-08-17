@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
-import { supabase } from '@/integration/supabase/client';
+import { supabase } from '../integration/supabase/client';
 
 interface SubcategoryCount {
   name: string;
