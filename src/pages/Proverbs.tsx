@@ -158,7 +158,7 @@ const Proverbs = () => {
                 <Button onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                   Prev
                 </Button>
-                <span className="self-center text-emerald-100">
+                <span className="self-center text-orange-400">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
