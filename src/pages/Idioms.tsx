@@ -1,72 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { WisdomCard } from '@/components/WisdomCard';
-import { AIAssistant } from '@/components/AIAssistant';
-import { DownloadButton } from '@/components/DownloadButton';
-import { useWisdomData } from '@/hooks/useWisdomData';
-import { Search, MessageSquare } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+"use client";
 
-const subcategories = [
-  'Success',
-  'Relationship',
-  'Emotions',
-  'Work',
-  'Time',
-  'Friendship',
-  'Life',
-];
+import React, { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { WisdomCard } from "@/components/WisdomCard";
+import { AIAssistant } from "@/components/AIAssistant";
+import { DownloadButton } from "@/components/DownloadButton";
+import { supabase } from "@/integrations/supabase/client";
+import { Search } from "lucide-react";
+
+type WisdomItem = {
+  id: string;
+  type: string; // idiom, proverb, simile, quote
+  text: string;
+  origin: string;
+  subcategory: string;
+};
+
+const subcategories = ["Emotions", "Success", "Time", "Friendship", "Relations", "Work"];
 
 const Idioms = () => {
-  const { items, loading, error } = useWisdomData();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [idioms, setIdioms] = useState<WisdomItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const [subcategoryCounts, setSubcategoryCounts] = useState<Record<string, number>>({});
 
-  const idioms = items.filter((item) => item.type === 'idiom');
+  // --- Fetch idioms from Supabase ---
+  const fetchIdioms = async () => {
+    setLoading(true);
+    setError(null);
 
+    try {
+      let allItems: WisdomItem[] = [];
+      let from = 0;
+      const limit = 1000;
+      let finished = false;
+
+      while (!finished) {
+        const { data, error } = await supabase
+          .from("idioms")
+          .select("*")
+          .range(from, from + limit - 1);
+
+        if (error) {
+          setError(error.message);
+          finished = true;
+          continue;
+        }
+
+        if (data && data.length > 0) {
+          allItems = [...allItems, ...data];
+          from += limit;
+          if (data.length < limit) finished = true;
+        } else {
+          finished = true;
+        }
+      }
+
+      // Count per subcategory
+      const counts: Record<string, number> = {};
+      allItems.forEach((item) => {
+        const sub = item.subcategory?.trim() || "Uncategorized";
+        counts[sub] = (counts[sub] || 0) + 1;
+      });
+
+      setIdioms(allItems);
+      setSubcategoryCounts(counts);
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchIdioms();
+  }, []);
+
+  // --- Filter & search ---
   const filteredIdioms = idioms
-    .filter((item) => {
-      const matchesCategory =
-        activeSubcategory === 'all' ||
-        item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase();
-      return matchesCategory;
-    })
+    .filter((item) =>
+      activeSubcategory === "all"
+        ? true
+        : (item.subcategory || "").toLowerCase() === activeSubcategory.toLowerCase()
+    )
     .filter((item) => {
       if (!searchTerm) return true;
-      const lowerSearch = searchTerm.toLowerCase();
       return (
-        item.text.toLowerCase().includes(lowerSearch) ||
-        item.origin.toLowerCase().includes(lowerSearch) ||
-        item.subcategory?.toLowerCase().includes(lowerSearch)
+        item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
       );
-    })
-    .sort((a, b) => a.id.localeCompare(b.id));
+    });
 
+  // --- Pagination ---
   const totalPages = Math.ceil(filteredIdioms.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentIdioms = filteredIdioms.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(1); // reset page when filters change
   }, [searchTerm, activeSubcategory]);
 
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">
-            Error Loading Idioms
-          </h1>
+          <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Idioms</h1>
           <p className="text-muted-foreground">{error}</p>
         </div>
       </div>
@@ -77,72 +122,55 @@ const Idioms = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="font-bold font-wisdom text-zinc-900 text-5xl text-center">
-              Idioms
-            </h1>
-            <DownloadButton category="idioms" />
-          </div>
-          <p className="text-lg mb-6 text-center text-muted-foreground">
-            Cultural expressions with meanings that differ from literal interpretation
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl font-wisdom font-bold mb-2">Idioms</h1>
+          <p className="text-lg text-muted-foreground mb-4">
+            Popular phrases and sayings with figurative meanings
           </p>
+          <DownloadButton category="idioms" />
 
           {/* Search */}
-          <div className="w-full max-w-md mx-auto mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search idioms..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 bg-card border-border"
-              />
-            </div>
+          <div className="w-full max-w-md mx-auto mb-6 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search any idiom..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 bg-card border-border"
+            />
           </div>
 
-          {/* Categories */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-800">
-              Categories
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center">
+          {/* Subcategories */}
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            <Button
+              variant={activeSubcategory === "all" ? "wisdom" : "outline"}
+              size="sm"
+              onClick={() => setActiveSubcategory("all")}
+            >
+              All
+              <Badge variant="secondary" className="ml-2">
+                {idioms.length}
+              </Badge>
+            </Button>
+            {subcategories.map((sub) => (
               <Button
-                variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'}
+                key={sub}
+                variant={activeSubcategory === sub ? "wisdom" : "outline"}
                 size="sm"
-                onClick={() => setActiveSubcategory('all')}
+                onClick={() => setActiveSubcategory(sub)}
               >
-                All Idioms
+                {sub}
                 <Badge variant="secondary" className="ml-2">
-                  {idioms.length}
+                  {subcategoryCounts[sub] || 0}
                 </Badge>
               </Button>
-              {subcategories.map((subcategory) => {
-                const count = idioms.filter(
-                  (item) => item.subcategory?.toLowerCase() === subcategory.toLowerCase()
-                ).length;
-                return (
-                  <Button
-                    key={subcategory}
-                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
-                    size="sm"
-                    onClick={() => setActiveSubcategory(subcategory)}
-                  >
-                    {subcategory}
-                    <Badge variant="secondary" className="ml-2">
-                      {count}
-                    </Badge>
-                  </Button>
-                );
-              })}
-            </div>
+            ))}
           </div>
 
-          {/* AI Assistant */}
           <AIAssistant category="Idioms" />
         </div>
 
-        {/* Content */}
+        {/* Idioms Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
@@ -153,41 +181,27 @@ const Idioms = () => {
           </div>
         ) : filteredIdioms.length > 0 ? (
           <>
-            {/* Results Header */}
-            <div className="text-center mb-8">
-              <h2 className="font-bold font-wisdom mb-2 text-zinc-900 text-3xl">
-                {activeSubcategory === 'all' ? 'All Idioms' : `${activeSubcategory} Idioms`}
-              </h2>
-              <p className="text-muted-foreground">
-                {filteredIdioms.length} {filteredIdioms.length === 1 ? 'idiom' : 'idioms'} found
-                {searchTerm && ` for "${searchTerm}"`}
-              </p>
-            </div>
-
-            {/* Idioms Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentIdioms.map((item) => (
                 <WisdomCard key={item.id} item={item} />
               ))}
             </div>
 
-            {/* Prev / Next Pagination */}
+            {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-8 flex justify-center gap-4">
                 <Button
-                  variant="outline"
+                  onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                 >
-                  Previous
+                  Prev
                 </Button>
-                <span className="text-muted-foreground flex items-center">
+                <span className="self-center">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button
-                  variant="outline"
+                  onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                 >
                   Next
                 </Button>
@@ -195,17 +209,13 @@ const Idioms = () => {
             )}
           </>
         ) : (
-          // Empty state
           <div className="text-center py-16">
-            <div className="max-w-md mx-auto space-y-4">
-              <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold text-foreground">No Idioms Found</h3>
-              <p className="text-muted-foreground">
-                {searchTerm || activeSubcategory !== 'all'
-                  ? `No results found. Try a different keyword or category.`
-                  : 'No idioms available yet.'}
-              </p>
-            </div>
+            <h3 className="text-xl font-semibold">No Idioms Found</h3>
+            <p className="text-muted-foreground">
+              {searchTerm || activeSubcategory !== "all"
+                ? "No results found. Try a different keyword or category."
+                : "No idioms available yet."}
+            </p>
           </div>
         )}
       </div>
