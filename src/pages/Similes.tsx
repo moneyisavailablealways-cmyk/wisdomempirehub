@@ -7,14 +7,6 @@ import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Zap } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 
 const subcategories = [
   'Emotion',
@@ -32,39 +24,36 @@ const Similes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // --- Filter only similes ---
   const similes = items.filter((item) => item.type === 'simile');
 
-  // --- Apply filters (category → search → sort) ---
   const filteredSimiles = similes
     .filter((item) => {
       const matchesCategory =
         activeSubcategory === 'all' ||
-        item.subcategory.toLowerCase() === activeSubcategory.toLowerCase();
+        item.subcategory?.toLowerCase() === activeSubcategory.toLowerCase();
       return matchesCategory;
     })
     .filter((item) => {
       if (!searchTerm) return true;
+      const lowerSearch = searchTerm.toLowerCase();
       return (
-        item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
+        item.text.toLowerCase().includes(lowerSearch) ||
+        item.origin.toLowerCase().includes(lowerSearch) ||
+        item.subcategory?.toLowerCase().includes(lowerSearch)
       );
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  // --- Reset to page 1 when filters change ---
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeSubcategory]);
-
-  // --- Pagination logic ---
   const totalPages = Math.ceil(filteredSimiles.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentSimiles = filteredSimiles.slice(
     startIndex,
     startIndex + itemsPerPage
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeSubcategory]);
 
   if (error) {
     return (
@@ -91,8 +80,7 @@ const Similes = () => {
             <DownloadButton category="similes" />
           </div>
           <p className="text-lg text-center text-muted-foreground mb-6">
-            Comparative phrases that use "like" or "as" to create vivid
-            descriptions and imagery.
+            Comparative phrases that use "like" or "as" to create vivid descriptions and imagery.
           </p>
 
           {/* Search */}
@@ -127,15 +115,12 @@ const Similes = () => {
               {subcategories.map((subcategory) => {
                 const count = similes.filter(
                   (item) =>
-                    item.subcategory.toLowerCase() ===
-                    subcategory.toLowerCase()
+                    item.subcategory?.toLowerCase() === subcategory.toLowerCase()
                 ).length;
                 return (
                   <Button
                     key={subcategory}
-                    variant={
-                      activeSubcategory === subcategory ? 'wisdom' : 'outline'
-                    }
+                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
                     size="sm"
                     onClick={() => setActiveSubcategory(subcategory)}
                   >
@@ -172,8 +157,7 @@ const Similes = () => {
                   : `${activeSubcategory} Similes`}
               </h2>
               <p className="text-muted-foreground">
-                {filteredSimiles.length}{' '}
-                {filteredSimiles.length === 1 ? 'simile' : 'similes'} found
+                {filteredSimiles.length} {filteredSimiles.length === 1 ? 'simile' : 'similes'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
             </div>
@@ -185,47 +169,26 @@ const Similes = () => {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Prev / Next Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-8 flex justify-center gap-4 items-center">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                >
+                  Previous
+                </Button>
+                <span className="text-muted-foreground">
                   Page {currentPage} of {totalPages}
-                </p>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1)
-                            setCurrentPage(currentPage - 1);
-                        }}
-                        className={
-                          currentPage === 1
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages)
-                            setCurrentPage(currentPage + 1);
-                        }}
-                        className={
-                          currentPage === totalPages
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                >
+                  Next
+                </Button>
               </div>
             )}
           </>
