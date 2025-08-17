@@ -24,7 +24,6 @@ const subcategories = [
   "Nature",
   "People",
   "Emotions",
-  "Wisdom",
   "Work",
   "Friendship",
 ];
