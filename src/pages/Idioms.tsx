@@ -11,7 +11,6 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
@@ -33,10 +32,8 @@ const Idioms = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // ✅ Only idioms
   const idioms = items.filter((item) => item.type === 'idiom');
 
-  // ✅ Filtering logic
   const filteredIdioms = idioms
     .filter((item) => {
       const matchesCategory =
@@ -55,20 +52,14 @@ const Idioms = () => {
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  // ✅ Reset page when filters change
+  const totalPages = Math.ceil(filteredIdioms.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentIdioms = filteredIdioms.slice(startIndex, startIndex + itemsPerPage);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeSubcategory]);
 
-  // ✅ Pagination
-  const totalPages = Math.ceil(filteredIdioms.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentIdioms = filteredIdioms.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-
-  // ✅ Error state
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -85,7 +76,7 @@ const Idioms = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        {/* ✅ Header */}
+        {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h1 className="font-bold font-wisdom text-zinc-900 text-5xl text-center">
@@ -97,7 +88,7 @@ const Idioms = () => {
             Cultural expressions with meanings that differ from literal interpretation
           </p>
 
-          {/* ✅ Search Bar */}
+          {/* Search */}
           <div className="w-full max-w-md mx-auto mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -110,7 +101,7 @@ const Idioms = () => {
             </div>
           </div>
 
-          {/* ✅ Category Filters */}
+          {/* Categories */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3 text-center text-zinc-800">
               Categories
@@ -128,15 +119,12 @@ const Idioms = () => {
               </Button>
               {subcategories.map((subcategory) => {
                 const count = idioms.filter(
-                  (item) =>
-                    item.subcategory?.toLowerCase() === subcategory.toLowerCase()
+                  (item) => item.subcategory?.toLowerCase() === subcategory.toLowerCase()
                 ).length;
                 return (
                   <Button
                     key={subcategory}
-                    variant={
-                      activeSubcategory === subcategory ? 'wisdom' : 'outline'
-                    }
+                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
                     size="sm"
                     onClick={() => setActiveSubcategory(subcategory)}
                   >
@@ -150,13 +138,12 @@ const Idioms = () => {
             </div>
           </div>
 
-          {/* ✅ AI Assistant */}
+          {/* AI Assistant */}
           <AIAssistant category="Idioms" />
         </div>
 
-        {/* ✅ Content */}
+        {/* Content */}
         {loading ? (
-          // Skeleton loading
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="animate-pulse">
@@ -169,13 +156,10 @@ const Idioms = () => {
             {/* Results Header */}
             <div className="text-center mb-8">
               <h2 className="font-bold font-wisdom mb-2 text-zinc-900 text-3xl">
-                {activeSubcategory === 'all'
-                  ? 'All Idioms'
-                  : `${activeSubcategory} Idioms`}
+                {activeSubcategory === 'all' ? 'All Idioms' : `${activeSubcategory} Idioms`}
               </h2>
               <p className="text-muted-foreground">
-                {filteredIdioms.length}{' '}
-                {filteredIdioms.length === 1 ? 'idiom' : 'idioms'} found
+                {filteredIdioms.length} {filteredIdioms.length === 1 ? 'idiom' : 'idioms'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
             </div>
@@ -187,60 +171,26 @@ const Idioms = () => {
               ))}
             </div>
 
-            {/* ✅ Pagination with numbers */}
+            {/* Prev / Next Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-8 flex justify-center gap-4">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                >
+                  Previous
+                </Button>
+                <span className="text-muted-foreground flex items-center">
                   Page {currentPage} of {totalPages}
-                </p>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1) setCurrentPage((p) => p - 1);
-                        }}
-                        className={
-                          currentPage === 1
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-
-                    {[...Array(totalPages)].map((_, i) => (
-                      <PaginationItem key={i}>
-                        <PaginationLink
-                          href="#"
-                          isActive={currentPage === i + 1}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(i + 1);
-                          }}
-                        >
-                          {i + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
-
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages) setCurrentPage((p) => p + 1);
-                        }}
-                        className={
-                          currentPage === totalPages
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                >
+                  Next
+                </Button>
               </div>
             )}
           </>
@@ -249,9 +199,7 @@ const Idioms = () => {
           <div className="text-center py-16">
             <div className="max-w-md mx-auto space-y-4">
               <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold text-foreground">
-                No Idioms Found
-              </h3>
+              <h3 className="text-xl font-semibold text-foreground">No Idioms Found</h3>
               <p className="text-muted-foreground">
                 {searchTerm || activeSubcategory !== 'all'
                   ? `No results found. Try a different keyword or category.`
