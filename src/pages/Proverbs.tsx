@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { WisdomCard } from "@/components/WisdomCard";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { Search, BookOpen } from "lucide-react";
 
 type WisdomItem = {
@@ -176,9 +176,22 @@ const Proverbs = () => {
             ))}
           </div>
 
+          {/* AI Assistant */}
           <AIAssistant category="Proverbs" />
+
+          {/* Display total proverbs & subcategory header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
+              {activeSubcategory === "all" ? "All Proverbs" : `${activeSubcategory} Proverbs`}
+            </h2>
+            <p className="text-muted-foreground">
+              {filteredProverbs.length}{" "}
+              {filteredProverbs.length === 1 ? "proverb" : "proverbs"} found
+              {searchTerm && ` for "${searchTerm}"`}
+            </p>
+          </div>
         </div>
-        
+
         {/* Proverbs Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
