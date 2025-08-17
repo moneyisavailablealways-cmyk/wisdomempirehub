@@ -18,7 +18,7 @@ type WisdomItem = {
   subcategory: string;
 };
 
-const subcategories = ["Life Advice", "Motivation", "Work & Business", "Famous People"];
+const subcategories = ["Life Advice", "Daily Motivation", "Work & Business", "Famous People"];
 
 const Quotes = () => {
   const [quotes, setQuotes] = useState<WisdomItem[]>([]);
