@@ -11,10 +11,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Quote } from "lucide-react";
 type WisdomItem = {
   id: string;
-  type: string; // idiom, proverb, simile, quote
+  type: 'proverb' | 'quote' | 'idiom' | 'simile';
   text: string;
   origin: string;
   subcategory: string;
+  created_at: string;
 };
 const subcategories = ["Life Advice", "Daily Motivation", "Work & Business", "Famous People"];
 const Quotes = () => {
@@ -47,7 +48,7 @@ const Quotes = () => {
           continue;
         }
         if (data && data.length > 0) {
-          allItems = [...allItems, ...data];
+          allItems = [...allItems, ...(data as WisdomItem[])];
           from += limit;
           if (data.length < limit) finished = true;
         } else {
