@@ -23,7 +23,7 @@ const subcategories = [
   "Success",
   "Time",
   "Friendship",
-  "Relation",
+  "Relationship",
   "Work",
   "Wisdom",
   "Fear",
