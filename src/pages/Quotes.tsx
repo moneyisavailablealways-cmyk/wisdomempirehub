@@ -96,7 +96,7 @@ const Quotes = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-slate-950">
+      <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-5xl font-wisdom font-bold mb-2">Quotes</h1>
@@ -108,7 +108,7 @@ const Quotes = () => {
           {/* Search */}
           <div className="w-full max-w-md mx-auto mb-6 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search any quote..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 bg-card border-border" />
+            <Input placeholder="Search any quote..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 bg-card border-border my-[10px]" />
           </div>
 
           {/* Subcategories */}
@@ -132,10 +132,10 @@ const Quotes = () => {
 
           {/* Display total quotes & subcategory header */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
+            <h2 className="text-2xl font-bold font-wisdom mb-2 text-white">
               {activeSubcategory === "all" ? "All Quotes" : `${activeSubcategory} Quotes`}
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-orange-400">
               {filteredQuotes.length} {filteredQuotes.length === 1 ? "quote" : "quotes"} found
               {searchTerm && ` for "${searchTerm}"`}
             </p>
@@ -157,7 +157,7 @@ const Quotes = () => {
                 <Button onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                   Prev
                 </Button>
-                <span className="self-center">
+                <span className="self-center text-orange-500">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
