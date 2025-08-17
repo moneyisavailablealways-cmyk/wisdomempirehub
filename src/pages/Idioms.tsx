@@ -1,19 +1,7 @@
 import React from 'react';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
-import { SubcategoryList } from '@/components/SubcategoryList'; 
-
-
-const subcategoryMap: Record<string, string[]> = {
-  idioms: ['Success','Relationship','Work','Emotions','Time','Friendship','Life'],
-  };
-export default function SubcategoryList({ table }) {
-  const [counts, setCounts] = useState<{ subcategory: string; count: number }[]>([]);
-  const [items, setItems] = useState<any[]>([]);
-  const [selectedSub, setSelectedSub] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const perPage = 21;
-  const [totalCount, setTotalCount] = useState(0);
+import { SubcategoryList } from '@/components/SubcategoryList';
 
 const Idioms = () => {
   return (
