@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { WisdomCard } from "@/components/WisdomCard";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { supabase } from "@/integrations/supabase/client";
-import { Search } from "lucide-react";
+import { supabase } from "@/integratios/supabase/client";
+import { Search, Type } from "lucide-react";
 
 type WisdomItem = {
   id: string;
@@ -18,7 +18,17 @@ type WisdomItem = {
   subcategory: string;
 };
 
-const subcategories = ["Emotions", "Success", "Time", "Friendship", "Relationship", "Work", "Life",];
+const subcategories = [
+  "Emotions",
+  "Success",
+  "Time",
+  "Friendship",
+  "Relation",
+  "Work",
+  "Wisdom",
+  "Fear",
+  "Life",
+];
 
 const Idioms = () => {
   const [idioms, setIdioms] = useState<WisdomItem[]>([]);
@@ -30,7 +40,7 @@ const Idioms = () => {
   const itemsPerPage = 12;
   const [subcategoryCounts, setSubcategoryCounts] = useState<Record<string, number>>({});
 
-  // --- Fetch idioms from Supabase ---
+  // --- Fetch only idioms from Supabase ---
   const fetchIdioms = async () => {
     setLoading(true);
     setError(null);
@@ -125,7 +135,7 @@ const Idioms = () => {
         <div className="mb-8 text-center">
           <h1 className="text-5xl font-wisdom font-bold mb-2">Idioms</h1>
           <p className="text-lg text-muted-foreground mb-4">
-            Popular phrases and sayings with figurative meanings
+            Short expressions conveying figurative meaning and wisdom
           </p>
           <DownloadButton category="idioms" />
 
@@ -167,7 +177,19 @@ const Idioms = () => {
             ))}
           </div>
 
+          {/* AI Assistant */}
           <AIAssistant category="Idioms" />
+
+          {/* Display total idioms & subcategory header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
+              {activeSubcategory === "all" ? "All Idioms" : `${activeSubcategory} Idioms`}
+            </h2>
+            <p className="text-muted-foreground">
+              {filteredIdioms.length} {filteredIdioms.length === 1 ? "idiom" : "idioms"} found
+              {searchTerm && ` for "${searchTerm}"`}
+            </p>
+          </div>
         </div>
 
         {/* Idioms Grid */}
@@ -210,6 +232,7 @@ const Idioms = () => {
           </>
         ) : (
           <div className="text-center py-16">
+            <Type className="h-16 w-16 text-muted-foreground mx-auto" />
             <h3 className="text-xl font-semibold">No Idioms Found</h3>
             <p className="text-muted-foreground">
               {searchTerm || activeSubcategory !== "all"
