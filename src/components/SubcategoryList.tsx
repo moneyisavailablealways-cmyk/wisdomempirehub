@@ -94,7 +94,7 @@ export const SubcategoryList: React.FC<SubcategoryListProps> = ({ table }) => {
 
       setSubcategoriesState((prev) => ({
         ...prev,
-        [subcategory]: { ...prev[subcategory], items: data || [], totalCount: count || 0, loading: false },
+        [subcategory]: { ...prev[subcategory], items: (data || []) as WisdomItem[], totalCount: count || 0, loading: false },
       }));
     } catch (err) {
       console.error(`Error fetching items for ${subcategory}:`, err);
