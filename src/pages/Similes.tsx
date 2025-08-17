@@ -20,12 +20,12 @@ type WisdomItem = {
 };
 
 const subcategories = [
-  "Life",
+  "Behavior",
   "Nature",
   "People",
   "Emotions",
   "Animals",
-  "Friendship",
+  "Appearance",
 ];
 
 const Similes = () => {
