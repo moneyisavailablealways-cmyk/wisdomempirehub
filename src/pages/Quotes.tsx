@@ -30,7 +30,7 @@ const Quotes = () => {
   const itemsPerPage = 12;
   const [subcategoryCounts, setSubcategoryCounts] = useState<Record<string, number>>({});
 
-  // --- Fetch only quotes ---
+  // --- Fetch only quotes from Supabase ---
   const fetchQuotes = async () => {
     setLoading(true);
     setError(null);
@@ -167,7 +167,19 @@ const Quotes = () => {
             ))}
           </div>
 
+          {/* AI Assistant */}
           <AIAssistant category="Quotes" />
+
+          {/* Display total quotes & subcategory header */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
+              {activeSubcategory === "all" ? "All Quotes" : `${activeSubcategory} Quotes`}
+            </h2>
+            <p className="text-muted-foreground">
+              {filteredQuotes.length} {filteredQuotes.length === 1 ? "quote" : "quotes"} found
+              {searchTerm && ` for "${searchTerm}"`}
+            </p>
+          </div>
         </div>
 
         {/* Quotes Grid */}
