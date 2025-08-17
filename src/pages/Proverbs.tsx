@@ -96,7 +96,7 @@ const Proverbs = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-gray-400">
+      <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-5xl font-wisdom font-bold mb-2 text-white">Proverbs</h1>
