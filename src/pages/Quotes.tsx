@@ -1,55 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { WisdomCard } from '@/components/WisdomCard';
-import { AIAssistant } from '@/components/AIAssistant';
-import { DownloadButton } from '@/components/DownloadButton';
-import { useWisdomData } from '@/hooks/useWisdomData';
-import { Search, Quote } from 'lucide-react';
+"use client";
 
-const subcategories = ['Life Advice', 'Daily Motivation', 'Work & Business', 'Famous People'];
+import React, { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { WisdomCard } from "@/components/WisdomCard";
+import { AIAssistant } from "@/components/AIAssistant";
+import { DownloadButton } from "@/components/DownloadButton";
+import { supabase } from "@/integrations/supabase/client";
+import { Search, Quote } from "lucide-react";
+
+type WisdomItem = {
+  id: string;
+  type: string; // idiom, proverb, simile, quote
+  text: string;
+  origin: string;
+  subcategory: string;
+};
+
+const subcategories = ["Life Advice", "Motivation", "Work & Business", "Famous People"];
 
 const Quotes = () => {
-  const { items, loading, error } = useWisdomData();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [quotes, setQuotes] = useState<WisdomItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const [subcategoryCounts, setSubcategoryCounts] = useState<Record<string, number>>({});
 
-  const quotes = items.filter((item) => item.type === 'quote');
+  // --- Fetch only quotes ---
+  const fetchQuotes = async () => {
+    setLoading(true);
+    setError(null);
 
+    try {
+      let allItems: WisdomItem[] = [];
+      let from = 0;
+      const limit = 1000;
+      let finished = false;
+
+      while (!finished) {
+        const { data, error } = await supabase
+          .from("quotes")
+          .select("*")
+          .range(from, from + limit - 1);
+
+        if (error) {
+          setError(error.message);
+          finished = true;
+          continue;
+        }
+
+        if (data && data.length > 0) {
+          allItems = [...allItems, ...data];
+          from += limit;
+          if (data.length < limit) finished = true;
+        } else {
+          finished = true;
+        }
+      }
+
+      // Count per subcategory
+      const counts: Record<string, number> = {};
+      allItems.forEach((item) => {
+        const sub = item.subcategory?.trim() || "Uncategorized";
+        counts[sub] = (counts[sub] || 0) + 1;
+      });
+
+      setQuotes(allItems);
+      setSubcategoryCounts(counts);
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuotes();
+  }, []);
+
+  // --- Filter & search ---
   const filteredQuotes = quotes
-    .filter((item) => {
-      const sub = item.subcategory?.toLowerCase() || '';
-      return activeSubcategory === 'all' || sub === activeSubcategory.toLowerCase();
-    })
+    .filter((item) =>
+      activeSubcategory === "all"
+        ? true
+        : (item.subcategory || "").toLowerCase() === activeSubcategory.toLowerCase()
+    )
     .filter((item) => {
       if (!searchTerm) return true;
-      const lowerSearch = searchTerm.toLowerCase();
       return (
-        item.text.toLowerCase().includes(lowerSearch) ||
-        item.origin.toLowerCase().includes(lowerSearch) ||
-        item.subcategory?.toLowerCase().includes(lowerSearch)
+        item.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
       );
-    })
-    .sort((a, b) => a.id.localeCompare(b.id));
+    });
 
+  // --- Pagination ---
   const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentQuotes = filteredQuotes.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(1); // reset page when filters change
   }, [searchTerm, activeSubcategory]);
 
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">
-            Error Loading Quotes
-          </h1>
+          <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Quotes</h1>
           <p className="text-muted-foreground">{error}</p>
         </div>
       </div>
@@ -60,66 +122,51 @@ const Quotes = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-4xl font-wisdom font-extrabold text-slate-950 text-center">
-              Quotes
-            </h1>
-            <DownloadButton category="quotes" />
-          </div>
-          <p className="text-lg mb-6 text-center text-slate-300">
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl font-wisdom font-bold mb-2">Quotes</h1>
+          <p className="text-lg text-muted-foreground mb-4">
             Inspiring words from notable figures and thinkers
           </p>
+          <DownloadButton category="quotes" />
 
           {/* Search */}
-          <div className="w-full max-w-md mb-6 mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search any quote..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 bg-card border-border"
-              />
-            </div>
+          <div className="w-full max-w-md mx-auto mb-6 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search any quote..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 bg-card border-border"
+            />
           </div>
 
-          {/* Categories */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">
-              Categories
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center">
+          {/* Subcategories */}
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            <Button
+              variant={activeSubcategory === "all" ? "wisdom" : "outline"}
+              size="sm"
+              onClick={() => setActiveSubcategory("all")}
+            >
+              All
+              <Badge variant="secondary" className="ml-2">
+                {quotes.length}
+              </Badge>
+            </Button>
+            {subcategories.map((sub) => (
               <Button
-                variant={activeSubcategory === 'all' ? 'wisdom' : 'outline'}
+                key={sub}
+                variant={activeSubcategory === sub ? "wisdom" : "outline"}
                 size="sm"
-                onClick={() => setActiveSubcategory('all')}
+                onClick={() => setActiveSubcategory(sub)}
               >
-                All Quotes
+                {sub}
                 <Badge variant="secondary" className="ml-2">
-                  {quotes.length}
+                  {subcategoryCounts[sub] || 0}
                 </Badge>
               </Button>
-              {subcategories.map((subcategory) => {
-                const count = quotes.filter(
-                  (item) => item.subcategory?.toLowerCase() === subcategory.toLowerCase()
-                ).length;
-                return (
-                  <Button
-                    key={subcategory}
-                    variant={activeSubcategory === subcategory ? 'wisdom' : 'outline'}
-                    size="sm"
-                    onClick={() => setActiveSubcategory(subcategory)}
-                  >
-                    {subcategory}
-                    <Badge variant="secondary" className="ml-2">{count}</Badge>
-                  </Button>
-                );
-              })}
-            </div>
+            ))}
           </div>
 
-          {/* AI Assistant */}
           <AIAssistant category="Quotes" />
         </div>
 
@@ -134,41 +181,27 @@ const Quotes = () => {
           </div>
         ) : filteredQuotes.length > 0 ? (
           <>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-wisdom mb-2 text-zinc-950">
-                {activeSubcategory === 'all'
-                  ? 'All Quotes'
-                  : `${activeSubcategory} Quotes`}
-              </h2>
-              <p className="text-muted-foreground">
-                {filteredQuotes.length} {filteredQuotes.length === 1 ? 'quote' : 'quotes'} found
-                {searchTerm && ` for "${searchTerm}"`}
-              </p>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentQuotes.map((item) => (
                 <WisdomCard key={item.id} item={item} />
               ))}
             </div>
 
-            {/* Prev / Next Pagination */}
+            {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex justify-center gap-4 items-center">
+              <div className="mt-8 flex justify-center gap-4">
                 <Button
-                  variant="outline"
+                  onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                 >
-                  Previous
+                  Prev
                 </Button>
-                <span className="text-muted-foreground">
+                <span className="self-center">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button
-                  variant="outline"
+                  onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                 >
                   Next
                 </Button>
@@ -180,9 +213,9 @@ const Quotes = () => {
             <Quote className="h-16 w-16 text-muted-foreground mx-auto" />
             <h3 className="text-xl font-semibold">No Quotes Found</h3>
             <p className="text-muted-foreground">
-              {searchTerm || activeSubcategory !== 'all'
-                ? 'No results found. Try a different keyword or category.'
-                : 'No quotes available yet.'}
+              {searchTerm || activeSubcategory !== "all"
+                ? "No results found. Try a different keyword or category."
+                : "No quotes available yet."}
             </p>
           </div>
         )}
