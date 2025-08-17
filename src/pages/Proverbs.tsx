@@ -108,7 +108,7 @@ const Proverbs = () => {
           {/* Search */}
           <div className="w-full max-w-md mx-auto mb-6 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search any proverb..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 bg-card border-border" />
+            <Input placeholder="Search any proverb..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 bg-card border-border mx-0 my-[11px]" />
           </div>
 
           {/* Subcategories */}
