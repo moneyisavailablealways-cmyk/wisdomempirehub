@@ -7,15 +7,8 @@ import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, Quote } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 
-const subcategories = ['Life Advice', 'Motivation', 'Work & Business', 'Famous People'];
+const subcategories = ['Life Advice', 'Daily Motivation', 'Work & Business', 'Famous People'];
 
 const Quotes = () => {
   const { items, loading, error } = useWisdomData();
@@ -24,10 +17,8 @@ const Quotes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Only take quotes
   const quotes = items.filter((item) => item.type === 'quote');
 
-  // Apply filters
   const filteredQuotes = quotes
     .filter((item) => {
       const sub = item.subcategory?.toLowerCase() || '';
@@ -35,26 +26,22 @@ const Quotes = () => {
     })
     .filter((item) => {
       if (!searchTerm) return true;
-      const text = item.text?.toLowerCase() || '';
-      const origin = item.origin?.toLowerCase() || '';
-      const sub = item.subcategory?.toLowerCase() || '';
+      const lowerSearch = searchTerm.toLowerCase();
       return (
-        text.includes(searchTerm.toLowerCase()) ||
-        origin.includes(searchTerm.toLowerCase()) ||
-        sub.includes(searchTerm.toLowerCase())
+        item.text.toLowerCase().includes(lowerSearch) ||
+        item.origin.toLowerCase().includes(lowerSearch) ||
+        item.subcategory?.toLowerCase().includes(lowerSearch)
       );
     })
-    .sort((a, b) => (a.id > b.id ? 1 : -1)); // numeric-safe sort
+    .sort((a, b) => a.id.localeCompare(b.id));
 
-  // Reset page on filter/search changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeSubcategory]);
-
-  // Pagination
   const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentQuotes = filteredQuotes.slice(startIndex, startIndex + itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeSubcategory]);
 
   if (error) {
     return (
@@ -71,11 +58,11 @@ const Quotes = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 bg-slate-500">
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-4xl font-wisdom text-center font-extrabold text-slate-950">
+            <h1 className="text-4xl font-wisdom font-extrabold text-slate-950 text-center">
               Quotes
             </h1>
             <DownloadButton category="quotes" />
@@ -97,7 +84,7 @@ const Quotes = () => {
             </div>
           </div>
 
-          {/* Subcategories */}
+          {/* Categories */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-3 text-center text-zinc-50">
               Categories
@@ -115,9 +102,7 @@ const Quotes = () => {
               </Button>
               {subcategories.map((subcategory) => {
                 const count = quotes.filter(
-                  (item) =>
-                    item.subcategory?.toLowerCase() ===
-                    subcategory.toLowerCase()
+                  (item) => item.subcategory?.toLowerCase() === subcategory.toLowerCase()
                 ).length;
                 return (
                   <Button
@@ -156,8 +141,7 @@ const Quotes = () => {
                   : `${activeSubcategory} Quotes`}
               </h2>
               <p className="text-muted-foreground">
-                {filteredQuotes.length}{' '}
-                {filteredQuotes.length === 1 ? 'quote' : 'quotes'} found
+                {filteredQuotes.length} {filteredQuotes.length === 1 ? 'quote' : 'quotes'} found
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
             </div>
@@ -168,59 +152,38 @@ const Quotes = () => {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Prev / Next Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-col items-center space-y-4 md:relative fixed bottom-4 left-0 right-0 z-10 md:z-auto bg-background/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-4 md:p-0 border-t md:border-t-0">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-8 flex justify-center gap-4 items-center">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                >
+                  Previous
+                </Button>
+                <span className="text-muted-foreground">
                   Page {currentPage} of {totalPages}
-                </p>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1) setCurrentPage(currentPage - 1);
-                        }}
-                        className={
-                          currentPage === 1
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages)
-                            setCurrentPage(currentPage + 1);
-                        }}
-                        className={
-                          currentPage === totalPages
-                            ? 'pointer-events-none opacity-50'
-                            : 'cursor-pointer'
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                >
+                  Next
+                </Button>
               </div>
             )}
           </>
         ) : (
           <div className="text-center py-16">
-            <div className="max-w-md mx-auto space-y-4">
-              <Quote className="h-16 w-16 text-muted-foreground mx-auto" />
-              <h3 className="text-xl font-semibold text-foreground">No Quotes Found</h3>
-              <p className="text-muted-foreground">
-                {searchTerm || activeSubcategory !== 'all'
-                  ? `No results found. Try a different keyword or category.`
-                  : 'No quotes available yet.'}
-              </p>
-            </div>
+            <Quote className="h-16 w-16 text-muted-foreground mx-auto" />
+            <h3 className="text-xl font-semibold">No Quotes Found</h3>
+            <p className="text-muted-foreground">
+              {searchTerm || activeSubcategory !== 'all'
+                ? 'No results found. Try a different keyword or category.'
+                : 'No quotes available yet.'}
+            </p>
           </div>
         )}
       </div>
@@ -229,3 +192,4 @@ const Quotes = () => {
 };
 
 export default Quotes;
+v
