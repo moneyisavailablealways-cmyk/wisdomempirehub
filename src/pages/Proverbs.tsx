@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '../integration/supabase/client';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 
@@ -16,7 +16,6 @@ const Proverbs = () => {
   const perPage = 21;
   const [totalCount, setTotalCount] = useState(0);
 
-  // ✅ Load subcategory counts
   useEffect(() => {
     async function fetchCounts() {
       const subs = subcategoryMap[table];
@@ -33,7 +32,6 @@ const Proverbs = () => {
     fetchCounts();
   }, [table]);
 
-  // ✅ Load items when subcategory/page changes
   useEffect(() => {
     if (!selectedSub) return;
     async function fetchItems() {
@@ -55,25 +53,26 @@ const Proverbs = () => {
     fetchItems();
   }, [selectedSub, page, table]);
 
+  const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-700 text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="font-wisdom text-foreground font-bold text-5xl">Proverbs</h1>
-            <DownloadButton category="proverbs" />
-          </div>
-          <p className="text-lg mb-6 text-center text-muted-foreground">
+        <div className="mb-8 text-center">
+          <h1 className="font-wisdom text-5xl font-bold mb-2">Proverbs</h1>
+          <p className="text-gray-300 text-lg mb-6">
             Traditional sayings that convey wisdom through generations
           </p>
 
           {/* AI Assistant */}
-          <AIAssistant category="Proverbs" />
+          <div className="mb-6">
+            <AIAssistant category="Proverbs" />
+          </div>
         </div>
 
         {/* Subcategory Buttons */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
           {counts.map((c) => (
             <button
               key={c.subcategory}
@@ -81,33 +80,62 @@ const Proverbs = () => {
                 setSelectedSub(c.subcategory);
                 setPage(1);
               }}
-              className={`px-4 py-2 rounded-xl border ${
-                selectedSub === c.subcategory ? 'bg-primary text-white' : 'bg-card'
+              className={`px-4 py-2 rounded-full border ${
+                selectedSub === c.subcategory
+                  ? 'bg-yellow-500 text-black font-bold'
+                  : 'bg-gray-800 text-gray-300'
               }`}
             >
-              {c.subcategory} ({c.count})
+              {capitalize(c.subcategory)} ({c.count})
             </button>
           ))}
         </div>
 
-        {/* Items List */}
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* All Proverbs Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-semibold">All Proverbs</h2>
+          <p className="text-yellow-400">{totalCount} proverbs found</p>
+        </div>
+
+        {/* Items Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item) => (
-            <li key={item.id} className="p-4 rounded-xl shadow bg-card">
-              {item.text}
-            </li>
+            <div
+              key={item.id}
+              className="bg-gray-800 rounded-xl p-4 shadow-lg flex flex-col justify-between"
+            >
+              {/* Tag */}
+              <div className="flex justify-between text-xs text-gray-400 mb-2">
+                <span>PROVERB • {capitalize(item.subcategory)}</span>
+                {item.region && (
+                  <span className="bg-blue-600 px-2 py-0.5 rounded-full">{item.region}</span>
+                )}
+              </div>
+
+              {/* Proverb Text */}
+              <p className="text-yellow-300 text-lg font-medium mb-4">"{item.text}"</p>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between text-gray-400 text-sm">
+                <button>♡</button>
+                <button>🔊</button>
+                <button>Meaning</button>
+                <button>🔖</button>
+                <button>⤴</button>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
 
         {/* Pagination */}
         {totalCount > perPage && (
-          <div className="flex gap-2 justify-center mt-6">
+          <div className="flex gap-2 justify-center mt-8">
             {Array.from({ length: Math.ceil(totalCount / perPage) }, (_, i) => (
               <button
                 key={i}
                 onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 rounded ${
-                  page === i + 1 ? 'bg-primary text-white' : 'bg-card'
+                className={`px-3 py-1 rounded-full ${
+                  page === i + 1 ? 'bg-yellow-500 text-black' : 'bg-gray-800 text-gray-300'
                 }`}
               >
                 {i + 1}
