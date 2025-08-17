@@ -135,7 +135,7 @@ const Proverbs = () => {
             <h2 className="text-2xl font-bold font-wisdom mb-2 text-white">
               {activeSubcategory === "all" ? "All Proverbs" : `${activeSubcategory} Proverbs`}
             </h2>
-            <p className="text-neutral-950">
+            <p className="text-amber-500">
               {filteredProverbs.length}{" "}
               {filteredProverbs.length === 1 ? "proverb" : "proverbs"} found
               {searchTerm && ` for "${searchTerm}"`}
