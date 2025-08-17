@@ -27,8 +27,8 @@ const subcategories = [
   "Relationship",
   "Work",
   "Wisdom",
-  "Fear",
-  "Life",
+  "fear",
+  "life",
 ];
 
 const Idioms = () => {
