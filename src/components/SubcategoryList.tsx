@@ -1,23 +1,8 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { WisdomCard } from '@/components/WisdomCard';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Search } from 'lucide-react';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
-
-interface SubcategoryCount {
-  subcategory: string;
-  count: number;
-}
+import { WisdomCard } from '@/components/WisdomCard';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 
 interface WisdomItem {
   id: string;
@@ -27,257 +12,185 @@ interface WisdomItem {
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
   meaning?: string;
   example?: string;
-  bg_style?: string;
-  audio_voice_type?: 'child' | 'youth' | 'old';
-  video_url?: string;
   created_at: string;
   user_id?: string;
+}
+
+interface SubcategoryCount {
+  subcategory: string;
+  count: number;
 }
 
 interface SubcategoryListProps {
   table: 'proverbs' | 'quotes' | 'idioms' | 'similes';
 }
 
+interface SubcategoryState {
+  items: WisdomItem[];
+  page: number;
+  totalCount: number;
+  searchQuery: string;
+  loading: boolean;
+}
+
 export const SubcategoryList: React.FC<SubcategoryListProps> = ({ table }) => {
   const [counts, setCounts] = useState<SubcategoryCount[]>([]);
-  const [items, setItems] = useState<WisdomItem[]>([]);
-  const [selectedSub, setSelectedSub] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [subcategoriesState, setSubcategoriesState] = useState<Record<string, SubcategoryState>>({});
   const [countsLoading, setCountsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const perPage = 21;
-  const [totalCount, setTotalCount] = useState(0);
 
-  // Load subcategory counts using proper aggregation to avoid 1000-row limit
+  // Fetch all subcategories and counts
   useEffect(() => {
     async function fetchCounts() {
       try {
         setCountsLoading(true);
-        setError(null);
-        
-        // Get all subcategories to find unique ones
-        const { data: allSubcategories, error: subcatError } = await supabase
-          .from(table)
-          .select('subcategory');
+        const { data: allData, error } = await supabase.from(table).select('subcategory');
+        if (error) throw error;
 
-        if (subcatError) throw subcatError;
+        const uniqueSubcategories = [...new Set(allData?.map((d: any) => d.subcategory))];
+        const countsData: SubcategoryCount[] = uniqueSubcategories.map((sub) => ({
+          subcategory: sub,
+          count: allData?.filter((d: any) => d.subcategory === sub).length || 0,
+        }));
 
-        // Get unique subcategories
-        const uniqueSubcategories = [...new Set((allSubcategories || []).map(item => item.subcategory))];
-
-        // Get count for each subcategory using exact count
-        const countPromises = uniqueSubcategories.map(async (subcategory) => {
-          const { count, error } = await supabase
-            .from(table)
-            .select('*', { count: 'exact', head: true })
-            .eq('subcategory', subcategory);
-          
-          if (error) throw error;
-          return { subcategory, count: count || 0 };
-        });
-
-        const countsData = await Promise.all(countPromises);
         setCounts(countsData.sort((a, b) => a.subcategory.localeCompare(b.subcategory)));
-      } catch (err) {
-        console.error('Error fetching counts:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load categories');
+
+        // Initialize state per subcategory
+        const initialState: Record<string, SubcategoryState> = {};
+        countsData.forEach((c) => {
+          initialState[c.subcategory] = { items: [], page: 1, totalCount: 0, searchQuery: '', loading: true };
+        });
+        setSubcategoriesState(initialState);
       } finally {
         setCountsLoading(false);
       }
     }
-    
     fetchCounts();
   }, [table]);
 
-  // Load items when subcategory/page/search changes
-  useEffect(() => {
-    if (!selectedSub) return;
-    
-    async function fetchItems() {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const from = (page - 1) * perPage;
-        const to = from + perPage - 1;
+  // Fetch items for a subcategory
+  const fetchItems = async (subcategory: string) => {
+    const state = subcategoriesState[subcategory];
+    if (!state) return;
 
-        let query = supabase
-          .from(table)
-          .select('*', { count: 'exact' })
-          .eq('subcategory', selectedSub);
+    setSubcategoriesState((prev) => ({
+      ...prev,
+      [subcategory]: { ...prev[subcategory], loading: true },
+    }));
 
-        // Add search filter if search query exists
-        if (searchQuery.trim()) {
-          query = query.or(`text.ilike.%${searchQuery}%,origin.ilike.%${searchQuery}%,meaning.ilike.%${searchQuery}%`);
-        }
+    try {
+      const from = (state.page - 1) * perPage;
+      const to = from + perPage - 1;
 
-        const { data, count, error } = await query
-          .range(from, to)
-          .order('id', { ascending: true });
-
-        if (error) throw error;
-        
-        setItems((data || []) as WisdomItem[]);
-        setTotalCount(count || 0);
-      } catch (err) {
-        console.error('Error fetching items:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load items');
-      } finally {
-        setLoading(false);
+      let query = supabase.from(table).select('*', { count: 'exact' }).eq('subcategory', subcategory);
+      if (state.searchQuery.trim()) {
+        query = query.or(
+          `text.ilike.%${state.searchQuery}%,origin.ilike.%${state.searchQuery}%,meaning.ilike.%${state.searchQuery}%`
+        );
       }
+
+      const { data, count, error } = await query.range(from, to).order('id', { ascending: true });
+      if (error) throw error;
+
+      setSubcategoriesState((prev) => ({
+        ...prev,
+        [subcategory]: { ...prev[subcategory], items: data || [], totalCount: count || 0, loading: false },
+      }));
+    } catch (err) {
+      console.error(`Error fetching items for ${subcategory}:`, err);
+      setSubcategoriesState((prev) => ({
+        ...prev,
+        [subcategory]: { ...prev[subcategory], loading: false },
+      }));
     }
-    
-    fetchItems();
-  }, [selectedSub, page, table, searchQuery]);
+  };
 
-  const handleSubcategoryClick = useCallback((subcategory: string) => {
-    setSelectedSub(subcategory);
-    setPage(1);
-    setSearchQuery(''); // Reset search when changing subcategory
-  }, []);
+  // Fetch items whenever counts are loaded
+  useEffect(() => {
+    counts.forEach((c) => fetchItems(c.subcategory));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counts]);
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchQuery(value);
-    setPage(1); // Reset to first page when searching
-  }, []);
+  // Search per subcategory
+  const handleSearchChange = (subcategory: string, value: string) => {
+    setSubcategoriesState((prev) => ({
+      ...prev,
+      [subcategory]: { ...prev[subcategory], searchQuery: value, page: 1 },
+    }));
+    fetchItems(subcategory);
+  };
 
-  const totalPages = Math.ceil(totalCount / perPage);
+  // Pagination per subcategory
+  const handlePageChange = (subcategory: string, page: number) => {
+    setSubcategoriesState((prev) => ({
+      ...prev,
+      [subcategory]: { ...prev[subcategory], page },
+    }));
+    fetchItems(subcategory);
+  };
 
-  if (error) {
+  if (countsLoading) {
     return (
-      <div className="text-center py-8">
-        <p className="text-destructive">{error}</p>
+      <div className="flex justify-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Subcategory Buttons */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold mb-3 text-center text-foreground">Categories</h3>
-        {countsLoading ? (
-          <div className="flex justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-2 justify-center">
-            {counts.map((c) => (
-              <Button
-                key={c.subcategory}
-                variant={selectedSub === c.subcategory ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => handleSubcategoryClick(c.subcategory)}
-                className="gap-2"
-              >
-                {c.subcategory}
-                <Badge variant="secondary">
-                  {c.count}
-                </Badge>
-              </Button>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="space-y-12">
+      {counts.map((c) => {
+        const state = subcategoriesState[c.subcategory];
+        if (!state) return null;
+        const totalPages = Math.ceil(state.totalCount / perPage);
 
-      {/* Items Display */}
-      {selectedSub && (
-        <div className="space-y-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold font-wisdom mb-2 text-foreground">
-              {selectedSub} {table.charAt(0).toUpperCase() + table.slice(1)}
-            </h2>
-            <p className="text-muted-foreground">
-              {totalCount} {totalCount === 1 ? 'item' : 'items'} found
-            </p>
-          </div>
+        return (
+          <div key={c.subcategory}>
+            <h2 className="text-2xl font-bold mb-2">{c.subcategory}</h2>
+            <p className="text-muted-foreground mb-4">{state.totalCount} items found</p>
 
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            {/* Search */}
+            <div className="max-w-md mb-4">
               <Input
                 type="text"
-                placeholder={`Search ${selectedSub.toLowerCase()} ${table}...`}
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10"
+                placeholder={`Search ${c.subcategory}...`}
+                value={state.searchQuery}
+                onChange={(e) => handleSearchChange(c.subcategory, e.target.value)}
               />
             </div>
-          </div>
 
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : items.length > 0 ? (
-            <>
+            {/* Items */}
+            {state.loading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : state.items.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map((item) => (
+                {state.items.map((item) => (
                   <WisdomCard key={item.id} item={item} />
                 ))}
               </div>
+            ) : (
+              <p className="text-muted-foreground">No items found.</p>
+            )}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-8 flex flex-col items-center space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Page {page} of {totalPages}
-                  </p>
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (page > 1) setPage(page - 1);
-                          }}
-                          className={page === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        const pageNum = i + 1;
-                        return (
-                          <PaginationItem key={pageNum}>
-                            <PaginationLink
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setPage(pageNum);
-                              }}
-                              isActive={page === pageNum}
-                              className="cursor-pointer"
-                            >
-                              {pageNum}
-                            </PaginationLink>
-                          </PaginationItem>
-                        );
-                      })}
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (page < totalPages) setPage(page + 1);
-                          }}
-                          className={page === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No items found for this category.</p>
-            </div>
-          )}
-        </div>
-      )}
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-4 flex justify-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    className={`px-3 py-1 rounded ${state.page === p ? 'bg-primary text-white' : 'bg-gray-200'}`}
+                    onClick={() => handlePageChange(c.subcategory, p)}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
