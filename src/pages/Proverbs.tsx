@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '.Proverbs./supabaseClient';
+import { supabase } from 'Proverbs/supabaseClient';
 import { AIAssistant } from '@/components/AIAssistant';
 import { DownloadButton } from '@/components/DownloadButton';
 
