@@ -177,6 +177,7 @@ const Index = () => {
                     <span className="text-xs text-muted-foreground">{proverbs.length} items</span>
                   </a>
                 </Button>
+
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                   <a href="/quotes">
                     <Quote className="h-6 w-6" />
