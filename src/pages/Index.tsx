@@ -17,6 +17,23 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
+  const [quotesCount, setQuotesCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchQuotesCount = async () => {
+      const { count, error } = await supabase
+        .from("quotes")
+        .select("*", { count: "exact", head: true });
+
+      if (error) {
+        console.error("Error fetching quotes count:", error.message);
+      } else {
+        setQuotesCount(count ?? 0);
+      }
+    };
+
+    fetchQuotesCount();
+  }, []);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -220,7 +237,9 @@ const Index = () => {
                   <a href="/quotes">
                     <Quote className="h-6 w-6" />
                     <span>Quotes</span>
-                    <span className="text-xs text-muted-foreground">{quotes.length} items</span>
+                    <span className="text-xs text-muted-foreground">
+                      {quotesCount !== null ? `${quotesCount} items` : "Loading..."}
+                    </span>
                   </a>
                 </Button>
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
