@@ -14,6 +14,18 @@ const Index = () => {
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [totalProverbs, setTotalProverbs] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const { count, error } = await supabase
+        .from('proverbs')
+        .select('id', { count: 'exact', head: true }); // head: true returns only count
+      if (!error && count !== null) setTotalProverbs(count);
+    };
+    fetchCount();
+  }, []);
+
   // Get daily items (using a simple hash based on date)
   const today = new Date().toDateString();
   const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
