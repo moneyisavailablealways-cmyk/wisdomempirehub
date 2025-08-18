@@ -18,7 +18,7 @@ const Index = () => {
   const [quotesCount, setQuotesCount] = useState<number | null>(null);
   const [similesCount, setSimilesCount] = useState<number | null>(null);
 
-  // --- Page loading for 3 seconds ---
+  // --- Page loading for 3 seconds with spinner ---
   const [pageLoading, setPageLoading] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => setPageLoading(false), 3000);
@@ -97,13 +97,14 @@ const Index = () => {
     );
   }
 
-  // --- Show page-level loading first ---
+  // --- Show page-level loading first with spinner ---
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center animate-pulse">
-          <h1 className="text-3xl font-bold text-wisdom-blue">Wisdom Empire</h1>
-          <p className="text-muted-foreground mt-2">Loading Page... Wait</p>
+        <div className="text-center">
+          <div className="border-4 border-wisdom-blue border-t-transparent rounded-full w-16 h-16 mx-auto animate-spin mb-4"></div>
+          <h1 className="text-2xl font-bold text-wisdom-blue">Wisdom Empire</h1>
+          <p className="text-muted-foreground mt-2">Loading Page...</p>
         </div>
       </div>
     );
@@ -213,54 +214,6 @@ const Index = () => {
               </Card>}
             </div>
 
-            {/* Quick Navigation */}
-            <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <a href="/proverbs">
-                      <BookOpen className="h-6 w-6" />
-                      <span>Proverbs</span>
-                      <span className="text-xs text-muted-foreground">
-                        {totalProverbs ?? "Loading..."} items
-                      </span>
-                    </a>
-                  </Button>
-
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <a href="/quotes">
-                      <Quote className="h-6 w-6" />
-                      <span>Quotes</span>
-                      <span className="text-xs text-muted-foreground">
-                        {quotesCount ?? "Loading..."} items
-                      </span>
-                    </a>
-                  </Button>
-
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <a href="/idioms">
-                      <MessageSquare className="h-6 w-6" />
-                      <span>Idioms</span>
-                      <span className="text-xs text-muted-foreground">
-                        {totalIdioms ?? "Loading..."} items
-                      </span>
-                    </a>
-                  </Button>
-
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <a href="/similes">
-                      <Sparkles className="h-6 w-6" />
-                      <span>Similes</span>
-                      <span className="text-xs text-muted-foreground">
-                        {similesCount ?? "Loading..."} items
-                      </span>
-                    </a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Most Viewed */}
             <div className="max-w-6xl mx-auto px-4 py-12">
               <h2 className="text-2xl font-bold mb-6 text-center">Most Viewed</h2>
@@ -280,6 +233,47 @@ const Index = () => {
                 ))}
               </div>
             </div>
+
+            {/* --- Explore by Category (moved below Recently Added) --- */}
+            <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20 max-w-6xl mx-auto px-4 py-12">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
+                <div className="grid md:grid-cols-4 gap-4">
+                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                    <a href="/proverbs">
+                      <BookOpen className="h-6 w-6" />
+                      <span>Proverbs</span>
+                      <span className="text-xs text-muted-foreground">{totalProverbs ?? "Loading..."} items</span>
+                    </a>
+                  </Button>
+
+                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                    <a href="/quotes">
+                      <Quote className="h-6 w-6" />
+                      <span>Quotes</span>
+                      <span className="text-xs text-muted-foreground">{quotesCount ?? "Loading..."} items</span>
+                    </a>
+                  </Button>
+
+                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                    <a href="/idioms">
+                      <MessageSquare className="h-6 w-6" />
+                      <span>Idioms</span>
+                      <span className="text-xs text-muted-foreground">{totalIdioms ?? "Loading..."} items</span>
+                    </a>
+                  </Button>
+
+                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                    <a href="/similes">
+                      <Sparkles className="h-6 w-6" />
+                      <span>Similes</span>
+                      <span className="text-xs text-muted-foreground">{similesCount ?? "Loading..."} items</span>
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
           </div>
         )}
       </section>
