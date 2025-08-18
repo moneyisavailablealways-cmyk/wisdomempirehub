@@ -7,6 +7,7 @@ import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Zap, TrendingUp, Clock, Star } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
 import { supabase } from '@/integrations/supabase/client';
+
 const Index = () => {
   const {
     items,
@@ -15,15 +16,22 @@ const Index = () => {
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [totalProverbs, setTotalProverbs] = useState(0);
+  export default function ProverbsButton() {
+  const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCount = async () => {
       const { count, error } = await supabase
-        .from('proverbs')
-        .select('id', { count: 'exact', head: true }); // head: true returns only count
-      if (!error && count !== null) setTotalProverbs(count);
+        .from("proverbs")
+        .select("*", { count: "exact", head: true });
+
+      if (error) {
+        console.error("Error fetching proverbs count:", error.message);
+      } else {
+        setTotalProverbs(count ?? 0);
+      }
     };
+
     fetchCount();
   }, []);
 
@@ -187,7 +195,9 @@ const Index = () => {
                   <a href="/proverbs">
                     <BookOpen className="h-6 w-6" />
                     <span>Proverbs</span>
-                    <span className="text-xs text-muted-foreground">{proverbs.length} items</span>
+                    <span className="text-xs text-muted-foreground">
+                      {totalProverbs !== null ? `${totalProverbs} items` : "Loading..."}
+                    </span>
                   </a>
                 </Button>
 
