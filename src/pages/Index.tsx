@@ -18,7 +18,23 @@ const Index = () => {
   const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
   const [quotesCount, setQuotesCount] = useState<number | null>(null);
+  const [similesCount, setSimilesCount] = useState<number | null>(null);
 
+  useEffect(() => {
+    const fetchSimilesCount = async () => {
+      const { count, error } = await supabase
+        .from("similes")
+        .select("*", { count: "exact", head: true });
+
+      if (error) {
+        console.error("Error fetching similes count:", error.message);
+      } else {
+        setSimilesCount(count ?? 0);
+      }
+    };
+
+    fetchSimilesCount();
+  }, []);
   useEffect(() => {
     const fetchQuotesCount = async () => {
       const { count, error } = await supabase
@@ -253,9 +269,11 @@ const Index = () => {
                 </Button>
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                   <a href="/similes">
-                    <Zap className="h-6 w-6" />
+                    <Sparkles className="h-6 w-6" />
                     <span>Similes</span>
-                    <span className="text-xs text-muted-foreground">{similes.length} items</span>
+                    <span className="text-xs text-muted-foreground">
+                      {similesCount !== null ? `${similesCount} items` : "Loading..."}
+                    </span>
                   </a>
                 </Button>
               </div>
