@@ -15,8 +15,6 @@ const Index = () => {
     error
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
-
-  export default function ProverbsButton() {
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
 
   useEffect(() => {
