@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +6,7 @@ import { WisdomCard } from '@/components/WisdomCard';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Zap, TrendingUp, Clock, Star } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
+import { supabase } from '@/integrations/supabase/client';
 const Index = () => {
   const {
     items,
