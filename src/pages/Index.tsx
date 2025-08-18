@@ -98,17 +98,21 @@ const Index = () => {
   }
 
   // --- Show page-level loading first with spinner ---
+  // --- Show page-level loading first with golden spinner ---
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="border-4 border-wisdom-blue border-t-transparent rounded-full w-16 h-16 mx-auto animate-spin mb-4"></div>
-          <h1 className="text-2xl font-bold text-wisdom-blue">Wisdom Empire</h1>
-          <p className="text-muted-foreground mt-2">Loading Page...</p>
+          {/* Golden spinning loader */}
+          <div className="w-16 h-16 mx-auto mb-4 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+          {/* Golden text */}
+          <h1 className="text-2xl font-bold text-yellow-400">Wisdom Empire</h1>
+          <p className="text-yellow-300 mt-2">Loading wisdom...</p>
         </div>
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background">
