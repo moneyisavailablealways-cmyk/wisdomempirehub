@@ -15,6 +15,26 @@ const Index = () => {
     error
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
+
+export default function IdiomsButton() {
+  const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const { count, error } = await supabase
+        .from("idioms")
+        .select("*", { count: "exact", head: true });
+
+      if (error) {
+        console.error("Error fetching idioms count:", error.message);
+      } else {
+        setTotalIdioms(count ?? 0);
+      }
+    };
+
+    fetchCount();
+  }, []);
+    
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
 
   useEffect(() => {
@@ -210,7 +230,9 @@ const Index = () => {
                   <a href="/idioms">
                     <MessageSquare className="h-6 w-6" />
                     <span>Idioms</span>
-                    <span className="text-xs text-muted-foreground">{idioms.length} items</span>
+                    <span className="text-xs text-muted-foreground">
+                      {totalIdioms !== null ? `${totalIdioms} items` : "Loading..."}
+                    </span>
                   </a>
                 </Button>
                 <Button variant="outline" className="h-20 flex-col gap-2" asChild>
