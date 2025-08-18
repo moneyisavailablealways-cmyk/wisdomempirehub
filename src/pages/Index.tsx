@@ -7,7 +7,6 @@ import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Zap, TrendingUp, Clock, Star, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
 import { supabase } from '@/integrations/supabase/client';
-
 const Index = () => {
   const {
     items,
@@ -19,67 +18,72 @@ const Index = () => {
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
   const [quotesCount, setQuotesCount] = useState<number | null>(null);
   const [similesCount, setSimilesCount] = useState<number | null>(null);
-
   useEffect(() => {
     const fetchSimilesCount = async () => {
-      const { count, error } = await supabase
-        .from("similes")
-        .select("*", { count: "exact", head: true });
-
+      const {
+        count,
+        error
+      } = await supabase.from("similes").select("*", {
+        count: "exact",
+        head: true
+      });
       if (error) {
         console.error("Error fetching similes count:", error.message);
       } else {
         setSimilesCount(count ?? 0);
       }
     };
-
     fetchSimilesCount();
   }, []);
   useEffect(() => {
     const fetchQuotesCount = async () => {
-      const { count, error } = await supabase
-        .from("quotes")
-        .select("*", { count: "exact", head: true });
-
+      const {
+        count,
+        error
+      } = await supabase.from("quotes").select("*", {
+        count: "exact",
+        head: true
+      });
       if (error) {
         console.error("Error fetching quotes count:", error.message);
       } else {
         setQuotesCount(count ?? 0);
       }
     };
-
     fetchQuotesCount();
   }, []);
-
   useEffect(() => {
     const fetchCount = async () => {
-      const { count, error } = await supabase
-        .from("idioms")
-        .select("*", { count: "exact", head: true });
-
+      const {
+        count,
+        error
+      } = await supabase.from("idioms").select("*", {
+        count: "exact",
+        head: true
+      });
       if (error) {
         console.error("Error fetching idioms count:", error.message);
       } else {
         setTotalIdioms(count ?? 0);
       }
     };
-
     fetchCount();
   }, []);
-
   useEffect(() => {
     const fetchCount = async () => {
-      const { count, error } = await supabase
-        .from("proverbs")
-        .select("*", { count: "exact", head: true });
-
+      const {
+        count,
+        error
+      } = await supabase.from("proverbs").select("*", {
+        count: "exact",
+        head: true
+      });
       if (error) {
         console.error("Error fetching proverbs count:", error.message);
       } else {
         setTotalProverbs(count ?? 0);
       }
     };
-
     fetchCount();
   }, []);
 
@@ -214,9 +218,9 @@ const Index = () => {
 
           {/* Most Viewed Section */}
           {mostViewed.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6">
-                <TrendingUp className="h-6 w-6 text-wisdom-blue" />
-                <h2 className="text-2xl font-bold font-wisdom text-foreground">Most Viewed</h2>
+              <div className="flex items-center gap-2 mb-6 mx-[240px]">
+                <TrendingUp className="h-6 w-6 text-wisdom-blue mx-0" />
+                <h2 className="text-2xl font-bold font-wisdom text-foreground text-center my-0 mx-[42px]">Most Viewed</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
@@ -225,7 +229,7 @@ const Index = () => {
 
           {/* Recently Added Section */}
           {recentlyAdded.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-6 mx-[240px]">
                 <Clock className="h-6 w-6 text-wisdom-gold" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
               </div>
