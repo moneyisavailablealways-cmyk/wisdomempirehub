@@ -60,15 +60,15 @@ const Contact = () => {
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-wisdom-gold mt-1" />
                   <div className="text-green-800">
-                    <h3 className="font-semibold text-foreground">Email</h3>
-                    <p className="text-muted-foreground">support@yourwebsite.com</p>
+                    <h3 className="font-semibold text-foreground">Email 1 </h3>
+                    <p className="text-muted-foreground">wisdomempirehub@gmail.com</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-wisdom-gold mt-1" />
                   <div className="text-green-950">
-                    <h3 className="font-semibold text-foreground">Phone</h3>
+                    <h3 className="font-semibold text-foreground">Youtube</h3>
                     <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
                   </div>
                 </div>
