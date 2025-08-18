@@ -4,287 +4,240 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WisdomCard } from '@/components/WisdomCard';
 import { useWisdomData } from '@/hooks/useWisdomData';
-import { Search, BookOpen, Quote, MessageSquare, Zap, TrendingUp, Clock, Star, Sparkles } from 'lucide-react';
+import { Search, BookOpen, Quote, MessageSquare, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero.jpg';
 import { supabase } from '@/integrations/supabase/client';
+
 const Index = () => {
-  const {
-    items,
-    loading,
-    error
-  } = useWisdomData();
+  const { items, loading, error } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
   const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
   const [quotesCount, setQuotesCount] = useState<number | null>(null);
   const [similesCount, setSimilesCount] = useState<number | null>(null);
+
+  // New app-level loading state (3s delay)
+  const [pageLoading, setPageLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setPageLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Fetch live counts from Supabase
   useEffect(() => {
     const fetchSimilesCount = async () => {
-      const {
-        count,
-        error
-      } = await supabase.from("similes").select("*", {
-        count: "exact",
-        head: true
-      });
-      if (error) {
-        console.error("Error fetching similes count:", error.message);
-      } else {
-        setSimilesCount(count ?? 0);
-      }
+      const { count } = await supabase.from("similes").select("*", { count: "exact", head: true });
+      setSimilesCount(count ?? 0);
     };
     fetchSimilesCount();
   }, []);
+
   useEffect(() => {
     const fetchQuotesCount = async () => {
-      const {
-        count,
-        error
-      } = await supabase.from("quotes").select("*", {
-        count: "exact",
-        head: true
-      });
-      if (error) {
-        console.error("Error fetching quotes count:", error.message);
-      } else {
-        setQuotesCount(count ?? 0);
-      }
+      const { count } = await supabase.from("quotes").select("*", { count: "exact", head: true });
+      setQuotesCount(count ?? 0);
     };
     fetchQuotesCount();
   }, []);
+
   useEffect(() => {
-    const fetchCount = async () => {
-      const {
-        count,
-        error
-      } = await supabase.from("idioms").select("*", {
-        count: "exact",
-        head: true
-      });
-      if (error) {
-        console.error("Error fetching idioms count:", error.message);
-      } else {
-        setTotalIdioms(count ?? 0);
-      }
+    const fetchIdiomsCount = async () => {
+      const { count } = await supabase.from("idioms").select("*", { count: "exact", head: true });
+      setTotalIdioms(count ?? 0);
     };
-    fetchCount();
-  }, []);
-  useEffect(() => {
-    const fetchCount = async () => {
-      const {
-        count,
-        error
-      } = await supabase.from("proverbs").select("*", {
-        count: "exact",
-        head: true
-      });
-      if (error) {
-        console.error("Error fetching proverbs count:", error.message);
-      } else {
-        setTotalProverbs(count ?? 0);
-      }
-    };
-    fetchCount();
+    fetchIdiomsCount();
   }, []);
 
-  // Get daily items (using a simple hash based on date)
+  useEffect(() => {
+    const fetchProverbsCount = async () => {
+      const { count } = await supabase.from("proverbs").select("*", { count: "exact", head: true });
+      setTotalProverbs(count ?? 0);
+    };
+    fetchProverbsCount();
+  }, []);
+
+  // Daily Wisdom logic
   const today = new Date().toDateString();
   const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+
   const proverbs = items.filter(item => item.type === 'proverb');
   const quotes = items.filter(item => item.type === 'quote');
   const idioms = items.filter(item => item.type === 'idiom');
   const similes = items.filter(item => item.type === 'simile');
+
   const proverbOfDay = proverbs[dateHash % proverbs.length];
   const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
   const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
 
-  // Filter all items based on search term
+  // Search
   const filteredItems = items.filter(item => {
     if (!searchTerm.trim()) return false;
     const searchLower = searchTerm.toLowerCase();
-    return item.text.toLowerCase().includes(searchLower) || item.origin.toLowerCase().includes(searchLower) || item.subcategory.toLowerCase().includes(searchLower);
+    return (
+      item.text.toLowerCase().includes(searchLower) ||
+      item.origin.toLowerCase().includes(searchLower) ||
+      item.subcategory.toLowerCase().includes(searchLower)
+    );
   });
 
-  // Most viewed (simulate with reverse chronological order)
+  // Most Viewed & Recently Added
   const mostViewed = [...items].reverse().slice(0, 6);
-
-  // Recently added (latest items)
   const recentlyAdded = [...items].slice(-6);
+
   if (error) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Content</h1>
           <p className="text-muted-foreground">{error}</p>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen bg-background">
+
+  // Show loading screen for 3s
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        {/* Spinner */}
+        <div className="h-12 w-12 border-4 border-wisdom-blue border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="text-center animate-pulse">
+          <h1 className="text-3xl font-bold text-wisdom-blue">Wisdom Empire</h1>
+          <p className="text-muted-foreground mt-2">Loading wisdom...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" />
+      <div className="relative h-[400px] flex items-center justify-center text-center text-white">
+        <img src={heroImage} alt="Wisdom background" className="absolute inset-0 w-full h-full object-cover brightness-50" />
+        <div className="relative z-10">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Wisdom Empire</h1>
+          <p className="text-xl">Discover Proverbs, Quotes, Idioms & Similes</p>
         </div>
-        
-        {/* Logo Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" />
+      </div>
+
+      {/* Daily Wisdom */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold mb-6 text-center">Daily Wisdom</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {proverbOfDay && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Proverb of the Day</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg italic">"{proverbOfDay.text}"</p>
+                <p className="text-sm text-muted-foreground mt-2">Origin: {proverbOfDay.origin}</p>
+              </CardContent>
+            </Card>
+          )}
+          {quoteOfDay && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Quote of the Day</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg italic">"{quoteOfDay.text}"</p>
+                <p className="text-sm text-muted-foreground mt-2">— {quoteOfDay.origin}</p>
+              </CardContent>
+            </Card>
+          )}
+          {idiomOfDay && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Idiom of the Day</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg italic">"{idiomOfDay.text}"</p>
+                <p className="text-sm text-muted-foreground mt-2">Origin: {idiomOfDay.origin}</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
-        
-        <div className="relative container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-6xl">Wisdom Empire Hub</h1>
-              <p className="text-lg lg:text-xl font-cultural opacity-90 max-w-2xl mx-auto text-violet-100">
-                Discover timeless wisdom from cultures around the world
-              </p>
-            </div>
-            
-            {/* Search Bar */}
-            <div className="w-full max-w-2xl mx-auto px-4 sm:px-0">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold bg-slate-100" />
-              </div>
-            </div>
+      </div>
+
+      {/* Search */}
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="flex gap-2">
+          <Input
+            placeholder="Search wisdom..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button><Search className="h-4 w-4" /></Button>
+        </div>
+        {searchTerm && (
+          <div className="mt-6 grid gap-4">
+            {filteredItems.map((item) => (
+              <WisdomCard key={item.id} item={item} />
+            ))}
+            {filteredItems.length === 0 && (
+              <p className="text-center text-muted-foreground">No results found</p>
+            )}
           </div>
+        )}
+      </div>
+
+      {/* Quick Navigation with Live Counts */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold mb-6 text-center">Explore Wisdom</h2>
+        <div className="grid md:grid-cols-4 gap-4">
+          <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+            <a href="/proverbs">
+              <BookOpen className="h-6 w-6" />
+              <span>Proverbs</span>
+              <span className="text-xs text-muted-foreground">{totalProverbs ?? 0} items</span>
+            </a>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+            <a href="/quotes">
+              <Quote className="h-6 w-6" />
+              <span>Quotes</span>
+              <span className="text-xs text-muted-foreground">{quotesCount ?? 0} items</span>
+            </a>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+            <a href="/idioms">
+              <MessageSquare className="h-6 w-6" />
+              <span>Idioms</span>
+              <span className="text-xs text-muted-foreground">{totalIdioms ?? 0} items</span>
+            </a>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+            <a href="/similes">
+              <Sparkles className="h-6 w-6" />
+              <span>Similes</span>
+              <span className="text-xs text-muted-foreground">{similesCount ?? 0} items</span>
+            </a>
+          </Button>
         </div>
-      </section>
+      </div>
 
-      {/* Search Results or Daily Content Sections */}
-      <section className="container mx-auto px-4 py-12">
-        {searchTerm.trim() ? (/* Search Results */
-      <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold font-wisdom mb-2">Search Results</h2>
-              <p className="text-muted-foreground text-lg">
-                {filteredItems.length} {filteredItems.length === 1 ? 'result' : 'results'} found for "{searchTerm}"
-              </p>
-            </div>
-            
-            {filteredItems.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredItems.map(item => <WisdomCard key={item.id} item={item} />)}
-              </div> : <div className="text-center py-16">
-                <div className="max-w-md mx-auto space-y-4">
-                  <Search className="h-16 w-16 text-muted-foreground mx-auto" />
-                  <h3 className="text-xl font-semibold">No Results Found</h3>
-                  <p className="text-muted-foreground">
-                    Try different keywords or browse our categories below.
-                  </p>
-                </div>
-              </div>}
-          </div>) : <div className="space-y-12 bg-slate-600">
-            
-            {/* Daily Items */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Proverb of the Day */}
-            {proverbOfDay && <Card className="border-wisdom-blue/20 bg-gray-900">
-                <CardHeader className="bg-zinc-300">
-                  <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950">
-                    <BookOpen className="h-5 w-5" />
-                    Proverb of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-900 rounded-xl">
-                  <WisdomCard item={proverbOfDay} />
-                </CardContent>
-              </Card>}
+      {/* Most Viewed */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold mb-6 text-center">Most Viewed</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {mostViewed.map((item) => (
+            <WisdomCard key={item.id} item={item} />
+          ))}
+        </div>
+      </div>
 
-            {/* Quote of the Day */}
-            {quoteOfDay && <Card className="border-wisdom-gold/20 bg-gray-900">
-                <CardHeader className="bg-slate-100">
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
-                    <Quote className="h-5 w-5" />
-                    Quote of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-900 rounded-xl">
-                  <WisdomCard item={quoteOfDay} />
-                </CardContent>
-              </Card>}
-
-            {/* Idiom of the Day */}
-            {idiomOfDay && <Card className="border-wisdom-cultural/20 bg-gray-900">
-                <CardHeader className="bg-white">
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
-                    <MessageSquare className="h-5 w-5" />
-                    Idiom of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-950">
-                  <WisdomCard item={idiomOfDay} />
-                </CardContent>
-              </Card>}
-          </div>
-
-          {/* Most Viewed Section */}
-          {mostViewed.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 mx-0">
-                <TrendingUp className="h-6 w-6 text-wisdom-blue mx-0" />
-                <h2 className="text-2xl font-bold font-wisdom text-foreground text-center my-0 mx-[42px]">Most Viewed</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
-              </div>
-            </div>}
-
-          {/* Recently Added Section */}
-          {recentlyAdded.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 mx-0">
-                <Clock className="h-6 w-6 text-wisdom-gold" />
-                <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
-              </div>
-            </div>}
-
-          {/* Quick Navigation */}
-          <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                  <a href="/proverbs">
-                    <BookOpen className="h-6 w-6" />
-                    <span>Proverbs</span>
-                    <span className="text-xs text-muted-foreground">
-                      {totalProverbs !== null ? `${totalProverbs} items` : "Loading..."}
-                    </span>
-                  </a>
-                </Button>
-
-                <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                  <a href="/quotes">
-                    <Quote className="h-6 w-6" />
-                    <span>Quotes</span>
-                    <span className="text-xs text-muted-foreground">
-                      {quotesCount !== null ? `${quotesCount} items` : "Loading..."}
-                    </span>
-                  </a>
-                </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                  <a href="/idioms">
-                    <MessageSquare className="h-6 w-6" />
-                    <span>Idioms</span>
-                    <span className="text-xs text-muted-foreground">
-                      {totalIdioms !== null ? `${totalIdioms} items` : "Loading..."}
-                    </span>
-                  </a>
-                </Button>
-                <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                  <a href="/similes">
-                    <Sparkles className="h-6 w-6" />
-                    <span>Similes</span>
-                    <span className="text-xs text-muted-foreground">
-                      {similesCount !== null ? `${similesCount} items` : "Loading..."}
-                    </span>
-                  </a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          </div>}
-      </section>
-    </div>;
+      {/* Recently Added */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold mb-6 text-center">Recently Added</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {recentlyAdded.map((item) => (
+            <WisdomCard key={item.id} item={item} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
+
 export default Index;
