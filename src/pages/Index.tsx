@@ -218,7 +218,7 @@ const Index = () => {
 
           {/* Most Viewed Section */}
           {mostViewed.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 mx-[150px]">
+              <div className="flex items-center gap-2 mb-6 mx-0">
                 <TrendingUp className="h-6 w-6 text-wisdom-blue mx-0" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground text-center my-0 mx-[42px]">Most Viewed</h2>
               </div>
@@ -229,7 +229,7 @@ const Index = () => {
 
           {/* Recently Added Section */}
           {recentlyAdded.length > 0 && <div>
-              <div className="flex items-center gap-2 mb-6 mx-[150px]">
+              <div className="flex items-center gap-2 mb-6 mx-0">
                 <Clock className="h-6 w-6 text-wisdom-gold" />
                 <h2 className="text-2xl font-bold font-wisdom text-foreground">Recently Added</h2>
               </div>
