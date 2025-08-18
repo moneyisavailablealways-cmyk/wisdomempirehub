@@ -15,9 +15,8 @@ const Index = () => {
     error
   } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
-
-export default function IdiomsButton() {
   const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
+  const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -34,8 +33,6 @@ export default function IdiomsButton() {
 
     fetchCount();
   }, []);
-    
-  const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCount = async () => {
