@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { WisdomCard } from "@/components/WisdomCard";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { supabase } from "@/integrationslib/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { Search, Type, Loader2 } from "lucide-react";
 
 type WisdomItem = {
