@@ -26,25 +26,18 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setShowSuccess(false);
-  
+
     try {
-      // Send the main message via EmailJS
+      // Send form via EmailJS (browser CDN)
       await emailjs.sendForm(
-        "service_27nifab",   // ✅ Your Service ID
-        "template_cbc1mss",  // ✅ Your Main Template ID
+        "service_27nifab", // ✅ Your Service ID
+        "template_cbc1mss", // ✅ Your Template ID
         e.currentTarget
       );
-  
-      // Send auto-reply using the same form data
-      await emailjs.sendForm(
-        "service_27nifab",   // ✅ Your Service ID
-        "template_wtzkptz",  // ✅ Your Auto-reply Template ID
-        e.currentTarget
-      );
-  
+
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
-  
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 48 hours."
@@ -59,6 +52,7 @@ const Contact: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-background px-4 py-12">
       {/* Header Section */}
