@@ -1,124 +1,190 @@
-<!-- Contact Page Block -->
-<div class="min-h-screen bg-background px-4 py-12">
-  <!-- Header -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
-    <p class="text-lg text-muted-foreground">We'd love to hear from you!</p>
-  </div>
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
-  <!-- Quick Navigation Buttons -->
-  <div class="flex flex-wrap gap-2 justify-center mb-12">
-    <a href="/proverbs" class="btn btn-outline btn-sm flex items-center gap-2">
-      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20l9-5-9-5-9 5 9 5z" /></svg>Proverbs
-    </a>
-    <a href="/quotes" class="btn btn-outline btn-sm flex items-center gap-2">
-      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2h6v2H9zm0-4V7h6v6H9z" /></svg>Quotes
-    </a>
-    <a href="/idioms" class="btn btn-outline btn-sm flex items-center gap-2">
-      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8h2a2 2 0 002-2V6a2 2 0 00-2-2h-2l-1 2H8a2 2 0 00-2 2v12a2 2 0 002 2h2l1-2z" /></svg>Idioms
-    </a>
-    <a href="/similes" class="btn btn-outline btn-sm flex items-center gap-2">
-      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" /></svg>Similes
-    </a>
-  </div>
+const Contact: React.FC = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  <!-- Contact Info Card -->
-  <div class="bg-gray-800 text-indigo-700 p-8 rounded-2xl mb-8">
-    <p class="text-muted-foreground mb-6">
-      If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
-    </p>
+  useEffect(() => {
+    // Basic SEO for the Contact page
+    const title = "Contact Us | Wisdom Empire Hub";
+    const description =
+      "Contact Wisdom Empire Hub with questions or feedback about proverbs, quotes, idioms, and similes.";
+    document.title = title;
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="flex items-start gap-3">
-        <svg class="h-5 w-5 text-wisdom-gold mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m0 0l4-4m0 0l4 4m-4-4v8" />
-        </svg>
-        <div class="text-green-800">
-          <h3 class="font-semibold text-foreground">Email</h3>
-          <p class="text-muted-foreground">support@yourwebsite.com</p>
-        </div>
-      </div>
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement("meta");
+      metaDesc.setAttribute("name", "description");
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute("content", description);
 
-      <div class="flex items-start gap-3">
-        <svg class="h-5 w-5 text-wisdom-gold mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h2l3 7-2 2 5 5-2 2 7 3v2h-2l-3-7 2-2-5-5 2-2L3 5z" />
-        </svg>
-        <div class="text-green-950">
-          <h3 class="font-semibold text-foreground">Phone</h3>
-          <p class="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
-        </div>
-      </div>
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", `${window.location.origin}/contact`);
+  }, []);
 
-      <div class="flex items-start gap-3">
-        <svg class="h-5 w-5 text-wisdom-gold mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-        </svg>
-        <div class="text-green-800">
-          <h3 class="font-semibold text-foreground">Address</h3>
-          <p class="text-muted-foreground">
-            Wisdom Empire Hub<br />
-            Youtube: @wisdomempirehub<br />
-            TikTok: @wisdomempirehub<br />
-            Telegram: t.me/wisdomempire247
-          </p>
-        </div>
-      </div>
-    </div>
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setShowSuccess(false);
 
-    <div class="mt-8 p-4 bg-wisdom-cultural/10 rounded-lg">
-      <p class="text-sm text-muted-foreground">We aim to respond to all messages within 48 hours.</p>
-    </div>
-  </div>
+    try {
+      // Simulate sending. Replace with your email/backend integration if needed.
+      await new Promise((r) => setTimeout(r, 800));
 
-  <!-- Contact Form Card -->
-  <div class="bg-gray-800 p-8 rounded-2xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-white">Send Us a Message</h2>
-
-    <form id="contact-form" class="space-y-4">
-      <input type="text" name="name" placeholder="Your Name" required
-        class="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200" />
-      <input type="email" name="email" placeholder="Your Email" required
-        class="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200" />
-      <textarea name="message" placeholder="Your Message" rows="4" required
-        class="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200"></textarea>
-      <button id="send-btn" type="submit"
-        class="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition">
-        Send Message
-      </button>
-    </form>
-
-    <p id="success-msg" style="display:none; color:green; margin-top:10px; text-align:center;">
-      ✅ Thank you! Your message has been sent.
-    </p>
-  </div>
-</div>
-
-<!-- EmailJS -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init('HvNGbJr-Ylg5ZlRZz'); // Replace with your EmailJS Public Key
-
-  const form = document.getElementById('contact-form');
-  const sendBtn = document.getElementById('send-btn');
-  const successMsg = document.getElementById('success-msg');
-
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    sendBtn.disabled = true;
-    sendBtn.textContent = 'Sending...';
-
-    emailjs.sendForm('service_27nifab', '__ejs-test-mail-service__', this)
-      .then(function() {
-        successMsg.style.display = 'block';
-        form.reset();
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Send Message';
-      }, function(error) {
-        alert('Oops... ' + JSON.stringify(error));
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Send Message';
+      toast({
+        title: "Message sent",
+        description: "Thank you! We will get back to you within 48 hours.",
       });
-  });
-</script>
+      setShowSuccess(true);
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      toast({ title: "Something went wrong", description: "Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="px-4 pt-10 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground mb-2">Contact Us</h1>
+        <p className="text-muted-foreground">We'd love to hear from you!</p>
+      </header>
+
+      <main className="container mx-auto px-4 py-10 grid gap-8">
+        {/* Quick Navigation */}
+        <nav aria-label="Quick navigation" className="flex flex-wrap gap-2 justify-center">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/proverbs">Proverbs</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/quotes">Quotes</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/idioms">Idioms</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/similes">Similes</Link>
+          </Button>
+        </nav>
+
+        {/* Contact Info */}
+        <section className="bg-card border border-border rounded-2xl p-6 md:p-8">
+          <p className="text-muted-foreground mb-6">
+            If you have questions, suggestions, or feedback about our proverb collection or features,
+            please reach out using the details below:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 h-5 w-5 rounded-full bg-primary/15" aria-hidden />
+              <div>
+                <h3 className="font-semibold text-foreground">Email</h3>
+                <p className="text-muted-foreground">support@yourwebsite.com</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 h-5 w-5 rounded-full bg-primary/15" aria-hidden />
+              <div>
+                <h3 className="font-semibold text-foreground">Phone</h3>
+                <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 h-5 w-5 rounded-full bg-primary/15" aria-hidden />
+              <div>
+                <h3 className="font-semibold text-foreground">Address</h3>
+                <p className="text-muted-foreground">
+                  Wisdom Empire Hub
+                  <br />Youtube: @wisdomempirehub
+                  <br />TikTok: @wisdomempirehub
+                  <br />Telegram: t.me/wisdomempire247
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 rounded-lg bg-muted/40">
+            <p className="text-sm text-muted-foreground">We aim to respond to all messages within 48 hours.</p>
+          </div>
+        </section>
+
+        {/* Contact Form */}
+        <section className="bg-card border border-border rounded-2xl p-6 md:p-8">
+          <h2 className="text-2xl font-semibold text-center mb-6 text-foreground">Send Us a Message</h2>
+
+          <form onSubmit={onSubmit} className="space-y-5 max-w-2xl mx-auto">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Your Name</Label>
+              <Input
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="Your Name"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="email">Your Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="message">Your Message</Label>
+              <Textarea
+                id="message"
+                name="message"
+                rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                placeholder="How can we help?"
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={submitting}>
+              {submitting ? "Sending..." : "Send Message"}
+            </Button>
+
+            {showSuccess && (
+              <p className="text-sm text-green-600 text-center">
+                ✅ Thank you! Your message has been sent.
+              </p>
+            )}
+          </form>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default Contact;
