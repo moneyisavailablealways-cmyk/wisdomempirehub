@@ -5,7 +5,7 @@
     <p class="text-lg text-muted-foreground">We'd love to hear from you!</p>
   </div>
 
-  <!-- Contact Information Card -->
+  <Contact Information Card>
   <div class="bg-gray-800 text-indigo-700 p-8 rounded-2xl mb-8">
     <p class="text-muted-foreground mb-6">
       If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <!-- Contact Form Card -->
+  <Contact Form Card>
   <div class="bg-gray-800 p-8 rounded-2xl">
     <h2 class="text-2xl font-bold mb-6 text-center text-white">Send Us a Message</h2>
 
@@ -75,7 +75,7 @@
   </div>
 </div>
 
-<!-- EmailJS Script -->
+<EmailJS Script>
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 <script>
   (function(){
