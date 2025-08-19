@@ -26,18 +26,28 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setShowSuccess(false);
-
+  
     try {
-      // Send form via EmailJS (browser CDN)
+      // Send the main message via EmailJS
       await emailjs.sendForm(
-        "service_27nifab", // ✅ Your Service ID
-        "template_cbc1mss", // ✅ Your Template ID
+        "service_27nifab",   // ✅ Your Service ID
+        "template_cbc1mss",  // ✅ Your Template ID
         e.currentTarget
       );
-
+  
+      // Send auto-reply to the user
+      await emailjs.send(
+        "service_27nifab",           // ✅ Your Service ID
+        "template_wtzkptz",          // ✅ Your Auto-reply Template ID
+        {
+          to_name: formData.name,
+          to_email: formData.email
+        }
+      );
+  
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
-
+  
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 48 hours."
