@@ -40,7 +40,7 @@ const Contact: React.FC = () => {
       // 2️⃣ Send auto-reply programmatically
       await emailjs.send("service_27nifab", "template_wtzkptz", {
         to_email: formData.email,   // recipient's email
-        from_name: "Wisdom Empire", // your site/company name
+        from_name: "Wisdom Empire Hub", // your site/company name
         message: "Thanks for contacting us! We’ll respond within 48 hours."
       });
 
