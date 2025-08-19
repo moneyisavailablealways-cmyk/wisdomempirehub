@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-background px-4 py-12">
-  <-- Header -->
+  <Header>
   <div class="text-center mb-12">
     <h1 class="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
     <p class="text-lg text-muted-foreground">We'd love to hear from you!</p>
