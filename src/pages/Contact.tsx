@@ -34,15 +34,16 @@ const Contact: React.FC = () => {
       );
 
       // 2️⃣ Send auto-reply to the sender
-      await emailjs.send(
-        "service_27nifab",     // ✅ Same Service ID
-        "template_wtzkptz",    // ✅ Auto-reply Template ID
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        }
-      );
+      // 1️⃣ Send main message via form
+      await emailjs.sendForm("service_27nifab", "template_cbc1mss", e.currentTarget);
+      
+      // 2️⃣ Send auto-reply programmatically
+      await emailjs.send("service_27nifab", "template_wtzkptz", {
+        to_email: formData.email,   // recipient's email
+        from_name: "Wisdom Empire", // your site/company name
+        message: "Thanks for contacting us! We’ll respond within 48 hours."
+      });
+
 
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
