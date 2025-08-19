@@ -28,8 +28,8 @@ const Contact: React.FC = () => {
     try {
       // Send form via EmailJS (browser CDN)
       await emailjs.sendForm(
-        " service_27nifab ",   // Replace with your EmailJS service ID
-        " __ejs-test-mail-service__ ",  // Replace with your EmailJS template ID
+        "service_27nifab",        // Your EmailJS service ID
+        "__ejs-test-mail-service__", // Your EmailJS template ID
         e.currentTarget
       );
 
@@ -54,9 +54,7 @@ const Contact: React.FC = () => {
     <div className="min-h-screen bg-background px-4 py-12">
       {/* Header Section */}
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">
-          Contact Us
-        </h1>
+        <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
         <p className="text-lg text-muted-foreground">We'd love to hear from you!</p>
       </header>
 
@@ -128,56 +126,48 @@ const Contact: React.FC = () => {
 
           {/* Contact Form Card */}
           <div className="bg-gray-800 p-8 rounded-2xl">
-            <h2 className="text-2xl font-bold mb-6 text-white text-center">
-              Send Us a Message
-            </h2>
+            <h2 className="text-2xl font-bold mb-6 text-white text-center">Send Us a Message</h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
-                  Name
-                </label>
+                <label htmlFor="name" className="block text-sm font-medium text-white mb-2">Name</label>
                 <Input
                   id="name"
-                  name="name"
+                  name="name"         // Must match {{name}}
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                   placeholder="Your Name"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  Email
-                </label>
+                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">Email</label>
                 <Input
                   id="email"
-                  name="email"
+                  name="email"        // Must match {{email}}
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                   placeholder="your@email.com"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
-                  Message
-                </label>
+                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">Message</label>
                 <Textarea
                   id="message"
-                  name="message"
+                  name="message"      // Must match {{message}}
                   value={formData.message}
                   onChange={handleInputChange}
                   required
                   rows={5}
-                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                   placeholder="How can we help you?"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-indigo-500"
                 />
               </div>
 
