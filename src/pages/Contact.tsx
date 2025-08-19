@@ -38,7 +38,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // Send auto-reply
     await emailjs.send(
       "service_27nifab",
-      "template_wtzkptz",
+      "template_cbc1mss",
       {
         to_name: formData.name,
         to_email: formData.email,   // must match {{to_email}} in template
