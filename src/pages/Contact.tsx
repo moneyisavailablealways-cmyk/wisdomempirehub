@@ -6,32 +6,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
+// Declare the global emailjs object from the CDN
+// @ts-ignore
+declare const emailjs: any;
+
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setShowSuccess(false);
 
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // Send form via EmailJS (browser CDN)
+      await emailjs.sendForm(
+        "service_27nifab",   // Replace with your EmailJS service ID
+        "__ejs-test-mail-service__",  // Replace with your EmailJS template ID
+        e.currentTarget
+      );
+
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
       toast({
@@ -43,6 +44,7 @@ const Contact: React.FC = () => {
         title: "Error sending message",
         description: "Please try again later."
       });
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -55,9 +57,7 @@ const Contact: React.FC = () => {
         <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">
           Contact Us
         </h1>
-        <p className="text-lg text-muted-foreground">
-          We'd love to hear from you!
-        </p>
+        <p className="text-lg text-muted-foreground">We'd love to hear from you!</p>
       </header>
 
       <div className="max-w-6xl mx-auto space-y-8">
@@ -65,26 +65,22 @@ const Contact: React.FC = () => {
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link to="/proverbs">
             <Button variant="outline" className="flex items-center gap-2">
-              <BookOpen size={16} />
-              Proverbs
+              <BookOpen size={16} /> Proverbs
             </Button>
           </Link>
           <Link to="/quotes">
             <Button variant="outline" className="flex items-center gap-2">
-              <Quote size={16} />
-              Quotes
+              <Quote size={16} /> Quotes
             </Button>
           </Link>
           <Link to="/idioms">
             <Button variant="outline" className="flex items-center gap-2">
-              <MessageSquare size={16} />
-              Idioms
+              <MessageSquare size={16} /> Idioms
             </Button>
           </Link>
           <Link to="/similes">
             <Button variant="outline" className="flex items-center gap-2">
-              <Zap size={16} />
-              Similes
+              <Zap size={16} /> Similes
             </Button>
           </Link>
         </div>
@@ -93,7 +89,6 @@ const Contact: React.FC = () => {
           {/* Contact Info Card */}
           <div className="bg-gray-800 text-indigo-700 rounded-2xl p-8">
             <h2 className="text-2xl font-bold mb-6 text-white">Get in Touch</h2>
-            
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <Mail className="text-indigo-400" size={24} />
