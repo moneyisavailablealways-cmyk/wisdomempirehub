@@ -25,19 +25,21 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
     setShowSuccess(false);
 
+    const { name, email, message } = formData;
+
     try {
-      // Send main message template
-      await emailjs.sendForm(
+      // Send main message to your inbox
+      await emailjs.send(
         "service_27nifab",   // ✅ Your Service ID
-        "template_cbc1mss",  // ✅ Your Main Template ID
-        e.currentTarget
+        "template_cbc1mss",  // ✅ Your main message template
+        { name, email, message }
       );
 
-      // Send auto-reply template
-      await emailjs.sendForm(
-        "service_27nifab",     // ✅ Same Service ID
-        "template_wtzkptz",    // ✅ Auto-reply Template ID
-        e.currentTarget
+      // Send auto-reply to user
+      await emailjs.send(
+        "service_27nifab",   // ✅ Same service
+        "template_wtzkptz",  // ✅ Your auto-reply template
+        { name, email, message }
       );
 
       setShowSuccess(true);
@@ -47,6 +49,7 @@ const Contact: React.FC = () => {
         title: "Message sent successfully!",
         description: "We'll get back to you within 48 hours."
       });
+
     } catch (error) {
       toast({
         title: "Error sending message",
@@ -70,16 +73,24 @@ const Contact: React.FC = () => {
         {/* Quick Navigation */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link to="/proverbs">
-            <Button variant="outline" className="flex items-center gap-2"><BookOpen size={16} /> Proverbs</Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <BookOpen size={16} /> Proverbs
+            </Button>
           </Link>
           <Link to="/quotes">
-            <Button variant="outline" className="flex items-center gap-2"><Quote size={16} /> Quotes</Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Quote size={16} /> Quotes
+            </Button>
           </Link>
           <Link to="/idioms">
-            <Button variant="outline" className="flex items-center gap-2"><MessageSquare size={16} /> Idioms</Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <MessageSquare size={16} /> Idioms
+            </Button>
           </Link>
           <Link to="/similes">
-            <Button variant="outline" className="flex items-center gap-2"><Zap size={16} /> Similes</Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Zap size={16} /> Similes
+            </Button>
           </Link>
         </div>
 
