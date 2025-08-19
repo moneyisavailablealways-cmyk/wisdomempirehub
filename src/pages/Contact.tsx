@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
-// Use the global emailjs object from the CDN
+// Declare the global emailjs object from the CDN
 // @ts-ignore
 declare const emailjs: any;
 
@@ -26,14 +26,23 @@ const Contact: React.FC = () => {
     setShowSuccess(false);
 
     try {
-      // Send main message
-      await emailjs.sendForm("service_27nifab", "template_cbc1mss", e.currentTarget);
+      // Send main message template
+      await emailjs.sendForm(
+        "service_27nifab",   // ✅ Your Service ID
+        "template_cbc1mss",  // ✅ Your Main Template ID
+        e.currentTarget
+      );
 
-      // Send auto-reply (to the user)
-      await emailjs.sendForm("service_27nifab", "template_wtzkptz", e.currentTarget);
+      // Send auto-reply template
+      await emailjs.sendForm(
+        "service_27nifab",     // ✅ Same Service ID
+        "template_wtzkptz",    // ✅ Auto-reply Template ID
+        e.currentTarget
+      );
 
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 48 hours."
@@ -43,7 +52,7 @@ const Contact: React.FC = () => {
         title: "Error sending message",
         description: "Please try again later."
       });
-      console.error("EmailJS Error:", error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -51,36 +60,31 @@ const Contact: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background px-4 py-12">
+      {/* Header Section */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
         <p className="text-lg text-muted-foreground">We'd love to hear from you!</p>
       </header>
 
       <div className="max-w-6xl mx-auto space-y-8">
+        {/* Quick Navigation */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link to="/proverbs">
-            <Button variant="outline" className="flex items-center gap-2">
-              <BookOpen size={16} /> Proverbs
-            </Button>
+            <Button variant="outline" className="flex items-center gap-2"><BookOpen size={16} /> Proverbs</Button>
           </Link>
           <Link to="/quotes">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Quote size={16} /> Quotes
-            </Button>
+            <Button variant="outline" className="flex items-center gap-2"><Quote size={16} /> Quotes</Button>
           </Link>
           <Link to="/idioms">
-            <Button variant="outline" className="flex items-center gap-2">
-              <MessageSquare size={16} /> Idioms
-            </Button>
+            <Button variant="outline" className="flex items-center gap-2"><MessageSquare size={16} /> Idioms</Button>
           </Link>
           <Link to="/similes">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Zap size={16} /> Similes
-            </Button>
+            <Button variant="outline" className="flex items-center gap-2"><Zap size={16} /> Similes</Button>
           </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Contact Info Card */}
           <div className="bg-gray-800 text-indigo-700 rounded-2xl p-8">
             <h2 className="text-2xl font-bold mb-6 text-white">Get in Touch</h2>
             <div className="space-y-6">
@@ -91,6 +95,7 @@ const Contact: React.FC = () => {
                   <p className="text-indigo-300">support@yourwebsite.com</p>
                 </div>
               </div>
+
               <div className="flex items-center gap-4">
                 <Phone className="text-indigo-400" size={24} />
                 <div>
@@ -98,6 +103,7 @@ const Contact: React.FC = () => {
                   <p className="text-indigo-300">+1 (XXX) XXX-XXXX</p>
                 </div>
               </div>
+
               <div className="flex items-start gap-4">
                 <MapPin className="text-indigo-400 mt-1" size={24} />
                 <div>
@@ -110,13 +116,13 @@ const Contact: React.FC = () => {
                 </div>
               </div>
             </div>
+
             <div className="mt-8 p-4 bg-gray-700 rounded-lg">
-              <p className="text-sm text-indigo-200">
-                We aim to respond to all messages within 48 hours.
-              </p>
+              <p className="text-sm text-indigo-200">We aim to respond to all messages within 48 hours.</p>
             </div>
           </div>
 
+          {/* Contact Form Card */}
           <div className="bg-gray-800 p-8 rounded-2xl">
             <h2 className="text-2xl font-bold mb-6 text-white text-center">Send Us a Message</h2>
 
@@ -173,9 +179,7 @@ const Contact: React.FC = () => {
 
               {showSuccess && (
                 <div className="text-center">
-                  <p className="text-green-400 font-medium">
-                    ✅ Thank you! Your message has been sent successfully.
-                  </p>
+                  <p className="text-green-400 font-medium">✅ Thank you! Your message has been sent successfully.</p>
                 </div>
               )}
             </form>
