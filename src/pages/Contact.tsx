@@ -22,48 +22,48 @@ const Contact: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setShowSuccess(false);
-  
-    try {
-      // Send form via EmailJS (main message)
-      await emailjs.sendForm(
-        "service_27nifab", // ✅ Your Service ID
-        "template_cbc1mss", // ✅ Your Template ID
-        e.currentTarget
-      );
-  
-      // Send auto-reply to the user
-      await emailjs.send(
-        "service_27nifab",        // ✅ Your Service ID
-        "template_wtzkptz",       // ✅ Your Auto-reply Template ID
-        {
-          to_name: formData.name,
-          to_email: formData.email,
-          from_name: "Wisdom Empire",
-          message: "Thank you for reaching out! We'll get back to you shortly."
-        }
-      );
-  
-      setShowSuccess(true);
-      setFormData({ name: "", email: "", message: "" });
-  
-      toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 48 hours."
-      });
-    } catch (error) {
-      toast({
-        title: "Error sending message",
-        description: "Please try again later."
-      });
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setShowSuccess(false);
+
+  try {
+    // Send form (main message)
+    await emailjs.sendForm(
+      "service_27nifab",
+      "template_cbc1mss",
+      e.currentTarget
+    );
+
+    // Send auto-reply
+    await emailjs.send(
+      "service_27nifab",
+      "template_wtzkptz",
+      {
+        to_name: formData.name,
+        to_email: formData.email,   // must match {{to_email}} in template
+        from_name: "Wisdom Empire Hub",
+        message: "Thank you for reaching out! We'll get back to you shortly."
+      }
+    );
+
+    setShowSuccess(true);
+    setFormData({ name: "", email: "", message: "" });
+
+    toast({
+      title: "Message sent successfully!",
+      description: "We'll get back to you within 48 hours."
+    });
+  } catch (error) {
+    toast({
+      title: "Error sending message",
+      description: "Please try again later."
+    });
+    console.error("EmailJS error:", error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 
   return (
