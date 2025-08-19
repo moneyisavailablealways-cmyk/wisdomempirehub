@@ -1,143 +1,171 @@
-import { useEffect, useState, FormEvent } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Mail, Phone, MapPin, BookOpen, Quote, MessageSquare, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import emailjs from 'emailjs-com';
 
-export default function Contact() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Basic SEO
-    const title = "Contact Us | Wisdom Empire Hub";
-    document.title = title;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const metaName = "description";
-    const description = "Contact Wisdom Empire Hub – questions, suggestions, or feedback.";
-    let meta = document.querySelector(`meta[name="${metaName}"]`) as HTMLMetaElement | null;
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.name = metaName;
-      document.head.appendChild(meta);
-    }
-    meta.content = description;
-
-    // Canonical tag
-    const href = window.location.origin + "/contact";
-    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "canonical";
-      document.head.appendChild(link);
-    }
-    link.href = href;
-  }, []);
-
-  const onSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setSuccess(false);
+    setLoading(true);
 
-    // Placeholder submission. Integrate EmailJS or backend later if needed.
-    await new Promise((r) => setTimeout(r, 800));
-
-    setSubmitting(false);
-    setSuccess(true);
-    setName("");
-    setEmail("");
-    setMessage("");
+    emailjs
+      .send(
+        'YOUR_SERVICE_ID',   // replace with your EmailJS Service ID
+        'YOUR_TEMPLATE_ID',  // replace with your EmailJS Template ID
+        formData,
+        'YOUR_PUBLIC_KEY'    // replace with your EmailJS Public Key
+      )
+      .then(() => {
+        setSubmitted(true);
+        setLoading(false);
+        setFormData({ name: '', email: '', message: '' });
+      })
+      .catch((error) => {
+        console.error('EmailJS Error:', error);
+        setLoading(false);
+      });
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-12">
-      <header className="text-center mb-12">
+    <div className="min-h-screen bg-background px-4 py-12">
+      {/* Header */}
+      <div className="text-center mb-12">
         <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
         <p className="text-lg text-muted-foreground">We'd love to hear from you!</p>
-      </header>
+      </div>
 
-      <section aria-labelledby="contact-info" className="bg-card text-card-foreground p-8 rounded-2xl mb-8 border border-border">
-        <p className="text-muted-foreground mb-6">
-          If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
-        </p>
+      {/* Quick Navigation Buttons */}
+      <div className="flex flex-wrap gap-2 justify-center mb-12">
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/proverbs" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" /> Proverbs
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/quotes" className="flex items-center gap-2">
+            <Quote className="h-4 w-4" /> Quotes
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/idioms" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" /> Idioms
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/similes" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" /> Similes
+          </Link>
+        </Button>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex items-start gap-3">
-            <Mail className="h-5 w-5 text-primary mt-1" />
-            <div>
-              <h3 className="font-semibold text-foreground">Email</h3>
-              <p className="text-muted-foreground">support@yourwebsite.com</p>
+      {/* Contact Information Card */}
+      <Card className="mb-8 text-indigo-700">
+        <CardContent className="p-8 bg-gray-800">
+          <p className="text-muted-foreground mb-6">
+            If you have questions, suggestions, or feedback about our proverb collection or features, please reach out using the details below:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex items-start gap-3">
+              <Mail className="h-5 w-5 text-wisdom-gold mt-1" />
+              <div className="text-green-800">
+                <h3 className="font-semibold text-foreground">Email</h3>
+                <p className="text-muted-foreground">support@yourwebsite.com</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Phone className="h-5 w-5 text-wisdom-gold mt-1" />
+              <div className="text-green-950">
+                <h3 className="font-semibold text-foreground">Phone</h3>
+                <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 text-wisdom-gold mt-1" />
+              <div className="text-green-800">
+                <h3 className="font-semibold text-foreground">Address</h3>
+                <p className="text-muted-foreground">
+                  Wisdom Empire Hub<br />
+                  Youtube: @wisdomempirehub<br />
+                  TikTok: @wisdomempirehub<br />
+                  Telegram: t.me/wisdomempire247
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <Phone className="h-5 w-5 text-primary mt-1" />
-            <div>
-              <h3 className="font-semibold text-foreground">Phone</h3>
-              <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
-            </div>
+          <div className="mt-8 p-4 bg-wisdom-cultural/10 rounded-lg">
+            <p className="text-sm text-muted-foreground">We aim to respond to all messages within 48 hours.</p>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="flex items-start gap-3">
-            <MapPin className="h-5 w-5 text-primary mt-1" />
-            <div>
-              <h3 className="font-semibold text-foreground">Address</h3>
-              <p className="text-muted-foreground">
-                Wisdom Empire Hub<br />
-                Youtube: @wisdomempirehub<br />
-                TikTok: @wisdomempirehub<br />
-                Telegram: t.me/wisdomempire247
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Contact Form Card */}
+      <Card className="p-8 bg-gray-800">
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">Send Us a Message</h2>
 
-        <div className="mt-8 p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">We aim to respond to all messages within 48 hours.</p>
-        </div>
-      </section>
-
-      <section aria-labelledby="contact-form" className="bg-card p-8 rounded-2xl border border-border">
-        <h2 id="contact-form" className="text-2xl font-bold mb-6 text-center text-foreground">
-          Send Us a Message
-        </h2>
-
-        <form onSubmit={onSubmit} className="space-y-4">
-          <Input
-            name="name"
-            placeholder="Your Name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Textarea
-            name="message"
-            placeholder="Your Message"
-            rows={4}
-            required
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? "Sending..." : "Send Message"}
-          </Button>
-        </form>
-
-        {success && (
-          <p className="mt-4 text-center text-sm text-foreground">✅ Thank you! Your message has been sent.</p>
+        {submitted ? (
+          <p className="text-green-400 text-center font-medium">
+            ✅ Thank you! Your message has been sent.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200"
+            />
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              rows={4}
+              required
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-xl focus:ring focus:ring-indigo-200"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition"
+            >
+              {loading ? 'Sending...' : 'Send Message'}
+            </button>
+          </form>
         )}
-      </section>
-    </main>
+      </Card>
+    </div>
   );
-}
+};
+
+export default Contact;
