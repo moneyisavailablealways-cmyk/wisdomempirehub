@@ -28,8 +28,8 @@ const Contact: React.FC = () => {
     try {
       // Send form via EmailJS (browser CDN)
       await emailjs.sendForm(
-        "service_27nifab",        // Your EmailJS service ID
-        "__ejs-test-mail-service__", // Your EmailJS template ID
+        "service_27nifab",   // ✅ Your Service ID
+        "template_cbc1mss",  // ✅ Your Template ID
         e.currentTarget
       );
 
@@ -133,7 +133,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="name" className="block text-sm font-medium text-white mb-2">Name</label>
                 <Input
                   id="name"
-                  name="name"         // Must match {{name}}
+                  name="name"  // ✅ Must match {{name}}
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -147,7 +147,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">Email</label>
                 <Input
                   id="email"
-                  name="email"        // Must match {{email}}
+                  name="email" // ✅ Must match {{email}}
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -161,7 +161,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="message" className="block text-sm font-medium text-white mb-2">Message</label>
                 <Textarea
                   id="message"
-                  name="message"      // Must match {{message}}
+                  name="message" // ✅ Must match {{message}}
                   value={formData.message}
                   onChange={handleInputChange}
                   required
