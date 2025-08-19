@@ -60,15 +60,15 @@ const Contact = () => {
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-wisdom-gold mt-1" />
                   <div className="text-green-800">
-                    <h3 className="font-semibold text-foreground">Email 1 </h3>
-                    <p className="text-muted-foreground">wisdomempirehub@gmail.com</p>
+                    <h3 className="font-semibold text-foreground">Email</h3>
+                    <p className="text-muted-foreground">support@yourwebsite.com</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-wisdom-gold mt-1" />
                   <div className="text-green-950">
-                    <h3 className="font-semibold text-foreground">Youtube</h3>
+                    <h3 className="font-semibold text-foreground">Phone</h3>
                     <p className="text-muted-foreground">+1 (XXX) XXX-XXXX</p>
                   </div>
                 </div>
@@ -78,9 +78,12 @@ const Contact = () => {
                   <div className="text-green-800">
                     <h3 className="font-semibold text-foreground">Address</h3>
                     <p className="text-muted-foreground">
-                      Your Company Name<br />
-                      123 Inspiration Street<br />
-                      City, State, ZIP
+                      Wisdom Empire Hub<br />
+                      To locate more wisdom,follow us on<br />
+                      Youtube--@wisdomempirehub<br />
+                      tiktok--@wisdomempirehub<br />
+                      Telegram--t.me/wisdomempire247
+
                     </p>
                   </div>
                 </div>
