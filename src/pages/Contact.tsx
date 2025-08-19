@@ -28,8 +28,8 @@ const Contact: React.FC = () => {
     try {
       // Send form via EmailJS (browser CDN)
       await emailjs.sendForm(
-        "service_27nifab",   // Replace with your EmailJS service ID
-        "__ejs-test-mail-service__",  // Replace with your EmailJS template ID
+        " service_27nifab ",   // Replace with your EmailJS service ID
+        " __ejs-test-mail-service__ ",  // Replace with your EmailJS template ID
         e.currentTarget
       );
 
