@@ -28,21 +28,18 @@ const Contact: React.FC = () => {
     setShowSuccess(false);
   
     try {
-      // Send the main message via EmailJS
+      // Send the main message to your email
       await emailjs.sendForm(
-        "service_27nifab",   // ✅ Your Service ID
-        "template_cbc1mss",  // ✅ Your Template ID
+        "service_27nifab",
+        "template_cbc1mss",
         e.currentTarget
       );
   
-      // Send auto-reply to the user
-      await emailjs.send(
-        "service_27nifab",           // ✅ Your Service ID
-        "template_wtzkptz",          // ✅ Your Auto-reply Template ID
-        {
-          to_name: formData.name,
-          to_email: formData.email
-        }
+      // Send auto-reply using the same form data
+      await emailjs.sendForm(
+        "service_27nifab",
+        "template_wtzkptz",
+        e.currentTarget
       );
   
       setShowSuccess(true);
@@ -62,6 +59,7 @@ const Contact: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-background px-4 py-12">
