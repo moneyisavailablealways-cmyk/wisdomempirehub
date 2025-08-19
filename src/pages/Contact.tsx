@@ -26,11 +26,22 @@ const Contact: React.FC = () => {
     setShowSuccess(false);
 
     try {
-      // Send form via EmailJS (browser CDN)
+      // 1️⃣ Send message to main inbox
       await emailjs.sendForm(
-        "service_27nifab",   // ✅ Your Service ID
-        "template_cbc1mss",  // ✅ Your Template ID
+        "service_27nifab",     // ✅ Your Service ID
+        "template_cbc1mss",    // ✅ Your main Template ID
         e.currentTarget
+      );
+
+      // 2️⃣ Send auto-reply to the sender
+      await emailjs.send(
+        "service_27nifab",     // ✅ Same Service ID
+        "template_wtzkptz",    // ✅ Auto-reply Template ID
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }
       );
 
       setShowSuccess(true);
@@ -118,9 +129,7 @@ const Contact: React.FC = () => {
             </div>
 
             <div className="mt-8 p-4 bg-gray-700 rounded-lg">
-              <p className="text-sm text-indigo-200">
-                We aim to respond to all messages within 48 hours.
-              </p>
+              <p className="text-sm text-indigo-200">We aim to respond to all messages within 48 hours.</p>
             </div>
           </div>
 
@@ -133,7 +142,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="name" className="block text-sm font-medium text-white mb-2">Name</label>
                 <Input
                   id="name"
-                  name="name"  // ✅ Must match {{name}}
+                  name="name"
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -147,7 +156,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">Email</label>
                 <Input
                   id="email"
-                  name="email" // ✅ Must match {{email}}
+                  name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -161,7 +170,7 @@ const Contact: React.FC = () => {
                 <label htmlFor="message" className="block text-sm font-medium text-white mb-2">Message</label>
                 <Textarea
                   id="message"
-                  name="message" // ✅ Must match {{message}}
+                  name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   required
