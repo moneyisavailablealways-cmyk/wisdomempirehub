@@ -35,18 +35,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.currentTarget
     );
 
-    // Send auto-reply
-    await emailjs.send(
-      "service_27nifab",
-      "template_cbc1mss",
-      {
-        to_name: formData.name,
-        to_email: formData.email,   // must match {{to_email}} in template
-        from_name: "Wisdom Empire Hub",
-        message: "Thank you for reaching out! We'll get back to you shortly."
-      }
-    );
-
     setShowSuccess(true);
     setFormData({ name: "", email: "", message: "" });
 
