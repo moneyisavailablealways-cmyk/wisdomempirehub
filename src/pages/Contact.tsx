@@ -26,37 +26,39 @@ const Contact: React.FC = () => {
     setShowSuccess(false);
 
     try {
-      // 1️⃣ Send message to main inbox
+      // 1️⃣ Send main message to your inbox
       await emailjs.sendForm(
-        "service_27nifab",     // ✅ Your Service ID
-        "template_cbc1mss",    // ✅ Your main Template ID
+        "service_27nifab",   // ✅ Your Service ID
+        "template_cbc1mss",  // ✅ Main Template ID
         e.currentTarget
       );
 
-      // 2️⃣ Send auto-reply to the sender
-      // 1️⃣ Send main message via form
-      await emailjs.sendForm("service_27nifab", "template_cbc1mss", e.currentTarget);
-      
-      // 2️⃣ Send auto-reply programmatically
-      await emailjs.send("service_27nifab", "template_wtzkptz", {
-        to_email: formData.email,   // recipient's email
-        from_name: "Wisdom Empire Hub", // your site/company name
-        message: "Thanks for contacting us! We’ll respond within 48 hours."
-      });
-
+      // 2️⃣ Send auto-reply to user
+      await emailjs.send(
+        "service_27nifab",   // ✅ Your Service ID
+        "template_wtzkptz",  // ✅ Auto-reply Template ID
+        {
+          to_email: formData.email,
+          from_name: "Wisdom Empire",
+          message: "Thank you for contacting us! We’ll respond within 48 hours.",
+          user_name: formData.name,   // optional: use in template
+        }
+      );
 
       setShowSuccess(true);
       setFormData({ name: "", email: "", message: "" });
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 48 hours."
       });
+
     } catch (error) {
+      console.error(error);
       toast({
         title: "Error sending message",
         description: "Please try again later."
       });
-      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -191,9 +193,7 @@ const Contact: React.FC = () => {
 
               {showSuccess && (
                 <div className="text-center">
-                  <p className="text-green-400 font-medium">
-                    ✅ Thank you! Your message has been sent successfully.
-                  </p>
+                  <p className="text-green-400 font-medium">✅ Thank you! Your message has been sent successfully.</p>
                 </div>
               )}
             </form>
