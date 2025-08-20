@@ -148,7 +148,7 @@ const Privacy = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-wisdom-gold">•</span>
-                    <span>You may request data deletion by contacting privacy@yourwebsite.com.</span>
+                    <span>You may request data deletion by contacting wisdomempirehub@gmail.com.</span>
                   </li>
                 </ul>
               </CardContent>
