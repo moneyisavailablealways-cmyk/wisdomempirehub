@@ -1,167 +1,158 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { BookOpen, Quote, MessageSquare, Zap, HelpCircle, Volume2, Download, Edit, Users, Mic } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const FAQ = () => {
+  const faqs = [
+    { id: "1", icon: HelpCircle, question: "How do I show or hide the meaning of a proverb?", answer: "Click the \"Show Meaning\" link under the proverb. Click again to hide it." },
+    { id: "2", icon: Edit, question: "Can I add my own proverbs?", answer: "Yes! Registered users can submit and edit proverbs through the edit feature." },
+    { id: "3", icon: Download, question: "Can I download the proverbs?", answer: "Yes, look for the download icon on each card to save a copy." },
+    { id: "4", icon: Volume2, question: "Why can't I hear the audio?", answer: "Make sure your device volume is up and your browser allows audio playback." },
+    { id: "5", icon: Users, question: "Is the content free to use?", answer: "All content is free for personal use. For commercial use, please contact us." }
+  ];
+
+  // --- Voice Assistant state ---
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [input, setInput] = useState("");
+  const [listening, setListening] = useState(false);
+
+  const sendMessage = async (msg: string, audioFile?: File) => {
+    const formData = new FormData();
+    if (audioFile) formData.append("file", audioFile);
+    else formData.append("text", msg);
+
+    const res = await fetch("/functions/v1/voice-assistant", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+
+    const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
+    audio.play();
+  };
+
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    let chunks: Blob[] = [];
+
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+
+    recorder.onstop = async () => {
+      const audioBlob = new Blob(chunks, { type: "audio/webm" });
+      sendMessage("", audioBlob as unknown as File);
+    };
+
+    recorder.start();
+    setListening(true);
+
+    setTimeout(() => {
+      recorder.stop();
+      setListening(false);
+    }, 5000); // 5 seconds max
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Quick Navigation */}
+      <section className="bg-card border-b border-border py-4">
+        <div className="container mx-auto px-4 flex flex-wrap gap-2 justify-center">
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/proverbs" className="flex items-center gap-2"><BookOpen className="h-4 w-4" />Proverbs</Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/quotes" className="flex items-center gap-2"><Quote className="h-4 w-4" />Quotes</Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/idioms" className="flex items-center gap-2"><MessageSquare className="h-4 w-4" />Idioms</Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/similes" className="flex items-center gap-2"><Zap className="h-4 w-4" />Similes</Link>
+          </Button>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* FAQ Accordion */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Frequently Asked Questions</h1>
+          <p className="text-lg text-muted-foreground">Find answers to common questions about using Wisdom Empire</p>
+        </div>
+
+        <Card>
+          <CardContent className="p-8 bg-slate-900 rounded-2xl">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map(faq => {
+                const IconComponent = faq.icon;
+                return (
+                  <AccordionItem key={faq.id} value={faq.id} className="border-b border-border last:border-b-0">
+                    <AccordionTrigger className="text-left hover:no-underline py-6 bg-teal-950 hover:bg-teal-800 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <IconComponent className="h-5 w-5 text-wisdom-gold flex-shrink-0" />
+                        <span className="font-medium text-foreground">{faq.question}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-6">
+                      <div className="ml-8 text-muted-foreground">{faq.answer}</div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* Voice Assistant */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-foreground">Ask AI Assistant</CardTitle>
+          </CardHeader>
+          <CardContent className="bg-slate-900 rounded-2xl p-6">
+            <div className="h-48 overflow-y-auto border p-3 rounded-lg mb-3 bg-slate-800 text-foreground">
+              {messages.map((m, i) => (
+                <div key={i} className={`mb-2 ${m.role === "user" ? "text-blue-400" : "text-green-400"}`}>
+                  <strong>{m.role === "user" ? "You" : "AI"}:</strong> {m.content}
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+                placeholder="Type your question..."
+                className="flex-1 border p-2 rounded-lg bg-slate-800 text-white"
+              />
+              <Button onClick={() => sendMessage(input)}>Send</Button>
+              <Button
+                onClick={startRecording}
+                className={listening ? "bg-red-500 text-white" : "bg-green-500 text-white"}
+              >
+                <Mic className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Contact Section */}
+        <Card className="mt-8">
+          <CardContent className="p-8 text-center bg-slate-900 rounded-2xl">
+            <h3 className="text-xl font-semibold text-foreground mb-4">Still have questions?</h3>
+            <p className="text-muted-foreground mb-6">Can't find what you're looking for? Get in touch with our support team.</p>
+            <Button asChild>
+              <Link to="/contact">Contact Us</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
-// Process base64 audio in chunks to prevent memory issues
-function processBase64Chunks(base64String: string, chunkSize = 32768) {
-  const chunks: Uint8Array[] = [];
-  let position = 0;
-  
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
-    
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
-    }
-    
-    chunks.push(bytes);
-    position += chunkSize;
-  }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
-}
-
-serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
-
-  try {
-    const { audio, voice = 'alloy', instructions = 'You are a helpful assistant.' } = await req.json();
-
-    if (!audio) {
-      throw new Error('Audio data is required');
-    }
-
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-    if (!OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not configured');
-    }
-
-    console.log('Processing voice assistant request...');
-
-    // Step 1: Convert speech to text using Whisper
-    console.log('Converting speech to text...');
-    const binaryAudio = processBase64Chunks(audio);
-    
-    const transcriptionFormData = new FormData();
-    const audioBlob = new Blob([binaryAudio], { type: 'audio/webm' });
-    transcriptionFormData.append('file', audioBlob, 'audio.webm');
-    transcriptionFormData.append('model', 'whisper-1');
-
-    const transcriptionResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: transcriptionFormData,
-    });
-
-    if (!transcriptionResponse.ok) {
-      const error = await transcriptionResponse.text();
-      console.error('Whisper API error:', error);
-      throw new Error(`Speech-to-text failed: ${error}`);
-    }
-
-    const transcriptionResult = await transcriptionResponse.json();
-    const userText = transcriptionResult.text;
-    console.log('Transcribed text:', userText);
-
-    // Step 2: Process with ChatGPT
-    console.log('Processing with AI...');
-    const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: instructions },
-          { role: 'user', content: userText }
-        ],
-        max_tokens: 500,
-        temperature: 0.8,
-      }),
-    });
-
-    if (!chatResponse.ok) {
-      const error = await chatResponse.json();
-      console.error('ChatGPT API error:', error);
-      throw new Error(error.error?.message || 'AI processing failed');
-    }
-
-    const chatResult = await chatResponse.json();
-    const aiResponse = chatResult.choices[0].message.content;
-    console.log('AI response:', aiResponse);
-
-    // Step 3: Convert AI response to speech
-    console.log('Converting response to speech...');
-    const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'tts-1',
-        input: aiResponse,
-        voice: voice,
-        response_format: 'mp3',
-      }),
-    });
-
-    if (!ttsResponse.ok) {
-      const error = await ttsResponse.json();
-      console.error('TTS API error:', error);
-      throw new Error(error.error?.message || 'Text-to-speech failed');
-    }
-
-    // Convert audio response to base64
-    const audioArrayBuffer = await ttsResponse.arrayBuffer();
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(audioArrayBuffer))
-    );
-
-    console.log('Voice assistant processing complete');
-
-    return new Response(
-      JSON.stringify({
-        transcription: userText,
-        response: aiResponse,
-        audioContent: base64Audio,
-        voice: voice
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
-
-  } catch (error) {
-    console.error('Voice assistant error:', error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
-  }
-});
+export default FAQ;
