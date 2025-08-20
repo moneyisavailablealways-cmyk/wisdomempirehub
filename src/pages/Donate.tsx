@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Globe, BookOpen, Users, Star, CreditCard, Wallet, ArrowLeft, Download, CheckCircle } from 'lucide-react';
 import { DonationForm } from '@/components/DonationForm';
-
 const Donate = () => {
   const [currentSection, setCurrentSection] = useState<'initial' | 'tiers' | 'payment' | 'form' | 'thankyou'>('initial');
   const [selectedTier, setSelectedTier] = useState<{
@@ -12,7 +11,6 @@ const Donate = () => {
     description: string;
   } | null>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'stripe' | 'paypal' | 'crypto' | null>(null);
-
   const donationTiers = [{
     name: "Wisdom Supporter",
     amount: "$5",
@@ -44,7 +42,6 @@ const Donate = () => {
     description: "Foundational supporter driving global wisdom preservation and innovation",
     gradient: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600"
   }];
-
   const handleDonateClick = () => {
     setCurrentSection('tiers');
   };
@@ -73,7 +70,6 @@ const Donate = () => {
   const handleBackToPayment = () => {
     setCurrentSection('payment');
   };
-
   const renderInitialSection = () => <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         <Card className="border border-ocean-blue/20 bg-gradient-to-br from-card to-ocean-blue/5">
@@ -164,7 +160,6 @@ const Donate = () => {
         </div>
       </div>
     </>;
-
   const renderTiersSection = () => <div className="space-y-8">
       <div className="text-center">
         <Button variant="ghost" onClick={handleBackToInitial} className="mb-4 text-ocean-blue hover:text-ocean-teal">
@@ -177,7 +172,7 @@ const Donate = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {donationTiers.map((tier, index) => <Card key={index} className={`${tier.gradient} text-white border-0 hover:scale-105 transition-all duration-300 cursor-pointer shadow-card hover:shadow-card-hover`} onClick={() => handleTierSelect(tier)}>
-            <CardContent className="p-6 text-center bg-lime-900">
+            <CardContent className="p-6 text-center bg-lime-900 rounded-2xl">
               <div className="mb-4">
                 <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
                 <div className="text-3xl font-bold mb-3">{tier.amount}</div>
@@ -190,7 +185,6 @@ const Donate = () => {
           </Card>)}
       </div>
     </div>;
-
   const renderPaymentSection = () => <div className="space-y-8">
       <div className="text-center">
         <Button variant="ghost" onClick={handleBackToTiers} className="mb-4 text-ocean-blue hover:text-ocean-teal">
@@ -247,14 +241,12 @@ const Donate = () => {
         </Card>
       </div>
     </div>;
-
   const renderFormSection = () => {
     if (!selectedTier || !selectedPaymentMethod) {
       return null;
     }
     return <DonationForm tier={selectedTier} paymentMethod={selectedPaymentMethod} onBack={handleBackToPayment} onSuccess={handleDonationSuccess} />;
   };
-
   const renderThankYouSection = () => <div className="text-center space-y-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
@@ -289,7 +281,6 @@ const Donate = () => {
         </div>
       </div>
     </div>;
-
   return <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
@@ -309,5 +300,4 @@ const Donate = () => {
       </div>
     </div>;
 };
-
 export default Donate;
