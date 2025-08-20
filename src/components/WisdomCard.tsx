@@ -227,11 +227,11 @@ export function WisdomCard({
       <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-border shadow-sm bg-slate-900">
         <CardContent className="p-6 space-y-4">
           {/* Header with type and origin badges */}
-          <div className="flex items-center justify-between flex-wrap gap-2 bg-zinc-300 rounded-2xl">
+          <div className="flex items-center justify-between flex-wrap gap-2 bg-zinc-300 rounded">
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-ocean-teal border-ocean-teal rounded bg-blue-700">
+            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-blue-700 rounded-xl">
               {item.origin}
             </Badge>
           </div>
