@@ -83,7 +83,7 @@ const FAQ = () => {
                 {faqs.map(faq => {
                 const IconComponent = faq.icon;
                 return <AccordionItem key={faq.id} value={faq.id} className="border-b border-border last:border-b-0">
-                      <AccordionTrigger className="text-left hover:no-underline py-6 bg-teal-950 hover:bg-teal-800">
+                      <AccordionTrigger className="text-left hover:no-underline py-6 bg-teal-950 hover:bg-teal-800 rounded-2xl">
                         <div className="flex items-center gap-3">
                           <IconComponent className="h-5 w-5 text-wisdom-gold flex-shrink-0" />
                           <span className="font-medium text-foreground">{faq.question}</span>
@@ -102,7 +102,7 @@ const FAQ = () => {
 
           {/* Contact Section */}
           <Card className="mt-8">
-            <CardContent className="p-8 text-center bg-zinc-600">
+            <CardContent className="p-8 text-center bg-slate-900">
               <h3 className="text-xl font-semibold text-foreground mb-4">Still have questions?</h3>
               <p className="text-muted-foreground mb-6">
                 Can't find what you're looking for? Get in touch with our support team.
