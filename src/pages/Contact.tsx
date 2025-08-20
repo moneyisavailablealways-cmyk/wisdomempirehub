@@ -95,8 +95,10 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <div className="flex items-center gap-4">
                 <Mail className="text-indigo-400" size={24} />
                 <div>
-                  <h3 className="font-semibold text-white">Email</h3>
-                  <p className="text-indigo-300">support@yourwebsite.com</p>
+                  <h3 className="font-semibold text-white">Email 1</h3>
+                  <p className="text-indigo-300">wisdomempirehub@gmail.com</p>
+                   <h3 className="font-semibold text-white">Email 2</h3>
+                  <p className="text-indigo-300">wisdomempire500@gmail.com</p>
                 </div>
               </div>
 
@@ -104,7 +106,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <Phone className="text-indigo-400" size={24} />
                 <div>
                   <h3 className="font-semibold text-white">Phone</h3>
-                  <p className="text-indigo-300">+1 (XXX) XXX-XXXX</p>
+                  <p className="text-indigo-300">You can send us with direct contact</p>
                 </div>
               </div>
 
