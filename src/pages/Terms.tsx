@@ -46,7 +46,7 @@ const Terms = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Terms of Use</h1>
-            <p className="text-muted-foreground">Last updated: [Insert Date]</p>
+            <p className="text-muted-foreground">Last updated: August,2025</p>
           </div>
 
           <div className="space-y-8">
