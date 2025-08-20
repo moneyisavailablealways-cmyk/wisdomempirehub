@@ -106,7 +106,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <Phone className="text-indigo-400" size={24} />
                 <div>
                   <h3 className="font-semibold text-white">Phone</h3>
-                  <p className="text-indigo-300">You can send us with direct contact</p>
+                  <p className="text-indigo-300">You can send us a message with your direct contact</p>
                 </div>
               </div>
 
