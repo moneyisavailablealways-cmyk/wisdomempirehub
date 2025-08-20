@@ -220,7 +220,7 @@ export function AIAssistant({
           <div className="flex items-center justify-between mb-4 my-[15px] mx-[26px] rounded-none bg-emerald-600">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-wisdom-gold px-0 mx-[3px] my-0 py-0 bg-emerald-600" />
-              <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">Lovable AI Assistant</h3>
+              <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">Wisdom AI Assistant</h3>
             </div>
           </div>
           
