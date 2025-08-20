@@ -211,7 +211,7 @@ export function AIAssistant({
   if (!isVisible) {
     return <Button onClick={handleShow} variant="outline" className="mb-4 transition-all duration-300 hover:scale-105">
         <Bot className="h-4 w-4 mr-2" />
-        Show Lovable AI Assistant
+        Show Wisdom AI Assistant
       </Button>;
   }
   return <div className={`transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 animate-fade-in' : 'opacity-0'}`} ref={responseRef}>
