@@ -104,7 +104,8 @@ export function WisdomCard({
           break;
         default:
           utterance.pitch = 1.0;
-          utterance.rate = 0.95; // Consistent medium speed
+          utterance.rate = 0.95;
+        // Consistent medium speed
       }
       utterance.onend = () => {
         setIsPlayingAudio(false);
@@ -134,21 +135,18 @@ export function WisdomCard({
       setIsPlayingMeaningAudio(false);
       return;
     }
-    
     if (!explanation) return;
-    
     try {
       setIsPlayingMeaningAudio(true);
       const utterance = new SpeechSynthesisUtterance(explanation);
-      
+
       // Use standard voice settings for meaning with consistent speed
       utterance.pitch = 1.0;
       utterance.rate = 0.95; // Consistent medium speed for better comprehension
-      
+
       utterance.onend = () => {
         setIsPlayingMeaningAudio(false);
       };
-      
       utterance.onerror = () => {
         setIsPlayingMeaningAudio(false);
         toast({
@@ -157,7 +155,6 @@ export function WisdomCard({
           variant: "destructive"
         });
       };
-      
       window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Error playing meaning audio:', error);
@@ -169,7 +166,6 @@ export function WisdomCard({
       });
     }
   };
-
   const handleShowMeaning = async () => {
     if (showMeaning) {
       setShowMeaning(false);
@@ -231,11 +227,11 @@ export function WisdomCard({
       <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
         <CardContent className="p-6 space-y-4">
           {/* Header with type and origin badges */}
-          <div className="flex items-center justify-between flex-wrap gap-2 bg-slate-400">
+          <div className="flex items-center justify-between flex-wrap gap-2 bg-slate-400 rounded-2xl">
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-blue-900 rounded-none">
+            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-blue-900 rounded-full">
               {item.origin}
             </Badge>
           </div>
@@ -251,14 +247,7 @@ export function WisdomCard({
                 <div className="text-sm text-muted-foreground leading-relaxed flex-1">
                   {explanation}
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handlePlayMeaningAudio} 
-                  disabled={isPlayingMeaningAudio}
-                  title={isPlayingMeaningAudio ? 'Stop meaning audio' : 'Play meaning audio'}
-                  className="shrink-0"
-                >
+                <Button variant="ghost" size="sm" onClick={handlePlayMeaningAudio} disabled={isPlayingMeaningAudio} title={isPlayingMeaningAudio ? 'Stop meaning audio' : 'Play meaning audio'} className="shrink-0">
                   {isPlayingMeaningAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                 </Button>
               </div>
