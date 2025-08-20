@@ -21,14 +21,43 @@ serve(async (req) => {
 
     console.log('Explaining wisdom:', { text: text.substring(0, 50) + '...', type, origin });
 
-    const prompt = `Explain the meaning and significance of this ${type} from ${origin}: "${text}"
+    // Determine the context based on origin/category
+    const pageContext = origin.toLowerCase().includes('proverb') ? 'Proverbs page' :
+                       origin.toLowerCase().includes('quote') ? 'Quotes page' :
+                       origin.toLowerCase().includes('idiom') ? 'Idioms page' :
+                       origin.toLowerCase().includes('simile') ? 'Similes page' :
+                       'Wisdom page';
 
-Please provide a concise explanation (2-3 sentences) that covers:
-1. The literal meaning
-2. The deeper wisdom or lesson it conveys
-3. How it might apply to modern life
+    // Create context-aware prompt
+    let prompt = '';
+    
+    if (type === 'user_query') {
+      // Handle general user questions
+      prompt = `User question from ${pageContext}: "${text}"`;
+    } else {
+      // Handle specific wisdom explanations
+      prompt = `From ${pageContext}, explain this ${type}: "${text}"`;
+    }
 
-Keep it educational, engaging, and accessible.`;
+    const systemPrompt = `You are Lovable, the AI assistant for Wisdom Empire. You help users explore proverbs, quotes, idioms, similes, and other cultural wisdom.
+
+Your responsibilities:
+1. **Friendly & engaging responses:** Always respond warmly and encouragingly, like a wise friend.
+2. **Audio explanation:** Every reply should be suitable for text-to-speech audio playback.
+3. **Page-aware context:** Adjust your answer depending on the page context provided.
+4. **Clarity & brevity:** Give clear, concise, and friendly answers (2-4 sentences).
+5. **Language:** Respond in English with an audio-friendly tone.
+
+**Page context guidelines:**
+- **Proverbs page:** Explain meaning, origin, usage, or cultural significance. Provide examples if relevant.
+- **Quotes page:** Explain meaning, context, or relevance. Offer insights or interpretations.
+- **Idioms page:** Explain meaning, origin, and example usage.
+- **Similes page:** Explain meaning and examples of usage in sentences.
+- **FAQ/Help pages:** Give clear guidance about using Wisdom Empire features.
+
+**Voice-friendly style:** Use conversational language that sounds natural when spoken aloud. Avoid complex punctuation or formatting.
+
+If you don't know the answer, respond politely and guide the user to explore related content.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -41,11 +70,11 @@ Keep it educational, engaging, and accessible.`;
         messages: [
           { 
             role: 'system', 
-            content: 'You are a wise cultural educator who explains the meaning of proverbs, quotes, idioms, and similes from different cultures. Provide clear, concise explanations that help people understand both the literal and metaphorical meanings.' 
+            content: systemPrompt
           },
           { role: 'user', content: prompt }
         ],
-        max_tokens: 200,
+        max_tokens: 300,
         temperature: 0.7,
       }),
     });
