@@ -224,10 +224,10 @@ export function WisdomCard({
     return videoId ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=0&rel=0&modestbranding=1` : url;
   };
   return <>
-      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card border border-border shadow-sm">
+      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-border shadow-sm bg-zinc-100">
         <CardContent className="p-6 space-y-4">
           {/* Header with type and origin badges */}
-          <div className="flex items-center justify-between flex-wrap gap-2 rounded bg-orange-500">
+          <div className="flex items-center justify-between flex-wrap gap-2 rounded bg-blue-700">
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
