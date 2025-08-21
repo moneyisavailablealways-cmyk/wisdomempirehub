@@ -146,7 +146,7 @@ export const DonationForm = ({
             </div>
 
             <div className="pt-4">
-              <Button type="submit" className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue" disabled={loading}>
+              <Button type="submit"<a href="https://ko-fi.com/s/dc6f6effd4">submit</a> className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue" disabled={loading}>
                 {loading ? 'Processing...' : `Donate ${tier.amount} via ${paymentDisplay.name}`}
               </Button>
             </div>
