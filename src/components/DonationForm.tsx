@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CreditCard, User, Mail, ArrowLeft } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 
 interface DonationFormProps {
   tier: {
@@ -15,14 +13,12 @@ interface DonationFormProps {
   };
   paymentMethod: 'stripe' | 'paypal' | 'crypto';
   onBack: () => void;
-  onSuccess: (donationId: string) => void;
 }
 
 export const DonationForm = ({
   tier,
   paymentMethod,
-  onBack,
-  onSuccess
+  onBack
 }: DonationFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -30,57 +26,16 @@ export const DonationForm = ({
   });
   const [loading, setLoading] = useState(false);
 
-  // still here in case you want Stripe/PayPal later
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-    setLoading(true);
-    try {
-      const donationData = {
-        ...formData,
-        tier: tier.name,
-        amount: tier.amount
-      };
-
-      const { data, error } = await supabase.functions.invoke('create-donation-payment', {
-        body: { donationData, paymentMethod },
-        headers: {
-          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ''}`
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.success && data.paymentUrl) {
-        if (paymentMethod === 'stripe') {
-          window.open(data.paymentUrl, '_blank');
-        } else {
-          setTimeout(() => {
-            onSuccess(data.donationId);
-          }, 2000);
-        }
-      }
-    } catch (error) {
-      console.error('Error creating donation:', error);
-      toast.error('Failed to process donation. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getPaymentMethodDisplay = () => {
     switch (paymentMethod) {
       case 'stripe':
-        return { name: 'Credit Card', icon: CreditCard, description: 'Secure payment via Stripe' };
+        return { name: 'Credit Card', icon: CreditCard, description: 'Secure payment via Ko-fi' };
       case 'paypal':
-        return { name: 'PayPal', icon: CreditCard, description: 'Pay with your PayPal account' };
+        return { name: 'PayPal', icon: CreditCard, description: 'Pay with your PayPal via Ko-fi' };
       case 'crypto':
-        return { name: 'Cryptocurrency', icon: CreditCard, description: 'Pay with crypto wallet' };
+        return { name: 'Cryptocurrency', icon: CreditCard, description: 'Pay with crypto via Ko-fi' };
       default:
-        return { name: 'Payment', icon: CreditCard, description: 'Secure payment' };
+        return { name: 'Payment', icon: CreditCard, description: 'Secure payment via Ko-fi' };
     }
   };
 
@@ -103,7 +58,7 @@ export const DonationForm = ({
         <CardHeader className="bg-gradient-to-r from-ocean-blue to-ocean-teal text-white">
           <CardTitle className="flex items-center gap-2">
             <paymentDisplay.icon className="h-5 w-5" />
-            {paymentDisplay.name} Payment
+            {paymentDisplay.name} via Ko-fi
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -113,7 +68,8 @@ export const DonationForm = ({
             <p className="text-sm text-muted-foreground">{tier.description}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Info form (not connected to supabase anymore) */}
+          <form className="space-y-4">
             <div>
               <Label htmlFor="name" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
@@ -145,23 +101,23 @@ export const DonationForm = ({
                 className="mt-1"
               />
             </div>
-
-            {/* ✅ Ko-fi button override */}
-            <div className="pt-4">
-              <Button
-                type="button"
-                onClick={() => window.open('https://ko-fi.com/s/dc6f6effd4', '_blank')}
-                className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue"
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : `Donate ${tier.amount} via ${paymentDisplay.name}`}
-              </Button>
-            </div>
-
-            <p className="text-xs text-muted-foreground text-center">
-              {paymentDisplay.description}. Your information is secure and encrypted.
-            </p>
           </form>
+
+          {/* ✅ Ko-fi button OUTSIDE form so it always works */}
+          <div className="pt-4">
+            <Button
+              type="button"
+              onClick={() => window.open('https://ko-fi.com/s/dc6f6effd4', '_blank')}
+              className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue"
+              disabled={loading}
+            >
+              {loading ? 'Processing...' : `Donate ${tier.amount} via Ko-fi`}
+            </Button>
+          </div>
+
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            {paymentDisplay.description}. Your information is secure and encrypted.
+          </p>
         </CardContent>
       </Card>
     </div>
