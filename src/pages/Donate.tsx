@@ -199,7 +199,7 @@ const Donate = () => {
 
       <div className="max-w-md mx-auto space-y-4">
         <Card className="border border-ocean-blue/20 hover:border-ocean-blue/40 transition-colors cursor-pointer">
-          <CardContent onClick={() => handlePaymentMethodSelect('stripe')} className="p-6 flex items-center justify-between bg-sky-200">
+          <CardContent onClick={() => handlePaymentMethodSelect('https://ko-fi.com/s/dc6f6effd4')} className="p-6 flex items-center justify-between bg-sky-200">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-green-950">
                 <CreditCard className="h-6 w-6 text-blue-600 bg-green-950" />
