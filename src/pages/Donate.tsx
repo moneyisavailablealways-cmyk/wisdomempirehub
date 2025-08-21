@@ -13,7 +13,7 @@ const Donate = () => {
       amount: "$5",
       description: "Help us maintain servers and keep wisdom accessible",
       gradient: "bg-gradient-to-br from-ocean-blue to-ocean-teal",
-      link: "https://ko-fi.com/s/dc6f6effd4" // replace with actual link
+      link: "https://ko-fi.com/wisdomempirehub/?amount=5" // replace with actual link
     },
     {
       name: "Wisdom Patron",
