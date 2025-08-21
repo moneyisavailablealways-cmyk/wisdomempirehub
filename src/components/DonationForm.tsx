@@ -146,10 +146,21 @@ export const DonationForm = ({
             </div>
 
             <div className="pt-4">
-              <Button type="submit" className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue" disabled={loading}>
-                {loading ? 'Processing...' : `Donate ${tier.amount} via ${paymentDisplay.name}`}
-              </Button>
+              <a
+                href="https://ko-fi.com/s/dc6f6effd4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full block"
+              >
+                <Button
+                  type="button"
+                  className="w-full bg-gradient-to-r from-ocean-blue to-ocean-teal hover:from-ocean-teal hover:to-ocean-blue"
+                >
+                  {loading ? 'Processing...' : `Donate ${tier.amount} via ${paymentDisplay.name}`}
+                </Button>
+              </a>
             </div>
+
 
             <p className="text-xs text-muted-foreground text-center">
               {paymentDisplay.description}. Your information is secure and encrypted.
