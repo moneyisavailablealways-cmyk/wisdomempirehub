@@ -13,7 +13,7 @@ const Donate = () => {
       amount: "$5",
       description: "Help us maintain servers and keep wisdom accessible",
       gradient: "bg-gradient-to-br from-ocean-blue to-ocean-teal",
-      link: "https://ko-fi.com/wisdomempirehub/?amount=5" // replace with actual link
+      link: "https://www.paypal.com/ncp/payment/LJEEDFHN6C8ZE" // replace with actual link
     },
     {
       name: "Wisdom Patron",
@@ -168,17 +168,13 @@ const Donate = () => {
               </div>
               <p className="text-white/90 mb-6 text-sm leading-relaxed">{tier.description}</p>
               {/* ✅ Direct Ko-fi link */}
-                <div id="paypal-container-LJEEDFHN6C8ZE"></div>
-  <script
-    src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID"
-    data-sdk-integration-source="button-factory"
-  ></script>
-  <script>
-    paypal.HostedButtons({
-      hostedButtonId: "LJEEDFHN6C8ZE",
-    }).render("#paypal-container-LJEEDFHN6C8ZE");
-  </script>
-
+              <Button
+                className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30"
+                variant="outline"
+                onClick={() => window.open(tier.link, '_blank')}
+              >
+                Donate Now
+              </Button>
             </CardContent>
           </Card>
         ))}
