@@ -41,7 +41,7 @@ const Donate = () => {
       amount: "$100+",
       description: "Lead sponsor of cultural wisdom preservation efforts",
       gradient: "bg-gradient-to-br from-ocean-blue via-ocean-teal to-ocean-coral",
-      link: "https://ko-fi.com/s/dc6f6effd4"
+      link: "https://www.paypal.com/ncp/payment/CA26AVPMY5A8C"
     },
     {
       name: "Wisdom Pillar",
