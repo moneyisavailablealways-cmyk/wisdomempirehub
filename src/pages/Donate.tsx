@@ -48,7 +48,7 @@ const Donate = () => {
       amount: "$500+",
       description: "Foundational supporter driving global wisdom preservation and innovation",
       gradient: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600",
-      link: "https://ko-fi.com/s/dc6f6effd4"
+      link: "https://www.paypal.com/ncp/payment/YLJQAZ8N7TRGS"
     }
   ];
 
