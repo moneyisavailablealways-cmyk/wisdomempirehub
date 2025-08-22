@@ -124,7 +124,7 @@ const Index = () => {
 
         {/* Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" />
+          <img src="/lovable-uploads/ead3a929-a21d-420d-ae0c-df6f55dbb0f4.png" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" />
         </div>
 
         <div className="relative container mx-auto px-4">
