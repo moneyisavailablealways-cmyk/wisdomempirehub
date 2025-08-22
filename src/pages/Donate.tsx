@@ -138,7 +138,7 @@ const Donate = () => {
             <CardContent className="p-6 text-center rounded-2xl bg-green-900">
               <div className="mb-4">
                 <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                <div className="text-3xl font-bold mb-3 bg-green-950 rounded-2xl">{tier.amount}</div>
+                <div className="text-3xl font-bold mb-3 rounded-2xl bg-green-900">{tier.amount}</div>
               </div>
               <p className="text-white/90 mb-6 text-sm leading-relaxed">{tier.description}</p>
               {/* ✅ Direct Ko-fi link */}
