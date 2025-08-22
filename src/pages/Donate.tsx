@@ -168,13 +168,17 @@ const Donate = () => {
               </div>
               <p className="text-white/90 mb-6 text-sm leading-relaxed">{tier.description}</p>
               {/* ✅ Direct Ko-fi link */}
-              <Button
-                className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30"
-                variant="outline"
-                onClick={() => window.open(tier.link, '_blank')}
-              >
-                Donate Now
-              </Button>
+                <div id="paypal-container-LJEEDFHN6C8ZE"></div>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID"
+    data-sdk-integration-source="button-factory"
+  ></script>
+  <script>
+    paypal.HostedButtons({
+      hostedButtonId: "LJEEDFHN6C8ZE",
+    }).render("#paypal-container-LJEEDFHN6C8ZE");
+  </script>
+
             </CardContent>
           </Card>
         ))}
