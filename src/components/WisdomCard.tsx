@@ -47,7 +47,9 @@ export function WisdomCard({
   const {
     openAIVoice
   } = useSettings();
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -225,24 +227,23 @@ export function WisdomCard({
       });
       return;
     }
-
     if (!cardRef.current) return;
-
     try {
       toast({
         description: "Generating your card image...",
         duration: 2000
       });
-
       const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: '#0f172a', // slate-900 background
-        scale: 2, // Higher quality
+        backgroundColor: '#0f172a',
+        // slate-900 background
+        scale: 2,
+        // Higher quality
         useCORS: true,
         allowTaint: true
       });
 
       // Convert to blob
-      canvas.toBlob((blob) => {
+      canvas.toBlob(blob => {
         if (blob) {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -252,14 +253,12 @@ export function WisdomCard({
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
-
           toast({
             description: "Card downloaded successfully! 📥",
             duration: 2000
           });
         }
       }, 'image/png', 0.9);
-
     } catch (error) {
       console.error('Error downloading card:', error);
       toast({
@@ -282,7 +281,7 @@ export function WisdomCard({
             <Badge className={getTypeColor(item.type)} variant="secondary">
               {item.type.toUpperCase()} • {item.subcategory}
             </Badge>
-            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-blue-700 rounded-xl">
+            <Badge variant="outline" className="text-ocean-teal border-ocean-teal bg-blue-700 rounded">
               {item.origin}
             </Badge>
           </div>
