@@ -8,36 +8,42 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Modern Ocean Design System - Fresh & Contemporary */
-    --background: 210 20% 98%;
-    --foreground: 222 84% 5%;
+    /* Wisdom Empire Brand Colors - Locked for all themes */
+    /* Deep navy backgrounds */
+    --background: 220 50% 8%;
+    --foreground: 45 100% 85%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
+    /* Card styling with navy */
+    --card: 220 39% 11%;
+    --card-foreground: 45 100% 85%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
+    /* Popover styling */
+    --popover: 220 39% 11%;
+    --popover-foreground: 45 100% 85%;
 
     /* Wisdom Empire Gold as primary */
     --primary: 45 100% 65%;
-    --primary-foreground: 220 39% 11%;
+    --primary-foreground: 220 39% 8%;
 
     /* Navy for secondary */
     --secondary: 220 39% 18%;
     --secondary-foreground: 45 100% 85%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 220 20% 47%;
+    /* Muted areas in navy tones */
+    --muted: 220 39% 18%;
+    --muted-foreground: 45 60% 60%;
 
     /* Light gold for accent */
     --accent: 45 100% 70%;
-    --accent-foreground: 220 39% 11%;
+    --accent-foreground: 220 39% 8%;
 
+    /* Destructive actions */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 45 100% 85%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    /* Borders and inputs in navy */
+    --border: 220 32% 20%;
+    --input: 220 32% 20%;
     --ring: 45 100% 65%;
 
     /* Wisdom Empire design tokens */
@@ -52,7 +58,7 @@ All colors MUST be HSL.
     --gradient-wisdom: linear-gradient(135deg, hsl(220 39% 11%) 0%, hsl(45 100% 65%) 100%);
     --gradient-cultural: linear-gradient(135deg, hsl(45 100% 70%) 0%, hsl(45 95% 75%) 100%);
     --gradient-hero: linear-gradient(135deg, hsl(220 39% 11%) 0%, hsl(220 39% 18%) 30%, hsl(45 100% 65%) 70%, hsl(45 100% 80%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(45 100% 98%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220 39% 11%) 0%, hsl(220 32% 15%) 100%);
     --gradient-nav: linear-gradient(90deg, hsl(220 39% 11%) 0%, hsl(45 100% 65%) 100%);
     
     /* Wisdom Empire shadows */
@@ -68,60 +74,18 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar colors locked to brand */
+    --sidebar-background: 220 50% 8%;
+    --sidebar-foreground: 45 100% 85%;
+    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary-foreground: 220 39% 8%;
+    --sidebar-accent: 220 39% 18%;
+    --sidebar-accent-foreground: 45 100% 85%;
+    --sidebar-border: 220 32% 20%;
+    --sidebar-ring: 45 100% 65%;
   }
 
-  .dark {
-    --background: 220 50% 8%;
-    --foreground: 45 100% 85%;
-
-    --card: 220 39% 11%;
-    --card-foreground: 45 100% 85%;
-
-    --popover: 220 39% 11%;
-    --popover-foreground: 45 100% 85%;
-
-    --primary: 45 100% 65%;
-    --primary-foreground: 220 39% 8%;
-
-    --secondary: 220 39% 18%;
-    --secondary-foreground: 45 100% 85%;
-
-    --muted: 220 39% 18%;
-    --muted-foreground: 45 60% 60%;
-
-    --accent: 45 100% 70%;
-    --accent-foreground: 220 39% 8%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  /* Remove dark mode variations - brand colors only */
 }
 
 @layer base {

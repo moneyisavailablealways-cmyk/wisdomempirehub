@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-	darkMode: ["class"],
+	darkMode: "class", // Disable automatic dark mode detection
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
@@ -62,12 +62,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Wisdom Empire custom colors
+				// Wisdom Empire custom colors - locked brand palette
 				wisdom: {
 					gold: 'hsl(var(--wisdom-gold))',
 					blue: 'hsl(var(--wisdom-blue))',
-					cultural: 'hsl(var(--cultural-accent))',
-					earth: 'hsl(var(--earth-tone))'
+					cultural: 'hsl(var(--wisdom-cultural))',
+					navy: 'hsl(var(--wisdom-navy))',
+					'light-gold': 'hsl(var(--wisdom-light-gold))',
+					'dark-blue': 'hsl(var(--wisdom-dark-blue))'
 				}
 			},
 			backgroundImage: {
