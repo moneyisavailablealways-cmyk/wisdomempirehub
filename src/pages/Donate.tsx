@@ -34,7 +34,7 @@ const Donate = () => {
       amount: "$40/month",
       description: "Ongoing support for platform growth and innovation",
       gradient: "bg-gradient-to-br from-ocean-navy to-ocean-coral",
-      link: "https://www.paypal.com/ncp/payment/3KRTWS7W9ELZE"
+      link: "https://www.paypal.com/ncp/payment/P-2M4415004C520745GNCUOBRY"
     },
     {
       name: "Wisdom Guardian",
