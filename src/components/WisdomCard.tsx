@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,9 +6,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/components/ui/use-toast';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { ShareMenu } from '@/components/ShareMenu';
 import { Heart, Volume2, Bot, MoreVertical, Edit, Download, Youtube, VolumeX, Loader2, Bookmark, BookmarkCheck } from 'lucide-react';
+import html2canvas from 'html2canvas';
 interface WisdomItem {
   id: string;
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
@@ -45,6 +47,8 @@ export function WisdomCard({
   const {
     openAIVoice
   } = useSettings();
+  const { user } = useAuth();
+  const cardRef = useRef<HTMLDivElement>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
@@ -212,11 +216,58 @@ export function WisdomCard({
       duration: 2000
     });
   };
-  const handleDownload = () => {
-    toast({
-      description: "Download functionality coming soon! 📥",
-      duration: 2000
-    });
+  const handleDownload = async () => {
+    if (!user) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to download cards as PNG files",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!cardRef.current) return;
+
+    try {
+      toast({
+        description: "Generating your card image...",
+        duration: 2000
+      });
+
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: '#0f172a', // slate-900 background
+        scale: 2, // Higher quality
+        useCORS: true,
+        allowTaint: true
+      });
+
+      // Convert to blob
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `wisdom-card-${item.type}-${item.id}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          toast({
+            description: "Card downloaded successfully! 📥",
+            duration: 2000
+          });
+        }
+      }, 'image/png', 0.9);
+
+    } catch (error) {
+      console.error('Error downloading card:', error);
+      toast({
+        title: "Download Error",
+        description: "Failed to download card. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
   const getVideoEmbedUrl = (url: string) => {
     // Convert various YouTube URL formats to embed format
@@ -224,7 +275,7 @@ export function WisdomCard({
     return videoId ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=0&rel=0&modestbranding=1` : url;
   };
   return <>
-      <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-border shadow-sm bg-slate-900">
+      <Card ref={cardRef} className="group h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-border shadow-sm bg-slate-900">
         <CardContent className="p-6 space-y-4">
           {/* Header with type and origin badges */}
           <div className="flex items-center justify-between flex-wrap gap-2 bg-zinc-300 rounded">
