@@ -27,7 +27,7 @@ const Donate = () => {
       amount: "$30",
       description: "Fund AI features and educational tools development",
       gradient: "bg-gradient-to-br from-ocean-coral to-ocean-blue",
-      link: "https://ko-fi.com/s/dc6f6effd4"
+      link: "https://www.paypal.com/ncp/payment/A8KKB3M5X6M8Y"
     },
     {
       name: "Monthly Supporter",
