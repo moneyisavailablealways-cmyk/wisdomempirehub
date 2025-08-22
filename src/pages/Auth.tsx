@@ -55,7 +55,7 @@ export default function Auth() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <img 
-              src="/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png" 
+              src="/lovable-uploads/ead3a929-a21d-420d-ae0c-df6f55dbb0f4.png" 
               alt="Wisdom Empire" 
               className="h-16 w-16 object-contain"
             />
