@@ -20,7 +20,7 @@ const Donate = () => {
       amount: "$20",
       description: "Support content research and cultural preservation",
       gradient: "bg-gradient-to-br from-ocean-teal to-ocean-mint",
-      link: "https://ko-fi.com/s/dc6f6effd4"
+      link: "https://www.paypal.com/ncp/payment/3RKZSNQSX24VW"
     },
     {
       name: "Wisdom Champion",
