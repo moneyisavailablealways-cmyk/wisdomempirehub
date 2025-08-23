@@ -9,6 +9,7 @@ import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Quote } from "lucide-react";
+import { SEOHead } from '@/components/SEOHead';
 type WisdomItem = {
   id: string;
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
@@ -96,6 +97,12 @@ const Quotes = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Inspirational Quotes Collection - Famous Quotes & Sayings | Wisdom Empire Hub"
+        description="Browse inspiring quotes from notable figures, thinkers, and leaders. Find motivational and thought-provoking quotes on Wisdom Empire Hub."
+        keywords="quotes, inspirational quotes, famous quotes, motivational quotes, wise quotes, notable figures, inspiring sayings"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+      />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">

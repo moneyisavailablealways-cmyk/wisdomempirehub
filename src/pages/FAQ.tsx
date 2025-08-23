@@ -1,4 +1,5 @@
 import React from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Quote, MessageSquare, Zap, HelpCircle, Volume2, Download, Edit, Users } from 'lucide-react';
@@ -16,9 +17,12 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* SEO Meta Tags */}
-      <title>FAQ - Wisdom Empire</title>
-      <meta name="description" content="Frequently Asked Questions about Wisdom Empire. Get answers about proverbs, quotes, idioms, and how to use our cultural knowledge platform." />
+      <SEOHead
+        title="FAQ - Frequently Asked Questions | Wisdom Empire Hub"
+        description="Frequently Asked Questions about Wisdom Empire Hub. Get answers about proverbs, quotes, idioms, and how to use our cultural knowledge platform."
+        keywords="FAQ, frequently asked questions, help, wisdom empire, proverbs, quotes, idioms, similes, support"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+      />
 
       {/* Quick Navigation Links */}
       <section className="bg-card border-b border-border py-4">

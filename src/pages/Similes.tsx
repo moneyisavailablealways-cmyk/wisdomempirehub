@@ -9,6 +9,7 @@ import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Type } from "lucide-react";
+import { SEOHead } from '@/components/SEOHead';
 type WisdomItem = {
   id: string;
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
@@ -96,6 +97,12 @@ const Similes = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Similes Collection - Comparative Expressions & Metaphors | Wisdom Empire Hub"
+        description="Discover similes and comparative expressions using 'like' and 'as'. Learn vivid language techniques and figurative comparisons."
+        keywords="similes, comparisons, metaphors, figurative language, like and as comparisons, literary devices, vivid expressions"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+      />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">

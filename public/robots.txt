@@ -1,3 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://wisdom-empire-hub.lovable.app/sitemap.xml
+
+# Preferred URLs
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +17,12 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Prevent crawling of auth and admin pages
+Disallow: /auth
+Disallow: /admin
+
+# Allow all wisdom content
+Allow: /proverbs/
+Allow: /quotes/
+Allow: /idioms/
+Allow: /similes/

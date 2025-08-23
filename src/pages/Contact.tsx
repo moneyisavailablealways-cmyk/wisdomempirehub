@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { SEOHead } from '@/components/SEOHead';
 import { BookOpen, Quote, MessageSquare, Zap, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -56,6 +57,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   return (
     <div className="min-h-screen bg-background px-4 py-12">
+      <SEOHead
+        title="Contact Us - Get in Touch | Wisdom Empire Hub"
+        description="Contact Wisdom Empire Hub for questions, support, or feedback about our cultural knowledge platform. We respond within 48 hours."
+        keywords="contact, support, wisdom empire, help, feedback, cultural education, contact form"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+      />
       {/* Header Section */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>

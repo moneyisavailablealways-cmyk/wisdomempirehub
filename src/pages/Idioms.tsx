@@ -9,6 +9,7 @@ import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Type } from "lucide-react";
+import { SEOHead } from '@/components/SEOHead';
 type WisdomItem = {
   id: string;
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
@@ -96,6 +97,12 @@ const Idioms = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Idioms Collection - Cultural Expressions & Phrases | Wisdom Empire Hub"
+        description="Explore idioms and figurative expressions from different cultures. Learn the meanings behind common phrases and cultural idioms."
+        keywords="idioms, cultural expressions, figurative language, phrases, expressions, cultural idioms, language learning"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+      />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">

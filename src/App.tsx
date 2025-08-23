@@ -14,6 +14,7 @@ import Proverbs from "./pages/Proverbs";
 import Quotes from "./pages/Quotes";
 import Idioms from "./pages/Idioms";
 import Similes from "./pages/Similes";
+import WisdomItem from "./pages/WisdomItem";
 import Donate from "./pages/Donate";
 import DonateSuccess from "./pages/DonateSuccess";
 import Contact from "./pages/Contact";
@@ -42,7 +43,8 @@ const App = () => (
                     <Route path="/proverbs" element={<Proverbs />} />
                     <Route path="/quotes" element={<Quotes />} />
                     <Route path="/idioms" element={<Idioms />} />
-                    <Route path="/similes" element={<Similes />} />
+          <Route path="/similes" element={<Similes />} />
+          <Route path="/:type/:id" element={<WisdomItem />} />
                     <Route path="/donate" element={<Donate />} />
                     <Route path="/donate/success" element={<DonateSuccess />} />
                     <Route path="/contact" element={<Contact />} />
