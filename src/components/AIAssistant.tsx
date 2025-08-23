@@ -65,17 +65,14 @@ export function AIAssistant({
       recognitionInstance.continuous = false;
       recognitionInstance.interimResults = false;
       recognitionInstance.lang = 'en-US';
-      
       recognitionInstance.onstart = () => {
         setIsListening(true);
       };
-      
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);
         setIsListening(false);
       };
-      
       recognitionInstance.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
@@ -85,11 +82,9 @@ export function AIAssistant({
           variant: "destructive"
         });
       };
-      
       recognitionInstance.onend = () => {
         setIsListening(false);
       };
-      
       setRecognition(recognitionInstance);
     }
   }, [toast]);
@@ -171,7 +166,6 @@ export function AIAssistant({
       });
     }
   };
-
   const handleVoiceInput = () => {
     if (!recognition) {
       toast({
@@ -181,7 +175,6 @@ export function AIAssistant({
       });
       return;
     }
-
     if (isListening) {
       recognition.stop();
       setIsListening(false);
@@ -189,7 +182,6 @@ export function AIAssistant({
       recognition.start();
     }
   };
-
   const handleClose = () => {
     setIsVisible(false);
   };
@@ -228,35 +220,20 @@ export function AIAssistant({
             <form onSubmit={handleSubmit} className="space-y-4 mx-[26px] mb-4">
               {/* Voice conversation button */}
               <div className="flex justify-center mb-4">
-                <Button 
-                  type="button"
-                  onClick={handleVoiceInput}
-                  disabled={isLoading}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${isListening ? 'bg-red-600 hover:bg-red-700 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white shadow-lg hover:shadow-xl transform hover:scale-105`}
-                >
-                  {isListening ? (
-                    <>
+                <Button type="button" onClick={handleVoiceInput} disabled={isLoading} className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${isListening ? 'bg-red-600 hover:bg-red-700 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'} text-white shadow-lg hover:shadow-xl transform hover:scale-105`}>
+                  {isListening ? <>
                       <MicOff className="h-5 w-5" />
                       <span>Listening... Tap to stop</span>
-                    </>
-                  ) : (
-                    <>
+                    </> : <>
                       <Mic className="h-5 w-5" />
                       <span>Start Voice Conversation</span>
-                    </>
-                  )}
+                    </>}
                 </Button>
               </div>
               
               <div className="relative">
-                <Input 
-                  placeholder="Type your question or click the voice button above" 
-                  value={input} 
-                  onChange={e => setInput(e.target.value)} 
-                  disabled={isLoading || isListening} 
-                  className="pr-12 bg-slate-950" 
-                />
-                <Button type="submit" size="sm" disabled={isLoading || !input.trim() || isListening} className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-zinc-950">
+                <Input placeholder="Type your question or click the voice button above" value={input} onChange={e => setInput(e.target.value)} disabled={isLoading || isListening} className="pr-12 bg-slate-950" />
+                <Button type="submit" size="sm" disabled={isLoading || !input.trim() || isListening} className="absolute right-1 top-1 h-8 w-8 p-0 text-zinc-950">
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>
               </div>
@@ -264,14 +241,7 @@ export function AIAssistant({
               {response && <div className="mt-4 p-4 bg-background/50 rounded-lg border border-border animate-fade-in">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <p className="text-sm text-muted-foreground">Lovable AI Response:</p>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={handlePlayResponseAudio} 
-                      disabled={isPlayingAudio} 
-                      title={isPlayingAudio ? 'Stop audio' : 'Listen to response'} 
-                      className={`shrink-0 h-8 w-8 p-0 transition-all duration-200 ${isPlayingAudio ? 'bg-green-100 text-green-700' : 'hover:bg-blue-100 hover:text-blue-700'}`}
-                    >
+                    <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlayingAudio} title={isPlayingAudio ? 'Stop audio' : 'Listen to response'} className={`shrink-0 h-8 w-8 p-0 transition-all duration-200 ${isPlayingAudio ? 'bg-green-100 text-green-700' : 'hover:bg-blue-100 hover:text-blue-700'}`}>
                       {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                     </Button>
                   </div>
@@ -281,11 +251,11 @@ export function AIAssistant({
           </div>
 
           {/* Bottom-right buttons */}
-          <div className="absolute bottom-3 right-3 flex gap-2">
-            <Button variant="ghost" size="sm" onClick={handleToggleCollapse} className="text-slate-50 hover:bg-emerald-700 h-8 w-8 p-0" title={isCollapsed ? 'Expand AI Assistant' : 'Collapse AI Assistant'}>
+          <div className="absolute bottom-2 right-2 flex gap-1">
+            <Button variant="ghost" size="sm" onClick={handleToggleCollapse} title={isCollapsed ? 'Expand AI Assistant' : 'Collapse AI Assistant'} className="text-slate-50 h-6 w-6 p-0 bg-stone-950 hover:bg-stone-800">
               <Minus className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleClose} className="text-slate-50 hover:bg-emerald-700 h-8 w-8 p-0" title="Close AI Assistant">
+            <Button variant="ghost" size="sm" onClick={handleClose} className="text-slate-50 hover:bg-emerald-700 h-6 w-6 p-0" title="Close AI Assistant">
               <X className="h-4 w-4" />
             </Button>
           </div>
