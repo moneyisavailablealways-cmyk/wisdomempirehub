@@ -256,7 +256,7 @@ export function AIAssistant({
                   disabled={isLoading || isListening} 
                   className="pr-12 bg-slate-950" 
                 />
-                <Button type="submit" size="sm" disabled={isLoading || !input.trim() || isListening} className="absolute right-1 top-1 h-8 w-8 p-0 text-zinc-950">
+                <Button type="submit" size="sm" disabled={isLoading || !input.trim() || isListening} className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-zinc-950">
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>
               </div>
@@ -281,11 +281,11 @@ export function AIAssistant({
           </div>
 
           {/* Bottom-right buttons */}
-          <div className="absolute bottom-2 right-2 flex gap-1">
-            <Button variant="ghost" size="sm" onClick={handleToggleCollapse} className="text-slate-50 hover:bg-emerald-700 h-6 w-6 p-0" title={isCollapsed ? 'Expand AI Assistant' : 'Collapse AI Assistant'}>
+          <div className="absolute bottom-3 right-3 flex gap-2">
+            <Button variant="ghost" size="sm" onClick={handleToggleCollapse} className="text-slate-50 hover:bg-emerald-700 h-8 w-8 p-0" title={isCollapsed ? 'Expand AI Assistant' : 'Collapse AI Assistant'}>
               <Minus className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleClose} className="text-slate-50 hover:bg-emerald-700 h-6 w-6 p-0" title="Close AI Assistant">
+            <Button variant="ghost" size="sm" onClick={handleClose} className="text-slate-50 hover:bg-emerald-700 h-8 w-8 p-0" title="Close AI Assistant">
               <X className="h-4 w-4" />
             </Button>
           </div>
