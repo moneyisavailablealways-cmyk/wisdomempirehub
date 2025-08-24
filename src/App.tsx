@@ -23,6 +23,8 @@ import Terms from "./pages/Terms";
 import FAQ from "./pages/FAQ";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import { RobotsTxt } from "./pages/RobotsTxt";
+import { SitemapXml } from "./pages/SitemapXml";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,8 @@ const App = () => (
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/auth" element={<Auth />} />
+                    <Route path="/robots.txt" element={<RobotsTxt />} />
+                    <Route path="/sitemap.xml" element={<SitemapXml />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
