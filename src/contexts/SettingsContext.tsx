@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type VoiceType = 'child' | 'youth' | 'old';
+type VoiceType = 'Adams' | 'Leo' | 'Bella' | 'Default';
 type OpenAIVoice = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
 
 interface SettingsContextType {
@@ -8,24 +8,28 @@ interface SettingsContextType {
   setPreferredVoice: (voice: VoiceType) => void;
   openAIVoice: OpenAIVoice;
   setOpenAIVoice: (voice: OpenAIVoice) => void;
+  availableVoices: VoiceType[];
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 const voiceMapping: Record<VoiceType, OpenAIVoice> = {
-  child: 'nova',
-  youth: 'alloy', 
-  old: 'onyx'
+  Adams: 'onyx',
+  Leo: 'alloy',
+  Bella: 'nova',
+  Default: 'echo'
 };
 
+const availableVoices: VoiceType[] = ['Adams', 'Leo', 'Bella', 'Default'];
+
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [preferredVoice, setPreferredVoice] = useState<VoiceType>('youth');
-  const [openAIVoice, setOpenAIVoice] = useState<OpenAIVoice>('alloy');
+  const [preferredVoice, setPreferredVoice] = useState<VoiceType>('Default');
+  const [openAIVoice, setOpenAIVoice] = useState<OpenAIVoice>('echo');
 
   // Load settings from localStorage
   useEffect(() => {
     const savedVoice = localStorage.getItem('wisdom-preferred-voice') as VoiceType;
-    if (savedVoice && ['child', 'youth', 'old'].includes(savedVoice)) {
+    if (savedVoice && availableVoices.includes(savedVoice)) {
       setPreferredVoice(savedVoice);
       setOpenAIVoice(voiceMapping[savedVoice]);
     }
@@ -43,7 +47,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       preferredVoice,
       setPreferredVoice: updatePreferredVoice,
       openAIVoice,
-      setOpenAIVoice
+      setOpenAIVoice,
+      availableVoices
     }}>
       {children}
     </SettingsContext.Provider>

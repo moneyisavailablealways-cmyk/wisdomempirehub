@@ -14,27 +14,38 @@ import { useSettings } from '@/contexts/SettingsContext';
 
 const voiceOptions = [
   { 
-    value: 'child' as const, 
-    label: 'Child Voice', 
-    emoji: '👶',
-    description: 'High, cheerful voice'
+    value: 'Adams' as const, 
+    label: 'Adams Voice', 
+    emoji: '🎭',
+    description: 'Deep, authoritative voice'
   },
   { 
-    value: 'youth' as const, 
-    label: 'Youth Voice', 
-    emoji: '🧑',
-    description: 'Clear, energetic voice'
+    value: 'Leo' as const, 
+    label: 'Leo Voice', 
+    emoji: '🦁',
+    description: 'Strong, confident voice'
   },
   { 
-    value: 'old' as const, 
-    label: 'Elder Voice', 
-    emoji: '👴',
-    description: 'Wise, mature voice'
+    value: 'Bella' as const, 
+    label: 'Bella Voice', 
+    emoji: '🌟',
+    description: 'Warm, friendly voice'
+  },
+  { 
+    value: 'Default' as const, 
+    label: 'Default Voice', 
+    emoji: '🎯',
+    description: 'Clear, balanced voice'
   }
 ];
 
 export function SettingsMenu() {
-  const { preferredVoice, setPreferredVoice } = useSettings();
+  const { preferredVoice, setPreferredVoice, availableVoices } = useSettings();
+
+  // Filter voice options to only show available voices
+  const displayVoiceOptions = voiceOptions.filter(option => 
+    availableVoices.includes(option.value)
+  );
 
   return (
     <Dialog>
@@ -67,7 +78,7 @@ export function SettingsMenu() {
             </p>
             
             <div className="grid grid-cols-1 gap-3">
-              {voiceOptions.map((option) => (
+              {displayVoiceOptions.map((option) => (
                 <Button
                   key={option.value}
                   variant={preferredVoice === option.value ? "wisdom" : "outline"}

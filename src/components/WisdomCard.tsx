@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { ShareMenu } from '@/components/ShareMenu';
 import { Heart, Volume2, Bot, MoreVertical, Edit, Download, Youtube, VolumeX, Loader2, Bookmark, BookmarkCheck } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { useTTS } from '@/hooks/useTTS';
 interface WisdomItem {
   id: string;
   type: 'proverb' | 'quote' | 'idiom' | 'simile';
@@ -41,15 +42,10 @@ const getTypeColor = (type: string) => {
 export function WisdomCard({
   item
 }: WisdomCardProps) {
-  const {
-    toast
-  } = useToast();
-  const {
-    openAIVoice
-  } = useSettings();
-  const {
-    user
-  } = useAuth();
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const { isPlaying: isPlayingAudio, togglePlayback } = useTTS();
+  const { isPlaying: isPlayingMeaningAudio, togglePlayback: toggleMeaningPlayback } = useTTS();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -57,19 +53,16 @@ export function WisdomCard({
   const [showExplanation, setShowExplanation] = useState(false);
   const [showMeaning, setShowMeaning] = useState(false);
   const [explanation, setExplanation] = useState('');
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isPlayingMeaningAudio, setIsPlayingMeaningAudio] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
   const [cardBackgroundState, setCardBackgroundState] = useState('default');
 
   // Auto-play audio when enabled
   useEffect(() => {
     if (autoPlayEnabled && !isPlayingAudio) {
-      handlePlayAudio();
+      togglePlayback(item.text);
     }
-  }, [autoPlayEnabled]);
+  }, [autoPlayEnabled, item.text, isPlayingAudio, togglePlayback]);
   const handleLike = () => {
     setIsLiked(!isLiked);
     toast({
@@ -85,101 +78,16 @@ export function WisdomCard({
     });
   };
   const handlePlayAudio = () => {
-    if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-      return;
-    }
-    try {
-      setIsPlayingAudio(true);
-      const utterance = new SpeechSynthesisUtterance(item.text);
-
-      // Configure voice settings based on audio_voice_type with consistent medium speed
-      switch (item.audio_voice_type) {
-        case 'child':
-          utterance.pitch = 1.5;
-          utterance.rate = 0.95; // Consistent medium speed
-          break;
-        case 'youth':
-          utterance.pitch = 1.0;
-          utterance.rate = 0.95; // Consistent medium speed
-          break;
-        case 'old':
-          utterance.pitch = 0.8;
-          utterance.rate = 0.9; // Slightly slower for old voice
-          break;
-        default:
-          utterance.pitch = 1.0;
-          utterance.rate = 0.95;
-        // Consistent medium speed
-      }
-      utterance.onend = () => {
-        setIsPlayingAudio(false);
-      };
-      utterance.onerror = () => {
-        setIsPlayingAudio(false);
-        toast({
-          title: "Audio Error",
-          description: "Failed to play audio",
-          variant: "destructive"
-        });
-      };
-      window.speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error('Error playing audio:', error);
-      setIsPlayingAudio(false);
-      toast({
-        title: "Audio Error",
-        description: "Failed to play audio",
-        variant: "destructive"
-      });
-    }
+    togglePlayback(item.text);
   };
   const handlePlayMeaningAudio = () => {
-    if (isPlayingMeaningAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingMeaningAudio(false);
-      return;
-    }
     if (!explanation) return;
-    try {
-      setIsPlayingMeaningAudio(true);
-      const utterance = new SpeechSynthesisUtterance(explanation);
-
-      // Use standard voice settings for meaning with consistent speed
-      utterance.pitch = 1.0;
-      utterance.rate = 0.95; // Consistent medium speed for better comprehension
-
-      utterance.onend = () => {
-        setIsPlayingMeaningAudio(false);
-      };
-      utterance.onerror = () => {
-        setIsPlayingMeaningAudio(false);
-        toast({
-          title: "Audio Error",
-          description: "Failed to play meaning audio",
-          variant: "destructive"
-        });
-      };
-      window.speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error('Error playing meaning audio:', error);
-      setIsPlayingMeaningAudio(false);
-      toast({
-        title: "Audio Error",
-        description: "Failed to play meaning audio",
-        variant: "destructive"
-      });
-    }
+    toggleMeaningPlayback(explanation);
   };
   const handleShowMeaning = async () => {
     if (showMeaning) {
       setShowMeaning(false);
-      // Stop meaning audio when hiding
-      if (isPlayingMeaningAudio) {
-        window.speechSynthesis.cancel();
-        setIsPlayingMeaningAudio(false);
-      }
+      // Stop meaning audio when hiding - handled by the TTS hook
       return;
     }
     if (explanation) {

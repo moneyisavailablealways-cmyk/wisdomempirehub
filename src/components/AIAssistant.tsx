@@ -8,6 +8,7 @@ import { useWisdomData } from '@/hooks/useWisdomData';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Bot, Send, Loader2, X, Volume2, VolumeX, Minus, Mic, MicOff } from 'lucide-react';
+import { useTTS } from '@/hooks/useTTS';
 
 // Add type declarations for Speech Recognition
 declare global {
@@ -27,13 +28,11 @@ export function AIAssistant({
   const [response, setResponse] = useState('');
   const [isVisible, setIsVisible] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const responseRef = useRef<HTMLDivElement>(null);
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { isPlaying: isPlayingAudio, togglePlayback } = useTTS();
 
   // Load visibility and collapsed state from localStorage on mount
   useEffect(() => {
@@ -131,40 +130,8 @@ export function AIAssistant({
     }
   };
   const handlePlayResponseAudio = () => {
-    if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-      return;
-    }
     if (!response) return;
-    try {
-      setIsPlayingAudio(true);
-      const utterance = new SpeechSynthesisUtterance(response);
-
-      // Medium speed for consistency with cards
-      utterance.pitch = 1.0;
-      utterance.rate = 0.95;
-      utterance.onend = () => {
-        setIsPlayingAudio(false);
-      };
-      utterance.onerror = () => {
-        setIsPlayingAudio(false);
-        toast({
-          title: "Audio Error",
-          description: "Failed to play response audio",
-          variant: "destructive"
-        });
-      };
-      window.speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error('Error playing response audio:', error);
-      setIsPlayingAudio(false);
-      toast({
-        title: "Audio Error",
-        description: "Failed to play response audio",
-        variant: "destructive"
-      });
-    }
+    togglePlayback(response);
   };
   const handleVoiceInput = () => {
     if (!recognition) {
