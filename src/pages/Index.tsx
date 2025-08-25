@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WisdomCard } from '@/components/WisdomCard';
 import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Sparkles } from 'lucide-react';
-import heroImage from '@/assets/wisdom-hero.jpg';
+import heroImage from '@/assets/wisdom-hero-optimized.webp';
 import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
@@ -126,12 +126,12 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" />
+          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" loading="lazy" />
         </div>
 
         {/* Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src="/lovable-uploads/ead3a929-a21d-420d-ae0c-df6f55dbb0f4.png" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" />
+          <img src="/lovable-uploads/logo-optimized.webp" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" loading="lazy" />
         </div>
 
         <div className="relative container mx-auto px-4">

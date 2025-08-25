@@ -57,7 +57,7 @@ export function AppNavigation() {
             <div className="flex items-center gap-8">
               <NavLink to="/" className="flex items-center gap-2">
                 <img 
-                  src="/lovable-uploads/ead3a929-a21d-420d-ae0c-df6f55dbb0f4.png" 
+                  src="/lovable-uploads/logo-optimized.webp" 
                   alt="Wisdom Empire" 
                   className="h-8 w-8 object-contain"
                 />
@@ -87,7 +87,7 @@ export function AppNavigation() {
           <div className="flex items-center justify-between h-16">
             <NavLink to="/" className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/ead3a929-a21d-420d-ae0c-df6f55dbb0f4.png" 
+                src="/lovable-uploads/logo-optimized.webp" 
                 alt="Wisdom Empire" 
                 className="h-6 w-6 object-contain"
               />
