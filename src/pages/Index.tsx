@@ -122,7 +122,7 @@ const Index = () => {
         description="Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world. Educational platform preserving global cultural heritage."
         keywords="proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures, sayings, expressions, wisdom empire"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
-        preloadImage={heroImage}
+        preloadImage="/src/assets/wisdom-hero-optimized.webp"
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
