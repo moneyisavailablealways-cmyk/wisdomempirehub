@@ -92,18 +92,22 @@ export function AIAssistant({
     if (!input.trim()) return;
     setIsLoading(true);
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('explain-wisdom', {
+      const { data, error } = await supabase.functions.invoke('voice-assistant', {
         body: {
-          text: input,
-          type: 'user_query',
-          origin: `${category} category`
+          message: input,
+          category: category
         }
       });
+      
       if (error) throw error;
-      setResponse(data.explanation);
+      
+      // Handle the new JSON response format
+      if (data.text) {
+        setResponse(data.text);
+      } else {
+        // Fallback for older response format
+        setResponse(data.explanation || data || 'No response available.');
+      }
 
       // Auto-scroll to response after a brief delay
       setTimeout(() => {
@@ -114,6 +118,7 @@ export function AIAssistant({
           });
         }
       }, 100);
+      
       toast({
         description: "AI assistant response ready! 🤖",
         duration: 3000
@@ -129,9 +134,25 @@ export function AIAssistant({
       setIsLoading(false);
     }
   };
-  const handlePlayResponseAudio = () => {
+  const handlePlayResponseAudio = async () => {
     if (!response) return;
-    togglePlayback(response);
+    
+    // Try to get the audio version from the last AI response
+    try {
+      const { data } = await supabase.functions.invoke('voice-assistant', {
+        body: {
+          message: input,
+          category: category
+        }
+      });
+      
+      // Use the audio field if available, otherwise fall back to text response
+      const audioText = data?.audio || response;
+      togglePlayback(audioText);
+    } catch (error) {
+      // Fallback to regular response text
+      togglePlayback(response);
+    }
   };
   const handleVoiceInput = () => {
     if (!recognition) {
