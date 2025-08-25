@@ -7,6 +7,7 @@ interface SEOHeadProps {
   canonical?: string;
   type?: 'website' | 'article';
   image?: string;
+  preloadImage?: string;
 }
 
 export function SEOHead({
@@ -15,7 +16,8 @@ export function SEOHead({
   keywords = "proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures, sayings, expressions",
   canonical,
   type = 'website',
-  image = "/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png"
+  image = "/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png",
+  preloadImage
 }: SEOHeadProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const canonicalUrl = canonical || currentUrl;
@@ -26,6 +28,11 @@ export function SEOHead({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <link rel="canonical" href={canonicalUrl} />
+      
+      {/* Preload critical images */}
+      {preloadImage && (
+        <link rel="preload" as="image" href={preloadImage} fetchPriority="high" />
+      )}
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />
