@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { SEOHead } from '@/components/SEOHead';
 import { BookOpen, Quote, MessageSquare, Zap, Mail, Phone, MapPin } from "lucide-react";
@@ -15,6 +15,28 @@ const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [emailJSLoaded, setEmailJSLoaded] = useState(false);
+
+  useEffect(() => {
+    // Load EmailJS dynamically only when Contact page is accessed
+    const loadEmailJS = () => {
+      if (typeof (window as any).emailjs !== 'undefined') {
+        setEmailJSLoaded(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.emailjs.com/dist/email.min.js';
+      script.async = true;
+      script.onload = () => {
+        (window as any).emailjs.init("ywpWceEA7xT1f3-P6");
+        setEmailJSLoaded(true);
+      };
+      document.head.appendChild(script);
+    };
+
+    loadEmailJS();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -25,12 +47,21 @@ const Contact: React.FC = () => {
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
+  
+  if (!emailJSLoaded) {
+    toast({
+      title: "Please wait",
+      description: "Loading email service..."
+    });
+    return;
+  }
+
   setIsSubmitting(true);
   setShowSuccess(false);
 
   try {
     // Send form (main message)
-    await emailjs.sendForm(
+    await (window as any).emailjs.sendForm(
       "service_27nifab",
       "template_cbc1mss",
       e.currentTarget
