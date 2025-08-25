@@ -34,6 +34,9 @@ export function SEOHead({
         <link rel="preload" as="image" href={preloadImage} fetchPriority="high" />
       )}
       
+      {/* Preconnect to Supabase for faster API requests */}
+      <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" />
+      
       {/* Open Graph */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

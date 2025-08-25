@@ -28,37 +28,23 @@ const Index = () => {
 
   // --- Fetch live counts from Supabase ---
   useEffect(() => {
-    const fetchSimilesCount = async () => {
-      const { count } = await supabase.from("similes").select("*", { count: "exact", head: true });
-      setSimilesCount(count ?? 0);
+    const fetchAllCounts = async () => {
+      // Fetch all counts in parallel to reduce request chains
+      const [similesResult, quotesResult, idiomsResult, proverbsResult] = await Promise.all([
+        supabase.from("similes").select("*", { count: "exact", head: true }),
+        supabase.from("quotes").select("*", { count: "exact", head: true }),
+        supabase.from("idioms").select("*", { count: "exact", head: true }),
+        supabase.from("proverbs").select("*", { count: "exact", head: true })
+      ]);
+      
+      setSimilesCount(similesResult.count ?? 0);
+      setQuotesCount(quotesResult.count ?? 0);
+      setTotalIdioms(idiomsResult.count ?? 0);
+      setTotalProverbs(proverbsResult.count ?? 0);
     };
-    fetchSimilesCount();
+    
+    fetchAllCounts();
   }, []);
-
-  useEffect(() => {
-    const fetchQuotesCount = async () => {
-      const { count } = await supabase.from("quotes").select("*", { count: "exact", head: true });
-      setQuotesCount(count ?? 0);
-    };
-    fetchQuotesCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchIdiomsCount = async () => {
-      const { count } = await supabase.from("idioms").select("*", { count: "exact", head: true });
-      setTotalIdioms(count ?? 0);
-    };
-    fetchIdiomsCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchProverbsCount = async () => {
-      const { count } = await supabase.from("proverbs").select("*", { count: "exact", head: true });
-      setTotalProverbs(count ?? 0);
-    };
-    fetchProverbsCount();
-  }, []);
-
   // --- Daily Wisdom logic ---
   const today = new Date().toDateString();
   const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
