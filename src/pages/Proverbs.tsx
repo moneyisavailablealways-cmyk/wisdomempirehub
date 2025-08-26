@@ -97,25 +97,19 @@ const Proverbs = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <SEOHead
-        title="Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide"
-        description="Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate."
-        keywords="wisdom, proverbs of wisdom, cultural wisdom, traditional proverbs, wise sayings, folk wisdom, ancestral knowledge, proverbs"
-        canonical={typeof window !== 'undefined' ? window.location.href : ''}
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide",
-          "url": "https://wisdomempirehub.com/proverbs",
-          "description": "Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate."
-        }}
-      />
+      <SEOHead title="Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide" description="Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate." keywords="wisdom, proverbs of wisdom, cultural wisdom, traditional proverbs, wise sayings, folk wisdom, ancestral knowledge, proverbs" canonical={typeof window !== 'undefined' ? window.location.href : ''} structuredData={{
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide",
+      "url": "https://wisdomempirehub.com/proverbs",
+      "description": "Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate."
+    }} />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Proverbs of Wisdom from Cultures Worldwide</h1>
+          <h1 className="font-wisdom font-bold mb-2 text-orange-200 text-4xl">Proverbs of Wisdom from Cultures Worldwide</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
-            <p className="mb-4">
+            <p className="mb-4 text-sm">
              Explore our collection of proverbs from cultures around the world, offering timeless wisdom on life, love, friendship, success, and more. These sayings, passed down through generations, provide guidance, insight, and inspiration that remain relevant today, reflecting the shared truths of human experience across cultures.
             </p>
             
