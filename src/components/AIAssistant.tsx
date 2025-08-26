@@ -162,7 +162,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
             {/* Header */}
             <div className="flex items-center gap-2 mb-4">
               <Bot className="h-5 w-5 text-wisdom-gold" />
-              <h3 className="font-semibold text-slate-50">Lovable AI Assistant</h3>
+              <h3 className="font-semibold text-slate-50">Wisdom AI Assistant</h3>
             </div>
 
             {/* Collapsible content */}
