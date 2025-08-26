@@ -197,7 +197,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
                 {response && (
                   <div className="mt-4 p-4 bg-background/50 rounded-lg border">
                     <div className="flex justify-between mb-2">
-                      <p className="text-sm text-muted-foreground">Lovable Response:</p>
+                      <p className="text-sm text-muted-foreground">Wisdom Response:</p>
                       <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlaying}>
                         {isPlaying ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                       </Button>
