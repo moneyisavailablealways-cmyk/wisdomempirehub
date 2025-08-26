@@ -116,11 +116,7 @@ const Idioms = () => {
           <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Idioms Rich in Cultural Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
-              Discover our extensive collection of idioms packed with wisdom from cultures around the world. These figurative expressions contain layers of meaning that go far beyond their literal interpretations, embodying the collective wisdom of societies and offering insights into how different cultures understand and express complex ideas. Each idiom represents a crystallization of cultural wisdom that has been refined through generations of use and understanding.
-            </p>
-            <p className="mb-4">
-              Our wisdom-rich idioms span diverse categories including emotions, success, time, friendship, relationships, work, and life itself. These cultural expressions serve as windows into the wisdom traditions of various societies, revealing how human experiences are understood and communicated across different linguistic and cultural boundaries. Explore how the wisdom of ages is embedded in these memorable phrases that continue to enrich our language and understanding.
-            </p>
+              Explore our collection of idioms from cultures worldwide, each carrying deep wisdom beyond literal meaning. Covering themes like emotions, success, friendship, work, and life, these expressions reflect generations of cultural insight and enrich our understanding of human experiences.            </p>
           </div>
           <DownloadButton category="idioms" />
 
