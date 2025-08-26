@@ -108,12 +108,12 @@ const Index = () => {
         description="Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world. Educational platform preserving global cultural heritage."
         keywords="proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures, sayings, expressions, wisdom empire"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
-        preloadImage="/src/assets/wisdom-hero-responsive.webp"
+        preloadImage={heroImage}
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" fetchPriority="high" />
+          <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" fetchPriority="high" decoding="async" />
         </div>
 
         {/* Logo Background */}

@@ -31,10 +31,11 @@ export function SEOHead({
       
       {/* Preload critical images */}
       {preloadImage && (
-        <link rel="preload" as="image" href={preloadImage} fetchPriority="high" />
+        <link rel="preload" as="image" href={preloadImage} fetchPriority="high" type="image/webp" />
       )}
       
-      {/* Preconnect to Supabase for faster API requests */}
+      {/* DNS prefetch for performance */}
+      <link rel="dns-prefetch" href="https://sxvrqshcqmbmogkwcixe.supabase.co" />
       <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" />
       
       {/* Open Graph */}
