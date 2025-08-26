@@ -1,117 +1,182 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import React, { useState, useEffect, useRef } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Bot, Send, Loader2, X, Volume2, VolumeX, Minus, Mic, MicOff } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useTTS } from '@/hooks/useTTS';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
-serve(async (req) => {
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
   }
-
-  try {
-    const { message, category } = await req.json();
-
-    if (!message) {
-      throw new Error("Message is required");
-    }
-
-    const openAIApiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!openAIApiKey) {
-      throw new Error("OpenAI API key not configured");
-    }
-
-    console.log("Processing message:", message.substring(0, 100) + "...");
-    console.log("Category context:", category || "general");
-
-    // System prompt for Lovable
-    const systemPrompt = `You are Lovable, the AI assistant for Wisdom Empire. 
-You help users explore proverbs, quotes, idioms, similes, and other cultural wisdom.
-
-Responsibilities:
-1. Friendly & engaging, like a wise friend. 
-2. Replies must be suitable for text-to-speech audio.
-3. Support both typing and spoken questions.
-4. Adapt answers depending on the page: proverbs, quotes, idioms, similes, FAQ/help.
-5. Voice-style answers should be conversational and clear.
-6. Keep answers concise but meaningful. 
-7. English by default, switch if user asks in another language.
-8. If unsure, guide users politely.
-
-Context: The user is currently exploring ${category || "general wisdom"}.
-
-⚡ Output Format (MUST always be valid JSON):
-{
-  "text": "Your richer reply for chat (with context and examples).",
-  "audio": "Your short, conversational reply optimized for voice."
 }
 
-Do NOT include code blocks or extra formatting. Always include both fields.`;
+interface AIAssistantProps {
+  category: string;
+}
 
-    // Call OpenAI
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${openAIApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini", // ✅ valid model
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: message },
-        ],
-        max_completion_tokens: 300,
-        response_format: { type: "json_object" }, // ✅ forces JSON output
-      }),
-    });
+export function AIAssistant({ category }: AIAssistantProps) {
+  const [input, setInput] = useState('');
+  const [response, setResponse] = useState('');
+  const [isVisible, setIsVisible] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const responseRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const { isPlaying, togglePlayback, stopPlayback } = useTTS();
 
-    console.log("OpenAI response status:", response.status);
+  // Load visibility & collapsed state
+  useEffect(() => {
+    const savedVisible = localStorage.getItem('ai-assistant-visible');
+    const savedCollapsed = localStorage.getItem('ai-assistant-collapsed');
+    if (savedVisible !== null) setIsVisible(JSON.parse(savedVisible));
+    if (savedCollapsed !== null) setIsCollapsed(JSON.parse(savedCollapsed));
+  }, []);
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("OpenAI API error:", error);
-      throw new Error(error.error?.message || "Failed to get AI response");
-    }
+  useEffect(() => { localStorage.setItem('ai-assistant-visible', JSON.stringify(isVisible)); }, [isVisible]);
+  useEffect(() => { localStorage.setItem('ai-assistant-collapsed', JSON.stringify(isCollapsed)); }, [isCollapsed]);
 
-    const data = await response.json();
-    const aiResponse = data.choices?.[0]?.message?.content;
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'en-US';
 
-    console.log("AI response raw:", aiResponse);
-
-    // Validate and parse JSON
-    let parsedResponse;
-    try {
-      parsedResponse = JSON.parse(aiResponse);
-
-      if (!parsedResponse.text || !parsedResponse.audio) {
-        throw new Error("Missing required fields in AI response");
-      }
-    } catch (err) {
-      console.error("Failed to parse AI response:", err);
-      parsedResponse = {
-        text: "I'd be happy to help you explore wisdom and insights. What would you like to learn about today?",
-        audio: "Happy to help with wisdom! What do you want to hear today?",
+      recognitionInstance.onstart = () => setIsListening(true);
+      recognitionInstance.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        handleVoiceSubmit(transcript); // Auto-submit and respond in voice
+        setIsListening(false);
       };
+      recognitionInstance.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        toast({ title: "Voice Input Error", description: "Could not process voice input.", variant: "destructive" });
+      };
+      recognitionInstance.onend = () => setIsListening(false);
+
+      setRecognition(recognitionInstance);
     }
+  }, [toast]);
 
-    return new Response(JSON.stringify(parsedResponse), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Voice assistant error:", error);
+  // Submit handler for text input
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    await fetchAIResponse(input);
+  };
 
-    const errorResponse = {
-      text: "I’m sorry, I’m having trouble processing your request right now. Please try again soon.",
-      audio: "Sorry, I’m having trouble right now. Please try again.",
-    };
+  // Submit handler for voice input (auto-play)
+  const handleVoiceSubmit = async (voiceText: string) => {
+    if (!voiceText.trim()) return;
+    await fetchAIResponse(voiceText);
+  };
 
-    return new Response(JSON.stringify(errorResponse), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+  // Core function to fetch AI response and auto-play audio
+  const fetchAIResponse = async (message: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('voice-assistant', {
+        body: { message, category }
+      });
+      if (error) throw error;
+
+      const aiText = data?.text || data?.explanation || 'No response available.';
+      const aiAudio = data?.audio || aiText;
+
+      setResponse(aiText);
+
+      // Auto-scroll
+      setTimeout(() => responseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+
+      // Auto-play audio
+      togglePlayback(aiAudio);
+
+    } catch (err) {
+      console.error('AI Assistant Error:', err);
+      toast({ title: "AI Assistant Error", description: "Failed to get response.", variant: "destructive" });
+    }
+  };
+
+  // Voice input button
+  const handleVoiceInput = () => {
+    if (!recognition) return toast({ title: "Voice Not Supported", description: "Your browser doesn't support voice input.", variant: "destructive" });
+    isListening ? recognition.stop() : recognition.start();
+  };
+
+  // UI helpers
+  const handleClose = () => setIsVisible(false);
+  const handleToggleCollapse = () => setIsCollapsed(!isCollapsed);
+  const handleShow = () => setIsVisible(true);
+
+  if (!isVisible) {
+    return <Button onClick={handleShow} variant="outline" className="mb-4 transition-all hover:scale-105"><Bot className="h-4 w-4 mr-2" />Wisdom AI Assistant</Button>;
   }
-});
+
+  return (
+    <div className={`transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 animate-fade-in' : 'opacity-0'}`} ref={responseRef}>
+      <Card className="border-wisdom-gold/20 bg-violet-300">
+        <CardContent className="p-6 bg-emerald-600 rounded-3xl relative">
+
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-wisdom-gold" />
+              <h3 className="font-semibold text-slate-50">Lovable AI Assistant</h3>
+            </div>
+          </div>
+
+          {/* Collapsible Content */}
+          <div className={`overflow-hidden transition-all duration-500 ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[1000px] opacity-100'}`}>
+            <form onSubmit={handleSubmit} className="space-y-4">
+
+              {/* Voice Conversation Button */}
+              <div className="flex justify-center mb-2">
+                <Button type="button" onClick={handleVoiceInput} disabled={isListening} className={`flex items-center gap-2 px-6 py-3 rounded-full ${isListening ? 'bg-red-600 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600'}`}>
+                  {isListening ? <><MicOff className="h-5 w-5" />Listening...</> : <><Mic className="h-5 w-5" />Start Voice Conversation</>}
+                </Button>
+              </div>
+
+              {/* Text Input */}
+              <div className="relative">
+                <Input placeholder="Type your question or use voice" value={input} onChange={e => setInput(e.target.value)} className="pr-12 bg-slate-950" />
+                <Button type="submit" size="sm" className="absolute right-1 top-1 h-8 w-8 p-0">
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* AI Response */}
+              {response && (
+                <div className="mt-4 p-4 bg-background/50 rounded-lg border">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <p className="text-sm text-muted-foreground">Lovable Response:</p>
+                    {/* TTS Playback Button */}
+                    <Button variant="ghost" size="sm" onClick={() => togglePlayback(response)} disabled={isPlaying} title="Listen to response">
+                      {isPlaying ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-foreground leading-relaxed">{response}</p>
+                </div>
+              )}
+
+            </form>
+          </div>
+
+          {/* Bottom-right controls */}
+          <div className="absolute bottom-2 right-2 flex gap-1">
+            <Button variant="ghost" size="sm" onClick={handleToggleCollapse} title={isCollapsed ? 'Expand' : 'Collapse'}><Minus className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="sm" onClick={handleClose} title="Close"><X className="h-4 w-4" /></Button>
+          </div>
+
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
