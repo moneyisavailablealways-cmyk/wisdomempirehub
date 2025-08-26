@@ -50,7 +50,7 @@ export function SettingsMenu() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button variant="ghost" size="sm" className="gap-2" aria-label="Open settings menu">
           <Settings className="h-4 w-4" />
         </Button>
       </DialogTrigger>
