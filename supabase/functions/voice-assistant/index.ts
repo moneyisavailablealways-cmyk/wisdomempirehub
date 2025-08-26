@@ -33,54 +33,77 @@ export function AIAssistant({ category }: AIAssistantProps) {
   useEffect(() => {
     const savedVisible = localStorage.getItem('ai-assistant-visible');
     const savedCollapsed = localStorage.getItem('ai-assistant-collapsed');
-    if (savedVisible !== null) setIsVisible(JSON.parse(savedVisible));
-    if (savedCollapsed !== null) setIsCollapsed(JSON.parse(savedCollapsed));
+    if (savedVisible) setIsVisible(JSON.parse(savedVisible));
+    if (savedCollapsed) setIsCollapsed(JSON.parse(savedCollapsed));
   }, []);
 
   useEffect(() => { localStorage.setItem('ai-assistant-visible', JSON.stringify(isVisible)); }, [isVisible]);
   useEffect(() => { localStorage.setItem('ai-assistant-collapsed', JSON.stringify(isCollapsed)); }, [isCollapsed]);
 
-  // Initialize Speech Recognition
+  // --- Improved Speech Recognition ---
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
-      recognitionInstance.continuous = false;
-      recognitionInstance.interimResults = false;
-      recognitionInstance.lang = 'en-US';
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
 
-      recognitionInstance.onstart = () => setIsListening(true);
-      recognitionInstance.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(transcript);
-        handleVoiceSubmit(transcript); // Auto-submit and respond in voice
-        setIsListening(false);
-      };
-      recognitionInstance.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-        toast({ title: "Voice Input Error", description: "Could not process voice input.", variant: "destructive" });
-      };
-      recognitionInstance.onend = () => setIsListening(false);
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.continuous = true;
+    recognitionInstance.interimResults = true;
+    recognitionInstance.lang = 'en-US';
+    recognitionInstance.maxAlternatives = 5;
 
-      setRecognition(recognitionInstance);
-    }
-  }, [toast]);
+    let finalTranscript = '';
+    let debounceTimer: number | null = null;
 
-  // Submit handler for text input
+    recognitionInstance.onstart = () => setIsListening(true);
+
+    recognitionInstance.onresult = (event: any) => {
+      let interimTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcriptChunk = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcriptChunk + ' ';
+        } else {
+          interimTranscript += transcriptChunk;
+        }
+      }
+
+      setInput(finalTranscript + interimTranscript);
+
+      // Debounced auto-submit for better recognition
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => {
+        if (finalTranscript.trim()) {
+          fetchAIResponse(finalTranscript.trim());
+          finalTranscript = '';
+          setInput('');
+        }
+      }, 1000);
+    };
+
+    recognitionInstance.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      setIsListening(false);
+      toast({ title: "Voice Input Error", description: "Could not process voice input.", variant: "destructive" });
+    };
+
+    recognitionInstance.onend = () => setIsListening(false);
+
+    setRecognition(recognitionInstance);
+  }, [toast, category]);
+
+  const handleVoiceInput = () => {
+    if (!recognition) return toast({ title: "Voice Not Supported", description: "Your browser doesn't support voice input.", variant: "destructive" });
+    isListening ? recognition.stop() : recognition.start();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    await fetchAIResponse(input);
+    fetchAIResponse(input.trim());
+    setInput('');
   };
 
-  // Submit handler for voice input (auto-play)
-  const handleVoiceSubmit = async (voiceText: string) => {
-    if (!voiceText.trim()) return;
-    await fetchAIResponse(voiceText);
-  };
-
-  // Core function to fetch AI response and auto-play audio
+  // Core AI + TTS function
   const fetchAIResponse = async (message: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('voice-assistant', {
@@ -103,12 +126,6 @@ export function AIAssistant({ category }: AIAssistantProps) {
       console.error('AI Assistant Error:', err);
       toast({ title: "AI Assistant Error", description: "Failed to get response.", variant: "destructive" });
     }
-  };
-
-  // Voice input button
-  const handleVoiceInput = () => {
-    if (!recognition) return toast({ title: "Voice Not Supported", description: "Your browser doesn't support voice input.", variant: "destructive" });
-    isListening ? recognition.stop() : recognition.start();
   };
 
   // UI helpers
@@ -157,7 +174,6 @@ export function AIAssistant({ category }: AIAssistantProps) {
                 <div className="mt-4 p-4 bg-background/50 rounded-lg border">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <p className="text-sm text-muted-foreground">Lovable Response:</p>
-                    {/* TTS Playback Button */}
                     <Button variant="ghost" size="sm" onClick={() => togglePlayback(response)} disabled={isPlaying} title="Listen to response">
                       {isPlaying ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                     </Button>

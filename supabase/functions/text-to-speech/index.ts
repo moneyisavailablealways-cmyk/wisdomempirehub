@@ -5,6 +5,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const allowedVoices = ["alloy", "adams", "leo", "bella"];
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -16,8 +18,12 @@ serve(async (req) => {
 
     if (!text) throw new Error("Text is required");
 
+    const selectedVoice = allowedVoices.includes(voice?.toLowerCase())
+      ? voice.toLowerCase()
+      : "alloy";
+
     console.log("Generating speech for text:", text.substring(0, 50) + "...");
-    console.log("Using voice:", voice || "alloy");
+    console.log("Using voice:", selectedVoice);
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OpenAI API key not configured");
@@ -32,7 +38,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "tts-1",
         input: text,
-        voice: voice || "alloy",
+        voice: selectedVoice,
         response_format: "mp3",
       }),
     });
@@ -51,7 +57,11 @@ serve(async (req) => {
 
     console.log("Speech generated successfully, length:", base64Audio.length);
 
-    return new Response(JSON.stringify({ audioContent: base64Audio }), {
+    return new Response(JSON.stringify({
+      audioContent: base64Audio,
+      voice: selectedVoice,
+      textLength: text.length
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
