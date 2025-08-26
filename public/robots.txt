@@ -1,10 +1,21 @@
+# Allow all bots full access to the main site
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://wisdomempirehub.com/api/sitemap.xml
+# Disallow sensitive or non-public areas
+Disallow: /auth
+Disallow: /admin
 
-# Preferred URLs
+# Explicitly allow wisdom content categories
+Allow: /proverbs/
+Allow: /quotes/
+Allow: /idioms/
+Allow: /similes/
+
+# Sitemap location
+Sitemap: https://wisdomempirehub.com/sitemap.xml
+
+# Bot-specific rules (optional but good for trust)
 User-agent: Googlebot
 Allow: /
 
@@ -16,13 +27,3 @@ Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
-
-# Prevent crawling of auth and admin pages
-Disallow: /auth
-Disallow: /admin
-
-# Allow all wisdom content
-Allow: /proverbs/
-Allow: /quotes/
-Allow: /idioms/
-Allow: /similes/
