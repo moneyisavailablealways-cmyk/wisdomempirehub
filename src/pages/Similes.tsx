@@ -110,8 +110,7 @@ const Similes = () => {
           <h1 className="font-wisdom mb-2 text-orange-200 text-4xl font-bold">Similes That Capture Timeless Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
-              Explore our remarkable collection of similes that capture timeless wisdom through vivid comparisons and creative imagery. These expressive similes use "like" and "as" to create powerful connections between ideas, revealing the profound wisdom embedded in everyday comparisons. Each simile in our database represents a unique way that cultures express complex concepts through familiar imagery, making abstract wisdom accessible and memorable through the power of comparison.
-            </p>
+              Discover our collection of similes that convey timeless wisdom through vivid comparisons. Covering themes like behavior, nature, people, emotions, and appearance, these expressions reveal cultural insights and make complex ideas memorable through familiar imagery.            </p>
           </div>
           <DownloadButton category="similes" />
 
