@@ -107,7 +107,7 @@ const Idioms = () => {
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="font-wisdom mb-2 text-orange-200 text-4xl font-thin">Idioms Rich in Cultural Wisdom</h1>
+          <h1 className="font-wisdom mb-2 text-orange-200 text-4xl font-bold">Idioms Rich in Cultural Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
               Explore our collection of idioms from cultures worldwide, each carrying deep wisdom beyond literal meaning. Covering themes like emotions, success, friendship, work, and life, these expressions reflect generations of cultural insight and enrich our understanding of human experiences.            </p>
