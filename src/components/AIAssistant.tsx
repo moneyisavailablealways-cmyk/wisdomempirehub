@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Bot, Send, Loader2, X, Volume2, VolumeX, Minus, Mic, MicOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Bot, Send, Loader2, X, Volume2, VolumeX, Minus, Mic, MicOff } from 'lucide-react';
 import { useTTS } from '@/hooks/useTTS';
 
 declare global {
@@ -18,46 +18,43 @@ interface AIAssistantProps {
   category: string;
 }
 
+const VOICES = ['alloy', 'adams', 'leo', 'bella'];
+
 export function AIAssistant({ category }: AIAssistantProps) {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
+  const [selectedVoice, setSelectedVoice] = useState('alloy');
   const responseRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { isPlaying: isPlayingAudio, togglePlayback } = useTTS();
+  const { isPlaying, togglePlayback, stopPlayback } = useTTS();
 
+  // Load visibility & collapsed state
   useEffect(() => {
     const savedVisible = localStorage.getItem('ai-assistant-visible');
     const savedCollapsed = localStorage.getItem('ai-assistant-collapsed');
-    if (savedVisible) setIsVisible(JSON.parse(savedVisible));
-    if (savedCollapsed) setIsCollapsed(JSON.parse(savedCollapsed));
+    if (savedVisible !== null) setIsVisible(JSON.parse(savedVisible));
+    if (savedCollapsed !== null) setIsCollapsed(JSON.parse(savedCollapsed));
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('ai-assistant-visible', JSON.stringify(isVisible));
-  }, [isVisible]);
+  useEffect(() => { localStorage.setItem('ai-assistant-visible', JSON.stringify(isVisible)); }, [isVisible]);
+  useEffect(() => { localStorage.setItem('ai-assistant-collapsed', JSON.stringify(isCollapsed)); }, [isCollapsed]);
 
-  useEffect(() => {
-    localStorage.setItem('ai-assistant-collapsed', JSON.stringify(isCollapsed));
-  }, [isCollapsed]);
-
-  // --- Improved Speech Recognition ---
+  // Initialize Speech Recognition
   useEffect(() => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognitionInstance = new SpeechRecognition();
-    recognitionInstance.continuous = true;
+    recognitionInstance.continuous = false;
     recognitionInstance.interimResults = true;
     recognitionInstance.lang = 'en-US';
     recognitionInstance.maxAlternatives = 5;
 
     let finalTranscript = '';
-    let debounceTimer: number | null = null;
 
     recognitionInstance.onstart = () => setIsListening(true);
 
@@ -73,16 +70,6 @@ export function AIAssistant({ category }: AIAssistantProps) {
       }
 
       setInput(finalTranscript + interimTranscript);
-
-      if (debounceTimer) clearTimeout(debounceTimer);
-
-      debounceTimer = window.setTimeout(() => {
-        if (finalTranscript.trim()) {
-          handleAIResponse(finalTranscript.trim());
-          finalTranscript = '';
-          setInput('');
-        }
-      }, 1000);
     };
 
     recognitionInstance.onerror = (event: any) => {
@@ -91,49 +78,54 @@ export function AIAssistant({ category }: AIAssistantProps) {
       toast({ title: "Voice Input Error", description: "Could not process voice input.", variant: "destructive" });
     };
 
-    recognitionInstance.onend = () => setIsListening(false);
+    recognitionInstance.onend = () => {
+      setIsListening(false);
+      if (finalTranscript.trim()) {
+        handleAIResponse(finalTranscript.trim());
+        finalTranscript = '';
+        setInput('');
+      }
+    };
 
     setRecognition(recognitionInstance);
-  }, [category, toast]);
+  }, [toast, category]);
 
   const handleVoiceInput = () => {
-    if (!recognition) {
-      toast({ title: "Voice Not Supported", description: "Your browser doesn't support voice input.", variant: "destructive" });
-      return;
-    }
+    if (!recognition) return toast({ title: "Voice Not Supported", description: "Your browser doesn't support voice input.", variant: "destructive" });
     isListening ? recognition.stop() : recognition.start();
   };
 
-  // --- Unified function for AI + TTS ---
+  // Core function: AI + TTS
   const handleAIResponse = async (message: string) => {
-    setIsLoading(true);
+    if (!message.trim()) return;
     try {
-      const { data } = await supabase.functions.invoke('voice-assistant', { body: { message, category } });
-      const textResponse = data.text || message;
-      setResponse(textResponse);
+      // Fetch AI text response
+      const { data, error } = await supabase.functions.invoke('voice-assistant', { body: { message, category } });
+      if (error) throw error;
 
-      // Call your TTS endpoint
+      const aiText = data?.text || data?.explanation || 'No response available.';
+      setResponse(aiText);
+
+      // Scroll to response
+      setTimeout(() => responseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+
+      // Fetch TTS audio from backend
       const ttsRes = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: data.audio || textResponse })
+        body: JSON.stringify({ text: aiText, voice: selectedVoice })
       });
       const ttsData = await ttsRes.json();
-      if (ttsData.audioContent) {
-        togglePlayback(ttsData.audioContent);
-      }
+      if (ttsData.audioContent) togglePlayback(ttsData.audioContent);
 
     } catch (err) {
-      console.error('AI/TTS error:', err);
+      console.error('AI/TTS Error:', err);
       toast({ title: "Error", description: "Failed to get AI response or generate audio.", variant: "destructive" });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
     handleAIResponse(input.trim());
     setInput('');
   };
@@ -144,7 +136,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
       const ttsRes = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: response })
+        body: JSON.stringify({ text: response, voice: selectedVoice })
       });
       const ttsData = await ttsRes.json();
       if (ttsData.audioContent) togglePlayback(ttsData.audioContent);
@@ -157,56 +149,74 @@ export function AIAssistant({ category }: AIAssistantProps) {
   const handleToggleCollapse = () => setIsCollapsed(!isCollapsed);
   const handleShow = () => setIsVisible(true);
 
-  if (!isVisible) {
-    return <Button onClick={handleShow} variant="outline" className="mb-4">
-      <Bot className="h-4 w-4 mr-2" /> Wisdom AI Assistant
-    </Button>;
-  }
-
   return (
     <div ref={responseRef}>
-      <Card className="border-wisdom-gold/20 bg-violet-300">
-        <CardContent className="p-6 bg-emerald-600 rounded-3xl relative">
-          <div className="flex items-center gap-2 mb-4">
-            <Bot className="h-5 w-5 text-wisdom-gold" />
-            <h3 className="font-semibold text-slate-50">Lovable AI Assistant</h3>
-          </div>
+      {!isVisible ? (
+        <Button onClick={handleShow} variant="outline" className="mb-4 transition-all hover:scale-105">
+          <Bot className="h-4 w-4 mr-2" /> Wisdom AI Assistant
+        </Button>
+      ) : (
+        <Card className="border-wisdom-gold/20 bg-violet-300">
+          <CardContent className="p-6 bg-emerald-600 rounded-3xl relative">
 
-          <div className={`transition-all ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[1000px] opacity-100'}`}>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex justify-center mb-4">
-                <Button type="button" onClick={handleVoiceInput} disabled={isLoading} className={`flex items-center gap-2 px-6 py-3 rounded-full ${isListening ? 'bg-red-600 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600'}`}>
-                  {isListening ? <><MicOff className="h-5 w-5" /><span>Listening...</span></> : <><Mic className="h-5 w-5" /><span>Start Voice Conversation</span></>}
-                </Button>
-              </div>
+            {/* Header */}
+            <div className="flex items-center gap-2 mb-4">
+              <Bot className="h-5 w-5 text-wisdom-gold" />
+              <h3 className="font-semibold text-slate-50">Lovable AI Assistant</h3>
+            </div>
 
-              <div className="relative">
-                <Input placeholder="Type your question" value={input} onChange={e => setInput(e.target.value)} disabled={isLoading || isListening} />
-                <Button type="submit" size="sm" disabled={isLoading || !input.trim() || isListening} className="absolute right-1 top-1">
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                </Button>
-              </div>
+            {/* Collapsible content */}
+            <div className={`overflow-hidden transition-all duration-500 ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[1000px] opacity-100'}`}>
+              <form onSubmit={handleSubmit} className="space-y-4">
 
-              {response && (
-                <div className="mt-4 p-4 bg-background/50 rounded-lg border">
-                  <div className="flex justify-between mb-2">
-                    <p className="text-sm text-muted-foreground">Lovable Response:</p>
-                    <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlayingAudio}>
-                      {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                  <p>{response}</p>
+                {/* Voice Button */}
+                <div className="flex justify-center mb-2">
+                  <Button type="button" onClick={handleVoiceInput} disabled={isListening} className={`flex items-center gap-2 px-6 py-3 rounded-full ${isListening ? 'bg-red-600 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600'}`}>
+                    {isListening ? <><MicOff className="h-5 w-5" />Listening...</> : <><Mic className="h-5 w-5" />Start Voice Conversation</>}
+                  </Button>
                 </div>
-              )}
-            </form>
-          </div>
 
-          <div className="absolute bottom-2 right-2 flex gap-1">
-            <Button variant="ghost" size="sm" onClick={handleToggleCollapse}><Minus className="h-4 w-4" /></Button>
-            <Button variant="ghost" size="sm" onClick={handleClose}><X className="h-4 w-4" /></Button>
-          </div>
-        </CardContent>
-      </Card>
+                {/* Text Input */}
+                <div className="relative">
+                  <Input placeholder="Type your question or use voice" value={input} onChange={e => setInput(e.target.value)} className="pr-12 bg-slate-950" />
+                  <Button type="submit" size="sm" className="absolute right-1 top-1 h-8 w-8 p-0">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Voice Selection */}
+                <div className="flex gap-2 mt-2">
+                  {VOICES.map(v => (
+                    <Button key={v} size="sm" variant={v === selectedVoice ? "default" : "outline"} onClick={() => setSelectedVoice(v)}>
+                      {v.charAt(0).toUpperCase() + v.slice(1)}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* AI Response */}
+                {response && (
+                  <div className="mt-4 p-4 bg-background/50 rounded-lg border">
+                    <div className="flex justify-between mb-2">
+                      <p className="text-sm text-muted-foreground">Lovable Response:</p>
+                      <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlaying}>
+                        {isPlaying ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    <p>{response}</p>
+                  </div>
+                )}
+              </form>
+            </div>
+
+            {/* Bottom-right controls */}
+            <div className="absolute bottom-2 right-2 flex gap-1">
+              <Button variant="ghost" size="sm" onClick={handleToggleCollapse}><Minus className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="sm" onClick={handleClose}><X className="h-4 w-4" /></Button>
+            </div>
+
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
