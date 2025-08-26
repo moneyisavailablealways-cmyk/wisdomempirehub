@@ -191,7 +191,7 @@ export function AIAssistant({
   if (!isVisible) {
     return <Button onClick={handleShow} variant="outline" className="mb-4 transition-all duration-300 hover:scale-105">
         <Bot className="h-4 w-4 mr-2" />
-        Show Wisdom AI Assistant
+        Show Lovable AI Assistant
       </Button>;
   }
   return <div className={`transition-all duration-500 ease-in-out ${isVisible ? 'opacity-100 animate-fade-in' : 'opacity-0'}`} ref={responseRef}>
@@ -200,7 +200,7 @@ export function AIAssistant({
           <div className="flex items-center justify-between mb-4 my-[15px] mx-[26px] rounded-none bg-emerald-600">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-wisdom-gold px-0 mx-[3px] my-0 py-0 bg-emerald-600" />
-              <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">Wisdom AI Assistant</h3>
+              <h3 className="font-semibold text-slate-50 px-0 text-left mx-0">Lovable AI Assistant</h3>
             </div>
           </div>
           
@@ -228,7 +228,7 @@ export function AIAssistant({
               
               {response && <div className="mt-4 p-4 bg-background/50 rounded-lg border border-border animate-fade-in">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-sm text-muted-foreground">Lovable AI Response:</p>
+                    <p className="text-sm text-muted-foreground">Lovable Response:</p>
                     <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlayingAudio} title={isPlayingAudio ? 'Stop audio' : 'Listen to response'} className={`shrink-0 h-8 w-8 p-0 transition-all duration-200 ${isPlayingAudio ? 'bg-green-100 text-green-700' : 'hover:bg-blue-100 hover:text-blue-700'}`}>
                       {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                     </Button>
