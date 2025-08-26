@@ -27,8 +27,13 @@
     
     <!-- Google tag (gtag.js) --> 
     <script>
-      // Defer Google Analytics loading to improve initial page performance
-      window.addEventListener('load', function() {
+      // Defer Google Analytics loading even further - only load on user interaction
+      let gaLoaded = false;
+      
+      function loadGA() {
+        if (gaLoaded) return;
+        gaLoaded = true;
+        
         var script = document.createElement('script');
         script.async = true;
         script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7QMZBDFT13';
@@ -40,7 +45,15 @@
           gtag('js', new Date());
           gtag('config', 'G-7QMZBDFT13');
         };
+      }
+      
+      // Load GA on first user interaction
+      ['click', 'scroll', 'keydown', 'touchstart'].forEach(function(event) {
+        document.addEventListener(event, loadGA, { once: true, passive: true });
       });
+      
+      // Fallback: load after 10 seconds if no interaction
+      setTimeout(loadGA, 10000);
     </script>
   </head>
 
