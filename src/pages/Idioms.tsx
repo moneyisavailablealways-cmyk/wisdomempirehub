@@ -97,23 +97,17 @@ const Idioms = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <SEOHead
-        title="Wisdom Empire Hub - Idioms Rich in Cultural Wisdom"
-        description="Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable."
-        keywords="wisdom, idioms rich in wisdom, cultural wisdom, cultural expressions, figurative language, idioms, wise expressions"
-        canonical={typeof window !== 'undefined' ? window.location.href : ''}
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Wisdom Empire Hub - Idioms Rich in Cultural Wisdom",
-          "url": "https://wisdomempirehub.com/idioms",
-          "description": "Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable."
-        }}
-      />
+      <SEOHead title="Wisdom Empire Hub - Idioms Rich in Cultural Wisdom" description="Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable." keywords="wisdom, idioms rich in wisdom, cultural wisdom, cultural expressions, figurative language, idioms, wise expressions" canonical={typeof window !== 'undefined' ? window.location.href : ''} structuredData={{
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Wisdom Empire Hub - Idioms Rich in Cultural Wisdom",
+      "url": "https://wisdomempirehub.com/idioms",
+      "description": "Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable."
+    }} />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Idioms Rich in Cultural Wisdom</h1>
+          <h1 className="font-wisdom mb-2 text-orange-200 font-bold text-4xl">Idioms Rich in Cultural Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
               Explore our collection of idioms from cultures worldwide, each carrying deep wisdom beyond literal meaning. Covering themes like emotions, success, friendship, work, and life, these expressions reflect generations of cultural insight and enrich our understanding of human experiences.            </p>
