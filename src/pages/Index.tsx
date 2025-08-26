@@ -120,7 +120,7 @@ const Index = () => {
           <img src="/lovable-uploads/logo-optimized.webp" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" loading="lazy" />
         </div>
 
-        <div className="relative container mx-auto px-4 bg-gray-900">
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-6xl">Explore Wisdom from Cultures Worldwide</h1>
