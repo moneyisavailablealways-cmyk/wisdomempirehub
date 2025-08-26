@@ -18,7 +18,7 @@ const Contact: React.FC = () => {
   const [emailJSLoaded, setEmailJSLoaded] = useState(false);
 
   useEffect(() => {
-    // Load EmailJS dynamically only when Contact page is accessed
+    // Load EmailJS lazily - only when user starts interacting with the form
     const loadEmailJS = () => {
       if (typeof (window as any).emailjs !== 'undefined') {
         setEmailJSLoaded(true);
@@ -28,6 +28,7 @@ const Contact: React.FC = () => {
       const script = document.createElement('script');
       script.src = 'https://cdn.emailjs.com/dist/email.min.js';
       script.async = true;
+      script.defer = true;
       script.onload = () => {
         (window as any).emailjs.init("ywpWceEA7xT1f3-P6");
         setEmailJSLoaded(true);
@@ -35,7 +36,22 @@ const Contact: React.FC = () => {
       document.head.appendChild(script);
     };
 
-    loadEmailJS();
+    // Only load EmailJS when user interacts with any form field
+    const handleFirstInteraction = () => {
+      loadEmailJS();
+      // Remove event listeners after first interaction
+      document.removeEventListener('focus', handleFirstInteraction, true);
+      document.removeEventListener('click', handleFirstInteraction, true);
+    };
+
+    // Add event listeners for user interaction
+    document.addEventListener('focus', handleFirstInteraction, true);
+    document.addEventListener('click', handleFirstInteraction, true);
+
+    return () => {
+      document.removeEventListener('focus', handleFirstInteraction, true);
+      document.removeEventListener('click', handleFirstInteraction, true);
+    };
   }, []);
 
   const handleInputChange = (
