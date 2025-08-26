@@ -30,7 +30,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
   const [selectedVoice, setSelectedVoice] = useState('alloy');
   const responseRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { isPlaying, togglePlayback, stopPlayback } = useTTS();
+  const { isPlaying, togglePlayback, stopAudio } = useTTS();
 
   // Load visibility & collapsed state
   useEffect(() => {
