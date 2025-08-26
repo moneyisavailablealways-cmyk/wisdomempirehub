@@ -38,8 +38,8 @@ export function AppNavigation() {
       className={({ isActive }) =>
         `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           isActive
-            ? 'bg-wisdom-blue text-primary-foreground'
-            : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
         }`
       }
     >

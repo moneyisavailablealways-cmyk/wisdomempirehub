@@ -62,6 +62,13 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Accessible interactive colors
+				interactive: {
+					primary: 'hsl(var(--interactive-primary))',
+					'primary-hover': 'hsl(var(--interactive-primary-hover))',
+					secondary: 'hsl(var(--interactive-secondary))',
+					'secondary-hover': 'hsl(var(--interactive-secondary-hover))'
+				},
 				// Wisdom Empire custom colors - locked brand palette
 				wisdom: {
 					gold: 'hsl(var(--wisdom-gold))',

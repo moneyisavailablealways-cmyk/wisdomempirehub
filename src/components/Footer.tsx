@@ -6,7 +6,7 @@ const Footer = () => {
     name: "Facebook",
     icon: Facebook,
     url: "https://www.facebook.com/share/16kqbQgqTn/",
-    color: "text-blue-600"
+    color: "text-interactive-primary"
   }, {
     name: "WhatsApp",
     icon: MessageCircle,

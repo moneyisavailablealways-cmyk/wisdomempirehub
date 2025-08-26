@@ -25,13 +25,13 @@ All colors MUST be HSL.
     --primary: 45 100% 65%;
     --primary-foreground: 220 39% 8%;
 
-    /* Navy for secondary */
-    --secondary: 220 39% 18%;
-    --secondary-foreground: 45 100% 85%;
+    /* Navy for secondary with better contrast */
+    --secondary: 220 39% 25%;
+    --secondary-foreground: 45 100% 90%;
 
-    /* Muted areas in navy tones */
+    /* Muted areas with improved contrast */
     --muted: 220 39% 18%;
-    --muted-foreground: 45 60% 60%;
+    --muted-foreground: 45 80% 70%;
 
     /* Light gold for accent */
     --accent: 45 100% 70%;
@@ -46,8 +46,14 @@ All colors MUST be HSL.
     --input: 220 32% 20%;
     --ring: 45 100% 65%;
 
+    /* Accessible interactive colors */
+    --interactive-primary: 210 100% 60%;
+    --interactive-primary-hover: 210 100% 50%;
+    --interactive-secondary: 45 100% 65%;
+    --interactive-secondary-hover: 45 100% 55%;
+
     /* Wisdom Empire design tokens */
-    --wisdom-blue: 220 39% 11%;
+    --wisdom-blue: 220 39% 25%;
     --wisdom-gold: 45 100% 65%;
     --wisdom-cultural: 45 95% 75%;
     --wisdom-navy: 220 39% 18%;

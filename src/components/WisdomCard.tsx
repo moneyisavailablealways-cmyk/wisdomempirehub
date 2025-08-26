@@ -223,7 +223,7 @@ export function WisdomCard({
                 {isPlayingAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </Button>
               
-              <button onClick={handleShowMeaning} disabled={isLoadingExplanation} className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm font-medium">
+              <button onClick={handleShowMeaning} disabled={isLoadingExplanation} className="text-interactive-primary hover:text-interactive-primary-hover cursor-pointer text-sm font-medium">
                 {isLoadingExplanation ? <span className="flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Loading...
@@ -237,7 +237,7 @@ export function WisdomCard({
                   <Youtube className="h-4 w-4" />
                 </Button>}
               
-              <Button variant="ghost" size="sm" onClick={handleBookmark} className={`${isBookmarked ? 'text-blue-600' : ''}`} title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}>
+              <Button variant="ghost" size="sm" onClick={handleBookmark} className={`${isBookmarked ? 'text-interactive-primary' : ''}`} title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}>
                 {isBookmarked ? <BookmarkCheck className="h-4 w-4 fill-current" /> : <Bookmark className="h-4 w-4" />}
               </Button>
               

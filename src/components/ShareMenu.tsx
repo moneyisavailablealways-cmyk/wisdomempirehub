@@ -38,7 +38,7 @@ export function ShareMenu({ text, type, origin, meaning }: ShareMenuProps) {
       name: 'Facebook',
       icon: Facebook,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`,
-      color: 'text-blue-600'
+      color: 'text-interactive-primary'
     },
     {
       name: 'WhatsApp',
