@@ -98,18 +98,30 @@ const Proverbs = () => {
   }
   return <div className="min-h-screen bg-background">
       <SEOHead
-        title="Proverbs Collection - Traditional Wisdom & Sayings | Wisdom Empire Hub"
-        description="Discover traditional proverbs and wise sayings from cultures worldwide. Learn timeless wisdom passed down through generations on Wisdom Empire Hub."
-        keywords="proverbs, traditional sayings, cultural wisdom, traditional proverbs, wise sayings, folk wisdom, ancestral knowledge"
+        title="Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide"
+        description="Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate."
+        keywords="wisdom, proverbs of wisdom, cultural wisdom, traditional proverbs, wise sayings, folk wisdom, ancestral knowledge, proverbs"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Wisdom Empire Hub - Proverbs of Wisdom from Cultures Worldwide",
+          "url": "https://wisdomempirehub.com/proverbs",
+          "description": "Explore proverbs that teach valuable life lessons and share cultural wisdom. Wisdom Empire Hub preserves global knowledge to inspire and educate."
+        }}
       />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Proverbs</h1>
-          <p className="text-lg mb-4 text-slate-50">
-            Traditional sayings that convey wisdom through generations
-          </p>
+          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Proverbs of Wisdom from Cultures Worldwide</h1>
+          <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
+            <p className="mb-4">
+              Welcome to our extensive collection of proverbs filled with wisdom from cultures around the globe. These traditional sayings contain profound wisdom that has been passed down through generations, offering timeless insights into human nature, relationships, and life itself. Each proverb in our collection represents the collective wisdom of civilizations, distilled into memorable phrases that continue to guide and inspire people today.
+            </p>
+            <p className="mb-4">
+              Our proverbs span diverse topics including love, friendship, success, fear, trust, and the pursuit of wisdom itself. Whether you're seeking guidance for daily challenges or exploring the rich tapestry of global cultural wisdom, these ancient expressions provide valuable perspectives that remain as relevant today as they were centuries ago. Discover how different cultures express similar truths through their unique lens of wisdom and experience.
+            </p>
+          </div>
           <DownloadButton category="proverbs" />
 
           {/* Search */}

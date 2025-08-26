@@ -1,13 +1,24 @@
 import React from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Quote, MessageSquare, Zap, Shield, Eye, Lock, UserCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const Privacy = () => {
   return <div className="min-h-screen bg-background">
-      {/* SEO Meta Tags */}
-      <title>Privacy Policy - Wisdom Empire</title>
-      <meta name="description" content="Privacy Policy for Wisdom Empire. Learn how we collect, use, and protect your personal information while using our cultural knowledge platform." />
+      <SEOHead
+        title="Wisdom Empire Hub - Privacy Policy for Users of Wisdom Resources"
+        description="Learn how Wisdom Empire Hub protects your data while you explore cultural wisdom, quotes, proverbs, idioms, and educational content."
+        keywords="wisdom, privacy policy, cultural wisdom privacy, wisdom empire data protection, global wisdom security"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Wisdom Empire Hub - Privacy Policy for Users of Wisdom Resources",
+          "url": "https://wisdomempirehub.com/privacy",
+          "description": "Learn how Wisdom Empire Hub protects your data while you explore cultural wisdom, quotes, proverbs, idioms, and educational content."
+        }}
+      />
       
       {/* Quick Navigation Links */}
       <section className="bg-card border-b border-border py-4">
@@ -45,8 +56,13 @@ const Privacy = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Privacy Policy</h1>
-            <p className="text-muted-foreground">Last updated: August,2025</p>
+            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Privacy Policy for Users of Wisdom Resources</h1>
+            <div className="max-w-3xl mx-auto text-lg text-muted-foreground">
+              <p className="mb-4">
+                Your privacy is paramount to us at Wisdom Empire Hub, where we are dedicated to preserving and sharing cultural wisdom from around the world. This privacy policy explains how we collect, use, and protect your personal information while you explore our vast collection of proverbs, quotes, idioms, and similes that represent the collective wisdom of humanity across diverse cultures and traditions.
+              </p>
+              <p className="text-sm">Last updated: August, 2025</p>
+            </div>
           </div>
 
           <div className="space-y-8">

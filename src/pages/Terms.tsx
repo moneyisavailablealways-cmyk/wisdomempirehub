@@ -1,13 +1,24 @@
 import React from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Quote, MessageSquare, Zap, FileText, Users, AlertTriangle, Scale } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const Terms = () => {
   return <div className="min-h-screen bg-background">
-      {/* SEO Meta Tags */}
-      <title>Terms of Use - Wisdom Empire</title>
-      <meta name="description" content="Terms of Use for Wisdom Empire. Understand the terms and conditions for using our cultural knowledge platform and wisdom collection." />
+      <SEOHead
+        title="Wisdom Empire Hub - Terms & Guidelines for Sharing Wisdom"
+        description="Read the terms and conditions of Wisdom Empire Hub, ensuring proper use while exploring and sharing global wisdom resources."
+        keywords="wisdom, terms and conditions, wisdom empire guidelines, cultural wisdom terms, global wisdom usage"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Wisdom Empire Hub - Terms & Guidelines for Sharing Wisdom",
+          "url": "https://wisdomempirehub.com/terms",
+          "description": "Read the terms and conditions of Wisdom Empire Hub, ensuring proper use while exploring and sharing global wisdom resources."
+        }}
+      />
       
       {/* Quick Navigation Links */}
       <section className="bg-card border-b border-border py-4">
@@ -45,8 +56,13 @@ const Terms = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Terms of Use</h1>
-            <p className="text-muted-foreground">Last updated: August,2025</p>
+            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Terms & Guidelines for Sharing Wisdom</h1>
+            <div className="max-w-3xl mx-auto text-lg text-muted-foreground">
+              <p className="mb-4">
+                Welcome to Wisdom Empire Hub's terms and guidelines, designed to ensure responsible sharing and preservation of cultural wisdom from around the world. These terms govern your use of our platform dedicated to collecting, preserving, and sharing proverbs, quotes, idioms, and similes that embody the collective wisdom of humanity across cultures and generations.
+              </p>
+              <p className="text-sm">Last updated: August, 2025</p>
+            </div>
           </div>
 
           <div className="space-y-8">

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Globe, BookOpen, Users, Star, ArrowLeft } from 'lucide-react';
@@ -150,13 +151,31 @@ const Donate = () => {
       </div>
     </div>;
   return <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Wisdom Empire Hub - Support the Sharing of Global Wisdom"
+        description="Help Wisdom Empire Hub continue preserving and sharing cultural wisdom. Donate to support quotes, proverbs, idioms, and educational resources worldwide."
+        keywords="wisdom, support global wisdom, cultural wisdom donation, preserve wisdom, educational resources, wisdom empire support"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Wisdom Empire Hub - Support the Sharing of Global Wisdom",
+          "url": "https://wisdomempirehub.com/donate",
+          "description": "Help Wisdom Empire Hub continue preserving and sharing cultural wisdom. Donate to support quotes, proverbs, idioms, and educational resources worldwide."
+        }}
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="font-bold font-wisdom text-foreground mb-4 text-2xl">Support Wisdom Empire</h1>
-            <p className="text-muted-foreground text-lg">
-              Help us preserve and share cultural wisdom from around the world
-            </p>
+            <h1 className="font-bold font-wisdom text-foreground mb-4 text-2xl">Support the Sharing of Global Wisdom</h1>
+            <div className="max-w-3xl mx-auto text-muted-foreground text-lg">
+              <p className="mb-4">
+                Join us in preserving and sharing the profound wisdom of humanity through proverbs, quotes, idioms, and similes from cultures around the world. Your support enables Wisdom Empire Hub to continue its mission of making timeless wisdom accessible to everyone, fostering cross-cultural understanding, and building bridges between diverse communities through shared knowledge and universal truths.
+              </p>
+              <p>
+                Every contribution helps us maintain our educational platform, expand our collection of cultural wisdom, and develop innovative features that make learning about global heritage both engaging and meaningful. Together, we can ensure that the wisdom of ages continues to inspire and guide future generations in their quest for knowledge and understanding.
+              </p>
+            </div>
           </div>
 
           {currentSection === 'initial' && renderInitialSection()}

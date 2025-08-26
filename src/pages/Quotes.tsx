@@ -98,18 +98,30 @@ const Quotes = () => {
   }
   return <div className="min-h-screen bg-background">
       <SEOHead
-        title="Inspirational Quotes Collection - Famous Quotes & Sayings | Wisdom Empire Hub"
-        description="Browse inspiring quotes from notable figures, thinkers, and leaders. Find motivational and thought-provoking quotes on Wisdom Empire Hub."
-        keywords="quotes, inspirational quotes, famous quotes, motivational quotes, wise quotes, notable figures, inspiring sayings"
+        title="Wisdom Empire Hub - Inspirational Quotes Full of Wisdom"
+        description="Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life."
+        keywords="wisdom, quotes full of wisdom, inspirational quotes, wisdom quotes, motivational quotes, wise quotes, timeless wisdom"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Wisdom Empire Hub - Inspirational Quotes Full of Wisdom",
+          "url": "https://wisdomempirehub.com/quotes",
+          "description": "Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life."
+        }}
       />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2">Quotes</h1>
-          <p className="text-lg text-muted-foreground mb-4">
-            Inspiring words from notable figures and thinkers
-          </p>
+          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Inspirational Quotes Full of Wisdom</h1>
+          <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
+            <p className="mb-4">
+              Explore our comprehensive collection of quotes filled with wisdom from the greatest minds throughout history. These inspirational quotes contain profound wisdom that has guided humanity across generations, offering insights from renowned philosophers, leaders, artists, and thinkers who have shaped our world. Each quote in our database represents distilled wisdom that can transform perspectives and inspire positive change in your daily life.
+            </p>
+            <p className="mb-4">
+              Our wisdom-rich quotes span categories including life advice, daily motivation, work and business insights, and words from famous people who have made lasting impacts on society. Whether you're seeking wisdom for personal growth, professional development, or simply daily inspiration, these carefully curated quotes provide timeless guidance that transcends cultural and temporal boundaries. Discover how the wisdom of ages can illuminate your path forward.
+            </p>
+          </div>
           <DownloadButton category="quotes" />
 
           {/* Search */}

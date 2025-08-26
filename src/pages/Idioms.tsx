@@ -98,18 +98,30 @@ const Idioms = () => {
   }
   return <div className="min-h-screen bg-background">
       <SEOHead
-        title="Idioms Collection - Cultural Expressions & Phrases | Wisdom Empire Hub"
-        description="Explore idioms and figurative expressions from different cultures. Learn the meanings behind common phrases and cultural idioms."
-        keywords="idioms, cultural expressions, figurative language, phrases, expressions, cultural idioms, language learning"
+        title="Wisdom Empire Hub - Idioms Rich in Cultural Wisdom"
+        description="Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable."
+        keywords="wisdom, idioms rich in wisdom, cultural wisdom, cultural expressions, figurative language, idioms, wise expressions"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Wisdom Empire Hub - Idioms Rich in Cultural Wisdom",
+          "url": "https://wisdomempirehub.com/idioms",
+          "description": "Understand idioms from different cultures, packed with wisdom. Wisdom Empire Hub makes learning cultural expressions insightful and memorable."
+        }}
       />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2">Idioms</h1>
-          <p className="text-lg text-muted-foreground mb-4">
-            Short expressions conveying figurative meaning and wisdom
-          </p>
+          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Idioms Rich in Cultural Wisdom</h1>
+          <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
+            <p className="mb-4">
+              Discover our extensive collection of idioms packed with wisdom from cultures around the world. These figurative expressions contain layers of meaning that go far beyond their literal interpretations, embodying the collective wisdom of societies and offering insights into how different cultures understand and express complex ideas. Each idiom represents a crystallization of cultural wisdom that has been refined through generations of use and understanding.
+            </p>
+            <p className="mb-4">
+              Our wisdom-rich idioms span diverse categories including emotions, success, time, friendship, relationships, work, and life itself. These cultural expressions serve as windows into the wisdom traditions of various societies, revealing how human experiences are understood and communicated across different linguistic and cultural boundaries. Explore how the wisdom of ages is embedded in these memorable phrases that continue to enrich our language and understanding.
+            </p>
+          </div>
           <DownloadButton category="idioms" />
 
           {/* Search */}

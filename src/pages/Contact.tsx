@@ -105,15 +105,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   return (
     <div className="min-h-screen bg-background px-4 py-12">
       <SEOHead
-        title="Contact Us - Get in Touch | Wisdom Empire Hub"
-        description="Contact Wisdom Empire Hub for questions, support, or feedback about our cultural knowledge platform. We respond within 48 hours."
-        keywords="contact, support, wisdom empire, help, feedback, cultural education, contact form"
+        title="Wisdom Empire Hub - Connect With Us About Wisdom"
+        description="Contact Wisdom Empire Hub for inquiries, collaboration, or support in spreading global wisdom and educational content."
+        keywords="wisdom, contact wisdom empire, cultural wisdom support, global wisdom, educational content, wisdom collaboration"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "Wisdom Empire Hub - Connect With Us About Wisdom",
+          "url": "https://wisdomempirehub.com/contact",
+          "description": "Contact Wisdom Empire Hub for inquiries, collaboration, or support in spreading global wisdom and educational content."
+        }}
       />
       {/* Header Section */}
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Contact Us</h1>
-        <p className="text-lg text-muted-foreground">We'd love to hear from you!</p>
+        <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Connect With Us About Wisdom</h1>
+        <div className="max-w-3xl mx-auto text-lg text-muted-foreground">
+          <p className="mb-4">
+            Welcome to Wisdom Empire Hub's contact center, where we connect with fellow seekers of wisdom from around the globe. Whether you have questions about our cultural wisdom collection, want to collaborate on preserving traditional knowledge, or need support navigating our educational resources, we're here to help you on your journey of discovering timeless wisdom.
+          </p>
+          <p>
+            Our team is passionate about sharing the profound wisdom embedded in proverbs, quotes, idioms, and similes from diverse cultures. We believe that wisdom transcends boundaries and connects us all through shared human experiences and universal truths that have guided humanity for generations.
+          </p>
+        </div>
       </header>
 
       <div className="max-w-6xl mx-auto space-y-8">

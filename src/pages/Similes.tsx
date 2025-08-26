@@ -98,18 +98,30 @@ const Similes = () => {
   }
   return <div className="min-h-screen bg-background">
       <SEOHead
-        title="Similes Collection - Comparative Expressions & Metaphors | Wisdom Empire Hub"
-        description="Discover similes and comparative expressions using 'like' and 'as'. Learn vivid language techniques and figurative comparisons."
-        keywords="similes, comparisons, metaphors, figurative language, like and as comparisons, literary devices, vivid expressions"
+        title="Wisdom Empire Hub - Similes That Capture Timeless Wisdom"
+        description="Discover similes from around the world that illustrate ideas with wisdom and creativity. Wisdom Empire Hub educates and inspires through cultural expressions."
+        keywords="wisdom, similes that capture wisdom, timeless wisdom, comparative expressions, similes, figurative language, wise comparisons"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Wisdom Empire Hub - Similes That Capture Timeless Wisdom",
+          "url": "https://wisdomempirehub.com/similes",
+          "description": "Discover similes from around the world that illustrate ideas with wisdom and creativity. Wisdom Empire Hub educates and inspires through cultural expressions."
+        }}
       />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2">Similes</h1>
-          <p className="text-lg text-muted-foreground mb-4">
-            Comparisons using "like" or "as" to illustrate meaning vividly
-          </p>
+          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Similes That Capture Timeless Wisdom</h1>
+          <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
+            <p className="mb-4">
+              Explore our remarkable collection of similes that capture timeless wisdom through vivid comparisons and creative imagery. These expressive similes use "like" and "as" to create powerful connections between ideas, revealing the profound wisdom embedded in everyday comparisons. Each simile in our database represents a unique way that cultures express complex concepts through familiar imagery, making abstract wisdom accessible and memorable through the power of comparison.
+            </p>
+            <p className="mb-4">
+              Our wisdom-filled similes span diverse categories including behavior, nature, people, emotions, animals, and appearance. These comparative expressions demonstrate how different cultures use similar patterns of thought to convey wisdom, creating bridges of understanding across linguistic and cultural boundaries. Discover how the wisdom of observation and comparison has been crystallized into these beautiful expressions that continue to enrich our understanding of the world around us.
+            </p>
+          </div>
           <DownloadButton category="similes" />
 
           {/* Search */}

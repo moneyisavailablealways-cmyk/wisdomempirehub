@@ -104,11 +104,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Wisdom Empire Hub - Cultural Knowledge & Timeless Wisdom"
-        description="Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world. Educational platform preserving global cultural heritage."
-        keywords="proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures, sayings, expressions, wisdom empire"
+        title="Wisdom Empire Hub – Explore Wisdom from Cultures Worldwide"
+        description="Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom."
+        keywords="wisdom, cultural wisdom, proverbs, quotes, idioms, similes, global wisdom, timeless wisdom, cultural heritage, wisdom empire"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
         preloadImage={heroImage}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Wisdom Empire Hub",
+          "url": "https://wisdomempirehub.com",
+          "description": "Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://wisdomempirehub.com/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
@@ -124,9 +136,9 @@ const Index = () => {
         <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-6xl">Wisdom Empire Hub</h1>
+              <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-6xl">Explore Wisdom from Cultures Worldwide</h1>
               <p className="text-lg lg:text-xl font-cultural opacity-90 max-w-2xl mx-auto text-violet-100">
-                Discover timeless wisdom from cultures around the world
+                Welcome to Wisdom Empire Hub, where timeless wisdom comes alive through proverbs, quotes, idioms, and similes from every corner of the globe. Our comprehensive collection preserves and shares the profound wisdom that has guided humanity for generations. Whether you're seeking daily inspiration, cultural understanding, or educational resources, our platform offers access to thousands of carefully curated expressions of wisdom that transcend borders and connect us all through shared human experience and universal truths.
               </p>
             </div>
 

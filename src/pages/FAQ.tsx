@@ -18,10 +18,17 @@ const FAQ = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="FAQ - Frequently Asked Questions | Wisdom Empire Hub"
-        description="Frequently Asked Questions about Wisdom Empire Hub. Get answers about proverbs, quotes, idioms, and how to use our cultural knowledge platform."
-        keywords="FAQ, frequently asked questions, help, wisdom empire, proverbs, quotes, idioms, similes, support"
+        title="Wisdom Empire Hub - FAQs About Cultural Wisdom"
+        description="Find answers to questions about Wisdom Empire Hub, our mission, and our content full of global wisdom. Learn how to explore wisdom effectively."
+        keywords="wisdom, FAQs about wisdom, cultural wisdom questions, wisdom empire help, global wisdom support, wisdom resources"
         canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "name": "Wisdom Empire Hub - FAQs About Cultural Wisdom",
+          "url": "https://wisdomempirehub.com/faq",
+          "description": "Find answers to questions about Wisdom Empire Hub, our mission, and our content full of global wisdom. Learn how to explore wisdom effectively."
+        }}
       />
 
       {/* Quick Navigation Links */}
@@ -60,8 +67,15 @@ const FAQ = () => {
         <div className="max-w-4xl mx-auto bg-gray-900">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">Frequently Asked Questions</h1>
-            <p className="text-lg text-muted-foreground">Find answers to common questions about using Wisdom Empire</p>
+            <h1 className="text-4xl font-bold font-wisdom text-foreground mb-4">FAQs About Cultural Wisdom</h1>
+            <div className="max-w-3xl mx-auto text-lg text-muted-foreground">
+              <p className="mb-4">
+                Welcome to our comprehensive FAQ section where we answer common questions about Wisdom Empire Hub and our mission to preserve and share cultural wisdom from around the world. Whether you're exploring proverbs, quotes, idioms, or similes, this guide will help you make the most of our educational platform and discover the profound wisdom that connects cultures across the globe.
+              </p>
+              <p>
+                Our goal is to make timeless wisdom accessible and meaningful for everyone, fostering cross-cultural understanding through the shared heritage of human knowledge and universal truths that have guided civilizations throughout history.
+              </p>
+            </div>
           </div>
 
           {/* FAQ Accordion */}

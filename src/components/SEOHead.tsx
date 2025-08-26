@@ -8,6 +8,7 @@ interface SEOHeadProps {
   type?: 'website' | 'article';
   image?: string;
   preloadImage?: string;
+  structuredData?: any;
 }
 
 export function SEOHead({
@@ -17,7 +18,8 @@ export function SEOHead({
   canonical,
   type = 'website',
   image = "/lovable-uploads/logo-optimized.webp",
-  preloadImage
+  preloadImage,
+  structuredData
 }: SEOHeadProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const canonicalUrl = canonical || currentUrl;
@@ -57,6 +59,13 @@ export function SEOHead({
       {/* Additional meta tags */}
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Wisdom Empire Hub" />
+      
+      {/* Structured Data */}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
     </Helmet>
   );
 }
