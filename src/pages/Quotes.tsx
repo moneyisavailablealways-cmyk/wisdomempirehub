@@ -107,7 +107,7 @@ const Quotes = () => {
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="font-wisdom mb-2 text-orange-200 text-3xl font-bold">Inspirational Quotes Full of Wisdom</h1>
+          <h1 className="font-wisdom mb-2 text-orange-200 font-bold text-4xl">Inspirational Quotes Full of Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4 text-sm">
             Explore our collection of inspirational quotes from history’s greatest minds—philosophers, leaders, artists, and thinkers. These timeless words offer guidance on life, motivation, work, and personal growth, providing wisdom that inspires positive change and transcends generations and cultures.
