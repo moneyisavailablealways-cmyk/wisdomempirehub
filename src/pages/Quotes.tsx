@@ -97,25 +97,19 @@ const Quotes = () => {
       </div>;
   }
   return <div className="min-h-screen bg-background">
-      <SEOHead
-        title="Wisdom Empire Hub - Inspirational Quotes Full of Wisdom"
-        description="Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life."
-        keywords="wisdom, quotes full of wisdom, inspirational quotes, wisdom quotes, motivational quotes, wise quotes, timeless wisdom"
-        canonical={typeof window !== 'undefined' ? window.location.href : ''}
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Wisdom Empire Hub - Inspirational Quotes Full of Wisdom",
-          "url": "https://wisdomempirehub.com/quotes",
-          "description": "Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life."
-        }}
-      />
+      <SEOHead title="Wisdom Empire Hub - Inspirational Quotes Full of Wisdom" description="Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life." keywords="wisdom, quotes full of wisdom, inspirational quotes, wisdom quotes, motivational quotes, wise quotes, timeless wisdom" canonical={typeof window !== 'undefined' ? window.location.href : ''} structuredData={{
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Wisdom Empire Hub - Inspirational Quotes Full of Wisdom",
+      "url": "https://wisdomempirehub.com/quotes",
+      "description": "Dive into a collection of quotes full of wisdom from around the world. Wisdom Empire Hub helps you learn and apply timeless wisdom in daily life."
+    }} />
       <div className="container mx-auto px-4 py-8 bg-slate-700">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Inspirational Quotes Full of Wisdom</h1>
+          <h1 className="font-wisdom mb-2 text-orange-200 text-3xl font-bold">Inspirational Quotes Full of Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
-            <p className="mb-4">
+            <p className="mb-4 text-sm">
             Explore our collection of inspirational quotes from history’s greatest minds—philosophers, leaders, artists, and thinkers. These timeless words offer guidance on life, motivation, work, and personal growth, providing wisdom that inspires positive change and transcends generations and cultures.
             </p>
             
