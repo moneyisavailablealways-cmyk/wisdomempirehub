@@ -116,11 +116,9 @@ const Quotes = () => {
           <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Inspirational Quotes Full of Wisdom</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
-              Explore our comprehensive collection of quotes filled with wisdom from the greatest minds throughout history. These inspirational quotes contain profound wisdom that has guided humanity across generations, offering insights from renowned philosophers, leaders, artists, and thinkers who have shaped our world. Each quote in our database represents distilled wisdom that can transform perspectives and inspire positive change in your daily life.
+            Explore our collection of inspirational quotes from history’s greatest minds—philosophers, leaders, artists, and thinkers. These timeless words offer guidance on life, motivation, work, and personal growth, providing wisdom that inspires positive change and transcends generations and cultures.
             </p>
-            <p className="mb-4">
-              Our wisdom-rich quotes span categories including life advice, daily motivation, work and business insights, and words from famous people who have made lasting impacts on society. Whether you're seeking wisdom for personal growth, professional development, or simply daily inspiration, these carefully curated quotes provide timeless guidance that transcends cultural and temporal boundaries. Discover how the wisdom of ages can illuminate your path forward.
-            </p>
+            
           </div>
           <DownloadButton category="quotes" />
 
