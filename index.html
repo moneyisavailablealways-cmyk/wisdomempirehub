@@ -3,41 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/lovable-uploads/logo-optimized.webp" type="image/webp">
-    <title>Wisdom Empire - Cultural Knowledge Hub</title>
+    
+    <title>Wisdom Empire Hub - Cultural Knowledge & Timeless Wisdom</title>
     <meta name="description" content="Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world. Educational platform preserving global cultural heritage." />
-    <meta name="author" content="Wisdom Empire" />
-    <meta name="keywords" content="proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures" />
-    <meta name="google-site-verification" content="tiNxAEsxQ_5viI0Ze2EkrQmjBJ88iQ5dOvA4Xw71uSw" />
+    <meta name="author" content="Wisdom Empire Hub" />
+    <link rel="canonical" href="https://wisdomempirehub.com/" />
 
-    <meta property="og:title" content="Wisdom Empire - Cultural Knowledge Hub" />
-    <meta property="og:description" content="Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world." />
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Wisdom Empire Hub - Cultural Knowledge & Timeless Wisdom" />
+    <meta property="og:description" content="Explore proverbs, quotes, idioms, and similes that share timeless wisdom from cultures worldwide." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://wisdomempirehub.com/" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:site" content="@WisdomEmpireHub" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    
-    <!-- Performance optimizations -->
+
+    <!-- Favicon -->
+    <link rel="icon" href="/lovable-uploads/logo-optimized.webp" type="image/webp" />
+
+    <!-- Google site verification -->
+    <meta name="google-site-verification" content="tiNxAEsxQ_5viI0Ze2EkrQmjBJ88iQ5dOvA4Xw71uSw" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://wisdomempirehub.com/",
+      "name": "Wisdom Empire Hub",
+      "description": "Discover timeless wisdom through proverbs, quotes, idioms, and similes from cultures around the world.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://wisdomempirehub.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Performance -->
     <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://sxvrqshcqmbmogkwcixe.supabase.co">
-    
-    
-    <!-- Google tag (gtag.js) --> 
+
+    <!-- Google Analytics (lazy load) -->
     <script>
-      // Defer Google Analytics loading even further - only load on user interaction
       let gaLoaded = false;
-      
       function loadGA() {
         if (gaLoaded) return;
         gaLoaded = true;
-        
         var script = document.createElement('script');
         script.async = true;
         script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7QMZBDFT13';
         document.head.appendChild(script);
-        
         script.onload = function() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -45,13 +64,9 @@
           gtag('config', 'G-7QMZBDFT13');
         };
       }
-      
-      // Load GA on first user interaction
-      ['click', 'scroll', 'keydown', 'touchstart'].forEach(function(event) {
-        document.addEventListener(event, loadGA, { once: true, passive: true });
-      });
-      
-      // Fallback: load after 10 seconds if no interaction
+      ['click','scroll','keydown','touchstart'].forEach(evt =>
+        document.addEventListener(evt, loadGA, { once: true, passive: true })
+      );
       setTimeout(loadGA, 10000);
     </script>
   </head>
