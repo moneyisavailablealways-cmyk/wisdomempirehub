@@ -36,7 +36,10 @@ export function SEOHead({
       
       {/* DNS prefetch for performance */}
       <link rel="dns-prefetch" href="https://sxvrqshcqmbmogkwcixe.supabase.co" />
-      <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" />
+      <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" crossOrigin="" />
+      
+      {/* Additional preconnects for common external resources */}
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />
