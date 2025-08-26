@@ -116,11 +116,9 @@ const Proverbs = () => {
           <h1 className="text-5xl font-wisdom font-bold mb-2 text-orange-200">Proverbs of Wisdom from Cultures Worldwide</h1>
           <div className="max-w-4xl mx-auto text-lg mb-6 text-slate-50">
             <p className="mb-4">
-              Welcome to our extensive collection of proverbs filled with wisdom from cultures around the globe. These traditional sayings contain profound wisdom that has been passed down through generations, offering timeless insights into human nature, relationships, and life itself. Each proverb in our collection represents the collective wisdom of civilizations, distilled into memorable phrases that continue to guide and inspire people today.
+             Explore our collection of proverbs from cultures around the world, offering timeless wisdom on life, love, friendship, success, and more. These sayings, passed down through generations, provide guidance, insight, and inspiration that remain relevant today, reflecting the shared truths of human experience across cultures.
             </p>
-            <p className="mb-4">
-              Our proverbs span diverse topics including love, friendship, success, fear, trust, and the pursuit of wisdom itself. Whether you're seeking guidance for daily challenges or exploring the rich tapestry of global cultural wisdom, these ancient expressions provide valuable perspectives that remain as relevant today as they were centuries ago. Discover how different cultures express similar truths through their unique lens of wisdom and experience.
-            </p>
+            
           </div>
           <DownloadButton category="proverbs" />
 
