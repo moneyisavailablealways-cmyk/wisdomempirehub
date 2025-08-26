@@ -58,7 +58,7 @@ export function AppNavigation() {
               <NavLink to="/" className="flex items-center gap-2">
                 <img 
                   src="/lovable-uploads/logo-optimized.webp" 
-                  alt="Wisdom Empire" 
+                  alt="Logo" 
                   className="h-8 w-8 object-contain"
                 />
                 <div className="text-2xl font-bold font-wisdom text-wisdom-gold">
@@ -88,7 +88,7 @@ export function AppNavigation() {
             <NavLink to="/" className="flex items-center gap-2">
               <img 
                 src="/lovable-uploads/logo-optimized.webp" 
-                alt="Wisdom Empire" 
+                alt="Logo" 
                 className="h-6 w-6 object-contain"
               />
               <div className="text-xl font-bold font-wisdom text-wisdom-gold">
