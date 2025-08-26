@@ -173,6 +173,9 @@ const Index = () => {
           </div>
         ) : (
           <div className="space-y-12 bg-slate-600">
+            {/* Daily Wisdom Section */}
+            <h2 className="text-3xl font-wisdom font-bold text-center text-white mb-8">Daily Wisdom</h2>
+            
             {/* Daily Items */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {proverbOfDay && <Card className="border-wisdom-blue/20 bg-gray-900">
