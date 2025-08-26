@@ -16,7 +16,7 @@ export function SEOHead({
   keywords = "proverbs, quotes, idioms, similes, cultural wisdom, education, heritage, global cultures, sayings, expressions",
   canonical,
   type = 'website',
-  image = "/lovable-uploads/33352f40-ec8e-4855-b9bf-be824ed01621.png",
+  image = "/lovable-uploads/logo-optimized.webp",
   preloadImage
 }: SEOHeadProps) {
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
