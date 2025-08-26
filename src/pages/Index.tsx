@@ -10,12 +10,9 @@ import { useWisdomData } from '@/hooks/useWisdomData';
 import { Search, BookOpen, Quote, MessageSquare, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero-responsive.webp';
 import { supabase } from '@/integrations/supabase/client';
+
 const Index = () => {
-  const {
-    items,
-    loading,
-    error
-  } = useWisdomData();
+  const { items, loading, error } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
   const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
   const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
@@ -33,33 +30,30 @@ const Index = () => {
   useEffect(() => {
     const fetchAllCounts = async () => {
       // Fetch all counts in parallel to reduce request chains
-      const [similesResult, quotesResult, idiomsResult, proverbsResult] = await Promise.all([supabase.from("similes").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("quotes").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("idioms").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("proverbs").select("*", {
-        count: "exact",
-        head: true
-      })]);
+      const [similesResult, quotesResult, idiomsResult, proverbsResult] = await Promise.all([
+        supabase.from("similes").select("*", { count: "exact", head: true }),
+        supabase.from("quotes").select("*", { count: "exact", head: true }),
+        supabase.from("idioms").select("*", { count: "exact", head: true }),
+        supabase.from("proverbs").select("*", { count: "exact", head: true })
+      ]);
+      
       setSimilesCount(similesResult.count ?? 0);
       setQuotesCount(quotesResult.count ?? 0);
       setTotalIdioms(idiomsResult.count ?? 0);
       setTotalProverbs(proverbsResult.count ?? 0);
     };
+    
     fetchAllCounts();
   }, []);
   // --- Daily Wisdom logic ---
   const today = new Date().toDateString();
   const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+
   const proverbs = items.filter(item => item.type === 'proverb');
   const quotes = items.filter(item => item.type === 'quote');
   const idioms = items.filter(item => item.type === 'idiom');
   const similes = items.filter(item => item.type === 'simile');
+
   const proverbOfDay = proverbs[dateHash % proverbs.length];
   const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
   const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
@@ -68,25 +62,33 @@ const Index = () => {
   const filteredItems = items.filter(item => {
     if (!searchTerm.trim()) return false;
     const searchLower = searchTerm.toLowerCase();
-    return item.text.toLowerCase().includes(searchLower) || item.origin.toLowerCase().includes(searchLower) || item.subcategory.toLowerCase().includes(searchLower);
+    return (
+      item.text.toLowerCase().includes(searchLower) ||
+      item.origin.toLowerCase().includes(searchLower) ||
+      item.subcategory.toLowerCase().includes(searchLower)
+    );
   });
 
   // --- Most Viewed & Recently Added ---
   const mostViewed = [...items].reverse().slice(0, 6);
   const recentlyAdded = [...items].slice(-6);
+
   if (error) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Content</h1>
           <p className="text-muted-foreground">{error}</p>
         </div>
-      </div>;
+      </div>
+    );
   }
 
   // --- Show page-level loading first with spinner ---
   // --- Show page-level loading first with golden spinner ---
   if (pageLoading) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           {/* Golden spinning loader */}
           <div className="w-16 h-16 mx-auto mb-4 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
@@ -94,21 +96,32 @@ const Index = () => {
           <h1 className="text-2xl font-bold text-yellow-400">Wisdom Empire</h1>
           <p className="text-yellow-300 mt-2">Loading wisdom...</p>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen bg-background">
-      <SEOHead title="Wisdom Empire Hub – Explore Wisdom from Cultures Worldwide" description="Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom." keywords="wisdom, cultural wisdom, proverbs, quotes, idioms, similes, global wisdom, timeless wisdom, cultural heritage, wisdom empire" canonical={typeof window !== 'undefined' ? window.location.href : ''} preloadImage={heroImage} structuredData={{
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Wisdom Empire Hub",
-      "url": "https://wisdomempirehub.com",
-      "description": "Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://wisdomempirehub.com/?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }} />
+
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Wisdom Empire Hub – Explore Wisdom from Cultures Worldwide"
+        description="Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom."
+        keywords="wisdom, cultural wisdom, proverbs, quotes, idioms, similes, global wisdom, timeless wisdom, cultural heritage, wisdom empire"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        preloadImage={heroImage}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Wisdom Empire Hub",
+          "url": "https://wisdomempirehub.com",
+          "description": "Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://wisdomempirehub.com/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
         <div className="absolute inset-0">
@@ -124,7 +137,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-6xl">Explore Wisdom from Cultures Worldwide</h1>
-              <p className="text-lg lg:text-xl font-cultural opacity-90 max-w-2xl mx-auto text-red-50">
+              <p className="text-lg lg:text-xl font-cultural opacity-90 max-w-2xl mx-auto text-violet-100">
                 Welcome to Wisdom Empire Hub, where timeless wisdom comes alive through proverbs, quotes, idioms, and similes from every corner of the globe. Our comprehensive collection preserves and shares the profound wisdom that has guided humanity for generations. Whether you're seeking daily inspiration, cultural understanding, or educational resources, our platform offers access to thousands of carefully curated expressions of wisdom that transcend borders and connect us all through shared human experience and universal truths.
               </p>
             </div>
@@ -133,7 +146,12 @@ const Index = () => {
             <div className="w-full max-w-2xl mx-auto px-4 sm:px-0">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-gold bg-slate-100" />
+                <Input
+                  placeholder="Search any proverb, quote, idiom, simile..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-blue bg-slate-100"
+                />
               </div>
             </div>
           </div>
@@ -142,7 +160,8 @@ const Index = () => {
 
       {/* Search Results or Daily Content Sections */}
       <section className="container mx-auto px-4 py-12">
-        {searchTerm.trim() ? <div className="space-y-8">
+        {searchTerm.trim() ? (
+          <div className="space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold font-wisdom mb-2">Search Results</h2>
               <p className="text-muted-foreground text-lg">
@@ -150,16 +169,22 @@ const Index = () => {
               </p>
             </div>
 
-            {filteredItems.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredItems.map(item => <WisdomCard key={item.id} item={item} />)}
-              </div> : <div className="text-center py-16">
+              </div>
+            ) : (
+              <div className="text-center py-16">
                 <div className="max-w-md mx-auto space-y-4">
                   <Search className="h-16 w-16 text-muted-foreground mx-auto" />
                   <h3 className="text-xl font-semibold">No Results Found</h3>
                   <p className="text-muted-foreground">Try different keywords or browse our categories below.</p>
                 </div>
-              </div>}
-          </div> : <div className="space-y-12 bg-slate-600">
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-12 bg-slate-600">
             {/* Daily Wisdom Section */}
             <h2 className="text-3xl font-wisdom font-bold text-center text-white mb-8">Daily Wisdom</h2>
             
@@ -206,7 +231,9 @@ const Index = () => {
             <div className="max-w-6xl mx-auto px-4 py-12">
               <h2 className="text-2xl font-bold mb-6 text-center">Most Viewed</h2>
               <div className="grid md:grid-cols-3 gap-6">
-                {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
+                {mostViewed.map((item) => (
+                  <WisdomCard key={item.id} item={item} />
+                ))}
               </div>
             </div>
 
@@ -214,7 +241,9 @@ const Index = () => {
             <div className="max-w-6xl mx-auto px-4 py-12">
               <h2 className="text-2xl font-bold mb-6 text-center">Recently Added</h2>
               <div className="grid md:grid-cols-3 gap-6">
-                {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
+                {recentlyAdded.map((item) => (
+                  <WisdomCard key={item.id} item={item} />
+                ))}
               </div>
             </div>
 
@@ -258,8 +287,11 @@ const Index = () => {
               </CardContent>
             </Card>
 
-          </div>}
+          </div>
+        )}
       </section>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
