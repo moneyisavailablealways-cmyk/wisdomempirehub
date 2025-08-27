@@ -15,40 +15,6 @@ const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [emailJSLoaded, setEmailJSLoaded] = useState(false);
-
-  useEffect(() => {
-    const loadEmailJS = () => {
-      if (typeof (window as any).emailjs !== 'undefined') {
-        setEmailJSLoaded(true);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.emailjs.com/dist/email.min.js';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        (window as any).emailjs.init("ywpWceEA7xT1f3-P6"); // Public key
-        setEmailJSLoaded(true);
-      };
-      document.head.appendChild(script);
-    };
-
-    const handleFirstInteraction = () => {
-      loadEmailJS();
-      document.removeEventListener('focus', handleFirstInteraction, true);
-      document.removeEventListener('click', handleFirstInteraction, true);
-    };
-
-    document.addEventListener('focus', handleFirstInteraction, true);
-    document.addEventListener('click', handleFirstInteraction, true);
-
-    return () => {
-      document.removeEventListener('focus', handleFirstInteraction, true);
-      document.removeEventListener('click', handleFirstInteraction, true);
-    };
-  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -59,11 +25,6 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!emailJSLoaded) {
-      toast({ title: "Please wait", description: "Loading email service..." });
-      return;
-    }
 
     if (!formData.name || !formData.email || !formData.message) {
       toast({ title: "Error", description: "Please fill all fields.", variant: "destructive" });

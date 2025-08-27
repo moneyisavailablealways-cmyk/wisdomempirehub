@@ -53,6 +53,16 @@
     <link rel="preconnect" href="https://sxvrqshcqmbmogkwcixe.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://sxvrqshcqmbmogkwcixe.supabase.co">
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function(){
+        // Initialize EmailJS with your public key
+        emailjs.init("ywpWceEA7xT1f3-P6");
+        console.log("EmailJS initialized with public key.");
+      })();
+    </script>
+
     <!-- Google Analytics (lazy load) -->
     <script>
       let gaLoaded = false;
