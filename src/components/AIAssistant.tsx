@@ -176,16 +176,6 @@ export function AIAssistant({ category }: AIAssistantProps) {
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
-
-                {/* Voice Selection */}
-                <div className="flex gap-2 mt-2">
-                  {VOICES.map(v => (
-                    <Button key={v} size="sm" variant={v === selectedVoice ? "default" : "outline"} onClick={() => setSelectedVoice(v)}>
-                      {v}
-                    </Button>
-                  ))}
-                </div>
-
                 {/* AI Response */}
                 {response && (
                   <div className="mt-4 p-4 bg-background/50 rounded-lg border">
