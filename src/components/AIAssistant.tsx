@@ -164,4 +164,83 @@ export function AIAssistant({ category }: AIAssistantProps) {
 
                 {/* Voice Input */}
                 <div className="flex justify-center mb-2">
-                  <Button type="button" onClick={handleVoiceInput} disabled={isLi
+                  <Button 
+                    type="button" 
+                    onClick={handleVoiceInput} 
+                    disabled={isListening} 
+                    className={`flex items-center gap-2 px-6 py-3 rounded-full ${
+                      isListening ? 'bg-red-600 animate-pulse' : 'bg-gradient-to-r from-blue-600 to-purple-600'
+                    }`}
+                  >
+                    {isListening ? (
+                      <>
+                        <MicOff className="h-5 w-5" />
+                        Listening...
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="h-5 w-5" />
+                        Start Voice Conversation
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {/* Text Input */}
+                <div className="relative">
+                  <Input 
+                    placeholder="Type your question or use voice" 
+                    value={input} 
+                    onChange={e => setInput(e.target.value)} 
+                    className="pr-12 bg-slate-950" 
+                  />
+                  <Button type="submit" size="sm" className="absolute right-1 top-1 h-8 w-8 p-0">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Voice Selection */}
+                <div className="flex gap-2 mt-2">
+                  {VOICES.map(voice => (
+                    <Button 
+                      key={voice} 
+                      size="sm" 
+                      variant={voice === selectedVoice ? "default" : "outline"} 
+                      onClick={() => setSelectedVoice(voice)}
+                    >
+                      {voice}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* AI Response */}
+                {response && (
+                  <div className="mt-4 p-4 bg-background/50 rounded-lg border">
+                    <div className="flex justify-between mb-2">
+                      <p className="text-sm text-muted-foreground">AI Response:</p>
+                      <Button variant="ghost" size="sm" onClick={handlePlayResponseAudio} disabled={isPlaying}>
+                        {isPlaying ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    <p className="text-foreground leading-relaxed">{response}</p>
+                  </div>
+                )}
+              </form>
+            </div>
+
+            {/* Bottom-right controls */}
+            <div className="absolute bottom-2 right-2 flex gap-1">
+              <Button variant="ghost" size="sm" onClick={handleToggleCollapse}>
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
