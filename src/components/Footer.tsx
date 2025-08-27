@@ -84,8 +84,8 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-md font-medium text-foreground">Contact</h4>
             <div className="space-y-2">
-              <a href="brunog0745090566@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:text-foreground block">
-                brunog@wisdomempire.com
+              <a href="mailto:contact@wisdomempire.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:text-foreground block">
+                contact@wisdomempire.com
               </a>
             </div>
           </div>
