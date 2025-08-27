@@ -18,7 +18,15 @@ interface AIAssistantProps {
   category: string;
 }
 
-const VOICES = ['alloy', 'adams', 'leo', 'bella'];
+const VOICES = ['Adams', 'Leo', 'Bella', 'Default'];
+
+// Voice mapping to OpenAI voice names
+const voiceMapping: Record<string, string> = {
+  Adams: 'onyx',
+  Leo: 'alloy', 
+  Bella: 'nova',
+  Default: 'echo'
+};
 
 export function AIAssistant({ category }: AIAssistantProps) {
   const [input, setInput] = useState('');
@@ -27,7 +35,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const [selectedVoice, setSelectedVoice] = useState('alloy');
+  const [selectedVoice, setSelectedVoice] = useState('Adams');
   const responseRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { isPlaying, togglePlayback, stopAudio } = useTTS();
@@ -109,14 +117,9 @@ export function AIAssistant({ category }: AIAssistantProps) {
       // Scroll to response
       setTimeout(() => responseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 
-      // Fetch TTS audio from backend
-      const ttsRes = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: aiText, voice: selectedVoice })
-      });
-      const ttsData = await ttsRes.json();
-      if (ttsData.audioContent) togglePlayback(ttsData.audioContent);
+      // Play TTS with selected voice
+      const openAIVoice = voiceMapping[selectedVoice] || 'onyx';
+      togglePlayback(aiText, openAIVoice);
 
     } catch (err) {
       console.error('AI/TTS Error:', err);
@@ -132,17 +135,8 @@ export function AIAssistant({ category }: AIAssistantProps) {
 
   const handlePlayResponseAudio = async () => {
     if (!response) return;
-    try {
-      const ttsRes = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: response, voice: selectedVoice })
-      });
-      const ttsData = await ttsRes.json();
-      if (ttsData.audioContent) togglePlayback(ttsData.audioContent);
-    } catch {
-      togglePlayback(response);
-    }
+    const openAIVoice = voiceMapping[selectedVoice] || 'onyx';
+    togglePlayback(response, openAIVoice);
   };
 
   const handleClose = () => setIsVisible(false);
@@ -188,7 +182,7 @@ export function AIAssistant({ category }: AIAssistantProps) {
                 <div className="flex gap-2 mt-2">
                   {VOICES.map(v => (
                     <Button key={v} size="sm" variant={v === selectedVoice ? "default" : "outline"} onClick={() => setSelectedVoice(v)}>
-                      {v.charAt(0).toUpperCase() + v.slice(1)}
+                      {v}
                     </Button>
                   ))}
                 </div>

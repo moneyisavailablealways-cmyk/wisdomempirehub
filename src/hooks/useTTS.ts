@@ -18,7 +18,7 @@ export function useTTS() {
     setIsPlaying(false);
   }, [currentAudio]);
 
-  const playText = useCallback(async (text: string) => {
+  const playText = useCallback(async (text: string, voiceOverride?: string) => {
     // Stop any currently playing audio
     stopAudio();
 
@@ -38,7 +38,7 @@ export function useTTS() {
       const { data, error } = await supabase.functions.invoke('text-to-speech', {
         body: {
           text: text,
-          voice: openAIVoice
+          voice: voiceOverride || openAIVoice
         }
       });
 
@@ -107,11 +107,11 @@ export function useTTS() {
     }
   }, [openAIVoice, toast, stopAudio, currentAudio]);
 
-  const togglePlayback = useCallback((text: string) => {
+  const togglePlayback = useCallback((text: string, voiceOverride?: string) => {
     if (isPlaying) {
       stopAudio();
     } else {
-      playText(text);
+      playText(text, voiceOverride);
     }
   }, [isPlaying, stopAudio, playText]);
 
