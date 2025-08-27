@@ -14,14 +14,22 @@ serve(async (req) => {
 
   try {
     const { text, voice } = await req.json();
-    if (!text) throw new Error("Text is required");
+
+    if (!text || typeof text !== "string") {
+      return new Response(JSON.stringify({ error: "Text is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const selectedVoice = allowedVoices.includes(voice?.toLowerCase())
       ? voice.toLowerCase()
       : "alloy";
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) throw new Error("OpenAI API key not configured");
+    if (!OPENAI_API_KEY) {
+      throw new Error("OpenAI API key not configured");
+    }
 
     console.log("Generating speech for text:", text.substring(0, 100) + "...");
     console.log("Using voice:", selectedVoice);
@@ -37,7 +45,7 @@ serve(async (req) => {
         model: "tts-1",
         input: text,
         voice: selectedVoice,
-        response_format: "base64", // ✅ Use base64 directly to avoid conversion issues
+        response_format: "base64",
       }),
     });
 
@@ -48,9 +56,11 @@ serve(async (req) => {
     }
 
     const ttsData = await ttsResponse.json();
-    const base64Audio = ttsData.audio; // Base64 from API
+    const base64Audio = ttsData.audio;
 
-    if (!base64Audio) throw new Error("No audio returned from TTS");
+    if (!base64Audio) {
+      throw new Error("No audio returned from TTS");
+    }
 
     return new Response(JSON.stringify({ audioContent: base64Audio }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
