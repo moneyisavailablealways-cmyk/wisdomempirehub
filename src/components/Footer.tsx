@@ -59,7 +59,7 @@ const Footer = () => {
     name: "FAQ",
     path: "/faq"
   }];
-  return <footer className="w-full border-t border-border bg-background">
+  return <footer className="hidden md:block w-full border-t border-border bg-background">
       <div className="container mx-auto px-4 py-8 md:py-12 bg-blue-950">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
