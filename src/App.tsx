@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppNavigation } from "@/components/AppNavigation";
+import { BottomTabs } from "@/components/BottomTabs";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import Proverbs from "./pages/Proverbs";
@@ -39,7 +40,7 @@ const App = () => (
             <BrowserRouter>
               <div className="min-h-screen bg-background flex flex-col">
                 <AppNavigation />
-                <main className="flex-1">
+                <main className="flex-1 pb-16 md:pb-0">
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/proverbs" element={<Proverbs />} />
@@ -60,6 +61,7 @@ const App = () => (
                   </Routes>
                 </main>
                 <Footer />
+                <BottomTabs />
               </div>
             </BrowserRouter>
           </SettingsProvider>
