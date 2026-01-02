@@ -13,9 +13,16 @@ import {
   Mail,
   HelpCircle,
   Menu,
-  X
+  X,
+  Users
 } from 'lucide-react';
 import { useState } from 'react';
+import { 
+  Facebook, 
+  Twitter, 
+  Youtube, 
+  Instagram 
+} from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -26,6 +33,13 @@ const navigation = [
   { name: 'Donate', href: '/donate', icon: Heart },
   { name: 'Contact', href: '/contact', icon: Mail },
   { name: 'FAQ', href: '/faq', icon: HelpCircle },
+];
+
+const socialLinks = [
+  { name: 'Facebook', icon: Facebook, url: 'https://www.facebook.com/share/16kqbQgqTn/' },
+  { name: 'X (Twitter)', icon: Twitter, url: 'https://x.com/wisdomempirehub' },
+  { name: 'YouTube', icon: Youtube, url: 'https://youtube.com/@wisdomempirehub' },
+  { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/wisdomempirehb' },
 ];
 
 export function AppNavigation() {
@@ -124,6 +138,29 @@ export function AppNavigation() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   />
                 ))}
+                
+                {/* Follow Us Section */}
+                <div className="mt-4 pt-4 border-t border-border">
+                  <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground">
+                    <Users className="h-4 w-4" />
+                    Follow Us
+                  </div>
+                  <div className="flex items-center gap-3 px-3 py-2">
+                    {socialLinks.map((social) => (
+                      <a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-md border border-border hover:border-primary/50 hover:bg-accent transition-all duration-200"
+                        aria-label={`Follow us on ${social.name}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <social.icon size={18} className="text-foreground" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}

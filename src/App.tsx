@@ -9,6 +9,7 @@ import { SettingsProvider } from "@/contexts/SettingsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppNavigation } from "@/components/AppNavigation";
 import { BottomTabs } from "@/components/BottomTabs";
+import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import Proverbs from "./pages/Proverbs";
@@ -62,6 +63,7 @@ const App = () => (
                 </main>
                 <Footer />
                 <BottomTabs />
+                <FloatingDonateButton />
               </div>
             </BrowserRouter>
           </SettingsProvider>

@@ -218,8 +218,8 @@ const Index = () => {
               </div>
             </div>
 
-            {/* --- Explore by Category (moved below Recently Added) --- */}
-            <Card className="bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20 max-w-6xl mx-auto px-4 py-12">
+            {/* --- Explore by Category (hidden on mobile) --- */}
+            <Card className="hidden md:block bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20 max-w-6xl mx-auto px-4 py-12">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
                 <div className="grid md:grid-cols-4 gap-4">
