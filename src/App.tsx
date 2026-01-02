@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AppNavigation } from "@/components/AppNavigation";
 import { BottomTabs } from "@/components/BottomTabs";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";
+import { SplashScreen } from "@/components/SplashScreen";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import Proverbs from "./pages/Proverbs";
@@ -30,47 +31,52 @@ import { SitemapXml } from "./pages/SitemapXml";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <AuthProvider>
-          <SettingsProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <div className="min-h-screen bg-background flex flex-col">
-                <AppNavigation />
-                <main className="flex-1 pb-16 md:pb-0">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/proverbs" element={<Proverbs />} />
-                    <Route path="/quotes" element={<Quotes />} />
-                    <Route path="/idioms" element={<Idioms />} />
-          <Route path="/similes" element={<Similes />} />
-          <Route path="/:type/:id" element={<WisdomItemPage />} />
-                    <Route path="/donate" element={<Donate />} />
-                    <Route path="/donate/success" element={<DonateSuccess />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/robots.txt" element={<RobotsTxt />} />
-                    <Route path="/sitemap.xml" element={<SitemapXml />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <Footer />
-                <BottomTabs />
-                <FloatingDonateButton />
-              </div>
-            </BrowserRouter>
-          </SettingsProvider>
-        </AuthProvider>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <TooltipProvider>
+          <AuthProvider>
+            <SettingsProvider>
+              {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <div className="min-h-screen bg-background flex flex-col">
+                  <AppNavigation />
+                  <main className="flex-1 pb-16 md:pb-0">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/proverbs" element={<Proverbs />} />
+                      <Route path="/quotes" element={<Quotes />} />
+                      <Route path="/idioms" element={<Idioms />} />
+                      <Route path="/similes" element={<Similes />} />
+                      <Route path="/:type/:id" element={<WisdomItemPage />} />
+                      <Route path="/donate" element={<Donate />} />
+                      <Route path="/donate/success" element={<DonateSuccess />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/robots.txt" element={<RobotsTxt />} />
+                      <Route path="/sitemap.xml" element={<SitemapXml />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                  <BottomTabs />
+                  <FloatingDonateButton />
+                </div>
+              </BrowserRouter>
+            </SettingsProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -3,11 +3,27 @@ import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 
 export function FloatingDonateButton() {
-  const [position, setPosition] = useState({ x: 20, y: 100 });
+  const [position, setPosition] = useState({ x: -1, y: -1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [hasMoved, setHasMoved] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+
+  // Initialize position to bottom right, above bottom tabs on mobile
+  useEffect(() => {
+    const updatePosition = () => {
+      const isMobile = window.innerWidth < 768;
+      const bottomOffset = isMobile ? 80 : 20; // Above bottom tabs on mobile
+      setPosition({
+        x: window.innerWidth - 130,
+        y: window.innerHeight - bottomOffset - 50,
+      });
+    };
+    
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -70,6 +86,9 @@ export function FloatingDonateButton() {
       e.preventDefault();
     }
   };
+
+  // Don't render until position is initialized
+  if (position.x === -1) return null;
 
   return (
     <div
