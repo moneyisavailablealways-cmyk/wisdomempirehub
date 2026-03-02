@@ -3,6 +3,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 export function useTTS() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [_currentAudio, _setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   const stopAudio = useCallback(() => {
