@@ -33,6 +33,7 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const handleSplashComplete = React.useCallback(() => setShowSplash(false), []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -40,7 +41,7 @@ const App = () => {
         <TooltipProvider>
           <AuthProvider>
             <SettingsProvider>
-              {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+              {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
               <Toaster />
               <Sonner />
               <BrowserRouter>
