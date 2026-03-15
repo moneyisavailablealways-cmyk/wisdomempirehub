@@ -30,23 +30,27 @@ export function BottomTabs() {
     if (index !== -1) setActiveIndex(index);
   }, [location.pathname]);
 
-  // Swipe gesture handlers
+  // Swipe gesture handlers - track both X and Y to avoid triggering on vertical scrolls
+  const touchStartY = useRef(0);
+
   const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   }, []);
 
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     touchEndX.current = e.changedTouches[0].clientX;
-    const swipeDistance = touchStartX.current - touchEndX.current;
+    const touchEndY = e.changedTouches[0].clientY;
+    const swipeDistanceX = touchStartX.current - touchEndX.current;
+    const swipeDistanceY = Math.abs(touchStartY.current - touchEndY);
     const minSwipeDistance = 50;
 
-    if (Math.abs(swipeDistance) > minSwipeDistance) {
-      if (swipeDistance > 0 && activeIndex < tabs.length - 1) {
-        // Swipe left - go to next tab
+    // Only trigger if horizontal swipe is dominant (not a vertical scroll)
+    if (Math.abs(swipeDistanceX) > minSwipeDistance && Math.abs(swipeDistanceX) > swipeDistanceY * 2) {
+      if (swipeDistanceX > 0 && activeIndex < tabs.length - 1) {
         triggerHaptic();
         navigate(tabs[activeIndex + 1].href);
-      } else if (swipeDistance < 0 && activeIndex > 0) {
-        // Swipe right - go to previous tab
+      } else if (swipeDistanceX < 0 && activeIndex > 0) {
         triggerHaptic();
         navigate(tabs[activeIndex - 1].href);
       }
@@ -54,7 +58,6 @@ export function BottomTabs() {
   }, [activeIndex, navigate]);
 
   useEffect(() => {
-    // Add swipe listeners to the main content area
     const mainElement = document.querySelector('main');
     if (mainElement) {
       mainElement.addEventListener('touchstart', handleTouchStart, { passive: true });

@@ -33,6 +33,7 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const handleSplashComplete = React.useCallback(() => setShowSplash(false), []);
 
   return (
     <QueryClientProvider client={queryClient}>
