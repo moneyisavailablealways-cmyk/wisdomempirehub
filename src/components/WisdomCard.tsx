@@ -301,4 +301,4 @@ export const WisdomCard = React.memo(function WisdomCard({
         </DialogContent>
       </Dialog>
     </>;
-}
+});
