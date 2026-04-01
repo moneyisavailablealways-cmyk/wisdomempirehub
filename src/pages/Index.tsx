@@ -1,224 +1,280 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WisdomCard } from '@/components/WisdomCard';
-import { useWisdomData } from '@/hooks/useWisdomData';
+import { WisdomCardSkeleton } from '@/components/WisdomCardSkeleton';
+import { supabase } from '@/integrations/supabase/client';
 import { Search, BookOpen, Quote, MessageSquare, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/wisdom-hero-responsive.webp';
-import { supabase } from '@/integrations/supabase/client';
+
+const SELECT_FIELDS = 'id,type,subcategory,text,origin,created_at,video_url,audio_voice_type';
+
+interface WisdomItem {
+  id: string;
+  type: 'proverb' | 'quote' | 'idiom' | 'simile';
+  subcategory: string;
+  text: string;
+  origin: string;
+  created_at: string;
+  video_url?: string;
+  audio_voice_type?: 'child' | 'youth' | 'old';
+}
+
 const Index = () => {
-  const {
-    items,
-    loading,
-    error
-  } = useWisdomData();
   const [searchTerm, setSearchTerm] = useState('');
-  const [totalIdioms, setTotalIdioms] = useState<number | null>(null);
-  const [totalProverbs, setTotalProverbs] = useState<number | null>(null);
-  const [quotesCount, setQuotesCount] = useState<number | null>(null);
-  const [similesCount, setSimilesCount] = useState<number | null>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [counts, setCounts] = useState({ proverbs: 0, quotes: 0, idioms: 0, similes: 0 });
+  const [dailyItems, setDailyItems] = useState<WisdomItem[]>([]);
+  const [recentItems, setRecentItems] = useState<WisdomItem[]>([]);
+  const [searchResults, setSearchResults] = useState<WisdomItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
 
-  // --- Page loading for 3 seconds with spinner ---
-  const [pageLoading, setPageLoading] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setPageLoading(false), 3000);
-    return () => clearTimeout(timer);
+  const debounceTimer = React.useRef<ReturnType<typeof setTimeout>>();
+  const handleSearchChange = React.useCallback((value: string) => {
+    setSearchTerm(value);
+    clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => setDebouncedSearch(value), 300);
   }, []);
 
-  // --- Fetch live counts from Supabase ---
+  // Fetch counts + a small sample for daily wisdom (lightweight)
   useEffect(() => {
-    const fetchAllCounts = async () => {
-      // Fetch all counts in parallel to reduce request chains
-      const [similesResult, quotesResult, idiomsResult, proverbsResult] = await Promise.all([supabase.from("similes").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("quotes").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("idioms").select("*", {
-        count: "exact",
-        head: true
-      }), supabase.from("proverbs").select("*", {
-        count: "exact",
-        head: true
-      })]);
-      setSimilesCount(similesResult.count ?? 0);
-      setQuotesCount(quotesResult.count ?? 0);
-      setTotalIdioms(idiomsResult.count ?? 0);
-      setTotalProverbs(proverbsResult.count ?? 0);
+    const fetchInitial = async () => {
+      setLoading(true);
+      const [
+        { count: pc },
+        { count: qc },
+        { count: ic },
+        { count: sc },
+        { data: recentProverbs },
+        { data: recentQuotes },
+        { data: recentIdioms },
+        { data: recentSimiles },
+      ] = await Promise.all([
+        supabase.from('proverbs').select('id', { count: 'exact', head: true }),
+        supabase.from('quotes').select('id', { count: 'exact', head: true }),
+        supabase.from('idioms').select('id', { count: 'exact', head: true }),
+        supabase.from('similes').select('id', { count: 'exact', head: true }),
+        supabase.from('proverbs').select(SELECT_FIELDS).order('created_at', { ascending: false }).limit(3),
+        supabase.from('quotes').select(SELECT_FIELDS).order('created_at', { ascending: false }).limit(3),
+        supabase.from('idioms').select(SELECT_FIELDS).order('created_at', { ascending: false }).limit(3),
+        supabase.from('similes').select(SELECT_FIELDS).order('created_at', { ascending: false }).limit(3),
+      ]);
+
+      setCounts({
+        proverbs: pc ?? 0,
+        quotes: qc ?? 0,
+        idioms: ic ?? 0,
+        similes: sc ?? 0,
+      });
+
+      const all = [
+        ...(recentProverbs || []).map(i => ({ ...i, type: 'proverb' as const })),
+        ...(recentQuotes || []).map(i => ({ ...i, type: 'quote' as const })),
+        ...(recentIdioms || []).map(i => ({ ...i, type: 'idiom' as const })),
+        ...(recentSimiles || []).map(i => ({ ...i, type: 'simile' as const })),
+      ] as WisdomItem[];
+
+      setRecentItems(all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 6));
+
+      // Pick daily items deterministically
+      const today = new Date().toDateString();
+      const hash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+      const proverbs = (recentProverbs || []) as WisdomItem[];
+      const quotes = (recentQuotes || []) as WisdomItem[];
+      const idioms = (recentIdioms || []) as WisdomItem[];
+      
+      const daily: WisdomItem[] = [];
+      if (proverbs.length) daily.push({ ...proverbs[hash % proverbs.length], type: 'proverb' });
+      if (quotes.length) daily.push({ ...quotes[(hash + 1) % quotes.length], type: 'quote' });
+      if (idioms.length) daily.push({ ...idioms[(hash + 2) % idioms.length], type: 'idiom' });
+      setDailyItems(daily);
+      setLoading(false);
     };
-    fetchAllCounts();
+
+    fetchInitial();
   }, []);
-  // --- Daily Wisdom logic ---
-  const today = new Date().toDateString();
-  const dateHash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-  const proverbs = items.filter(item => item.type === 'proverb');
-  const quotes = items.filter(item => item.type === 'quote');
-  const idioms = items.filter(item => item.type === 'idiom');
-  const similes = items.filter(item => item.type === 'simile');
-  const proverbOfDay = proverbs[dateHash % proverbs.length];
-  const quoteOfDay = quotes[(dateHash + 1) % quotes.length];
-  const idiomOfDay = idioms[(dateHash + 2) % idioms.length];
 
-  // --- Search filter ---
-  const filteredItems = items.filter(item => {
-    if (!searchTerm.trim()) return false;
-    const searchLower = searchTerm.toLowerCase();
-    return item.text.toLowerCase().includes(searchLower) || item.origin.toLowerCase().includes(searchLower) || item.subcategory.toLowerCase().includes(searchLower);
-  });
+  // Search across tables
+  useEffect(() => {
+    if (!debouncedSearch.trim()) {
+      setSearchResults([]);
+      return;
+    }
 
-  // --- Most Viewed & Recently Added ---
-  const mostViewed = [...items].reverse().slice(0, 6);
-  const recentlyAdded = [...items].slice(-6);
-  if (error) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">Error Loading Content</h1>
-          <p className="text-muted-foreground">{error}</p>
-        </div>
-      </div>;
-  }
+    const search = async () => {
+      setSearching(true);
+      const term = `%${debouncedSearch}%`;
+      const [{ data: p }, { data: q }, { data: i }, { data: s }] = await Promise.all([
+        supabase.from('proverbs').select(SELECT_FIELDS).or(`text.ilike.${term},origin.ilike.${term}`).limit(10),
+        supabase.from('quotes').select(SELECT_FIELDS).or(`text.ilike.${term},origin.ilike.${term}`).limit(10),
+        supabase.from('idioms').select(SELECT_FIELDS).or(`text.ilike.${term},origin.ilike.${term}`).limit(10),
+        supabase.from('similes').select(SELECT_FIELDS).or(`text.ilike.${term},origin.ilike.${term}`).limit(10),
+      ]);
 
-  // --- Show page-level loading first with spinner ---
-  // --- Show page-level loading first with golden spinner ---
-  if (pageLoading) {
-    return <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          {/* Golden spinning loader */}
-          <div className="w-16 h-16 mx-auto mb-4 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
-          {/* Golden text */}
-          <h1 className="text-2xl font-bold text-yellow-400">Wisdom Empire</h1>
-          <p className="text-yellow-300 mt-2">Loading wisdom...</p>
-        </div>
-      </div>;
-  }
-  return <div className="min-h-screen bg-background">
-      <SEOHead title="Wisdom Empire Hub – Explore Wisdom from Cultures Worldwide" description="Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom." keywords="wisdom, cultural wisdom, proverbs, quotes, idioms, similes, global wisdom, timeless wisdom, cultural heritage, wisdom empire" canonical={typeof window !== 'undefined' ? window.location.href : ''} preloadImage={heroImage} structuredData={{
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Wisdom Empire Hub",
-      "url": "https://wisdomempirehub.com",
-      "description": "Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures. Discover, learn, and be inspired by global wisdom.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://wisdomempirehub.com/?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }} />
+      setSearchResults([
+        ...(p || []).map(x => ({ ...x, type: 'proverb' as const })),
+        ...(q || []).map(x => ({ ...x, type: 'quote' as const })),
+        ...(i || []).map(x => ({ ...x, type: 'idiom' as const })),
+        ...(s || []).map(x => ({ ...x, type: 'simile' as const })),
+      ] as WisdomItem[]);
+      setSearching(false);
+    };
+
+    search();
+  }, [debouncedSearch]);
+
+  const totalCount = counts.proverbs + counts.quotes + counts.idioms + counts.similes;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Wisdom Empire Hub – Explore Wisdom from Cultures Worldwide"
+        description="Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures."
+        keywords="wisdom, cultural wisdom, proverbs, quotes, idioms, similes"
+        canonical={typeof window !== 'undefined' ? window.location.href : ''}
+        preloadImage={heroImage}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Wisdom Empire Hub",
+          "url": "https://wisdomempirehub.com",
+          "description": "Wisdom Empire Hub brings you timeless wisdom from proverbs, quotes, idioms, and similes across cultures.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://wisdomempirehub.com/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero text-primary-foreground py-16">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Wisdom Empire - Cultural Knowledge Hub" className="w-full h-full object-cover opacity-20" fetchPriority="high" decoding="async" />
         </div>
-
-        {/* Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src="/lovable-uploads/logo-optimized.webp" alt="Wisdom Empire Background Logo" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" loading="lazy" />
+          <img src="/lovable-uploads/logo-optimized.webp" alt="" className="w-96 h-96 md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] object-contain opacity-20" loading="lazy" />
         </div>
-
         <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold mx-0 my-0 px-0 py-0 ml-0 mr-0 mt-0 mb-0 pl-0 pr-0 pt-0 lg:text-4xl">Explore Wisdom from Cultures Worldwide</h1>
+              <h1 className="text-4xl font-wisdom tracking-tight text-white font-bold lg:text-4xl">
+                Explore Wisdom from Cultures Worldwide
+              </h1>
               <p className="text-lg lg:text-xl font-cultural opacity-90 max-w-2xl mx-auto text-violet-100">
-                Wisdom Empire Hub brings together timeless proverbs, quotes, idioms, and similes from cultures around the world—offering daily inspiration, cultural insight, and universal truths that connect us all.
+                Wisdom Empire Hub brings together timeless proverbs, quotes, idioms, and similes from cultures around the world.
               </p>
             </div>
-
-            {/* Search Bar */}
             <div className="w-full max-w-2xl mx-auto px-4 sm:px-0">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input placeholder="Search any proverb, quote, idiom, simile..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-blue bg-slate-100" />
+                <Input
+                  placeholder="Search any proverb, quote, idiom, simile..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="w-full pl-12 h-14 text-base sm:text-lg backdrop-blur border-2 border-primary-foreground/20 focus:border-wisdom-blue bg-slate-100"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Search Results or Daily Content Sections */}
+      {/* Content */}
       <section className="container mx-auto px-4 py-12">
-        {searchTerm.trim() ? <div className="space-y-8">
+        {debouncedSearch.trim() ? (
+          <div className="space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold font-wisdom mb-2">Search Results</h2>
               <p className="text-muted-foreground text-lg">
-                {filteredItems.length} {filteredItems.length === 1 ? 'result' : 'results'} found for "{searchTerm}"
+                {searching ? 'Searching...' : `${searchResults.length} results found for "${debouncedSearch}"`}
               </p>
             </div>
-
-            {filteredItems.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredItems.map(item => <WisdomCard key={item.id} item={item} />)}
-              </div> : <div className="text-center py-16">
-                <div className="max-w-md mx-auto space-y-4">
-                  <Search className="h-16 w-16 text-muted-foreground mx-auto" />
-                  <h3 className="text-xl font-semibold">No Results Found</h3>
-                  <p className="text-muted-foreground">Try different keywords or browse our categories below.</p>
-                </div>
-              </div>}
-          </div> : <div className="space-y-12 bg-slate-600">
-            {/* Daily Wisdom Section */}
-            <h2 className="text-3xl font-wisdom font-bold text-center text-white mb-8">Daily Wisdom</h2>
-            
-            {/* Daily Items */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {proverbOfDay && <Card className="border-wisdom-blue/20 bg-gray-900">
-                <CardHeader className="bg-zinc-300">
-                  <CardTitle className="flex items-center gap-2 bg-zinc-300 text-gray-950">
-                    <BookOpen className="h-5 w-5" />
-                    Proverb of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-900 rounded-xl">
-                  <WisdomCard item={proverbOfDay} />
-                </CardContent>
-              </Card>}
-
-              {quoteOfDay && <Card className="border-wisdom-gold/20 bg-gray-900">
-                <CardHeader className="bg-slate-100">
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
-                    <Quote className="h-5 w-5" />
-                    Quote of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-900 rounded-xl">
-                  <WisdomCard item={quoteOfDay} />
-                </CardContent>
-              </Card>}
-
-              {idiomOfDay && <Card className="border-wisdom-cultural/20 bg-gray-900">
-                <CardHeader className="bg-white">
-                  <CardTitle className="flex items-center gap-2 text-zinc-950">
-                    <MessageSquare className="h-5 w-5" />
-                    Idiom of the Day
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="bg-slate-950">
-                  <WisdomCard item={idiomOfDay} />
-                </CardContent>
-              </Card>}
-            </div>
-
-            {/* Most Viewed */}
-            <div className="max-w-6xl mx-auto px-4 py-12">
-              <h2 className="text-2xl font-bold mb-6 text-center">Most Viewed</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {mostViewed.map(item => <WisdomCard key={item.id} item={item} />)}
+            {searching ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, i) => <WisdomCardSkeleton key={i} />)}
               </div>
+            ) : searchResults.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {searchResults.map((item) => <WisdomCard key={item.id} item={item} />)}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <Search className="h-16 w-16 text-muted-foreground mx-auto" />
+                <h3 className="text-xl font-semibold mt-4">No Results Found</h3>
+                <p className="text-muted-foreground">Try different keywords or browse our categories.</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-12 bg-slate-600">
+            {/* Daily Wisdom */}
+            <h2 className="text-3xl font-wisdom font-bold text-center text-white mb-8">Daily Wisdom</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {loading ? (
+                Array.from({ length: 3 }).map((_, i) => <WisdomCardSkeleton key={i} />)
+              ) : (
+                <>
+                  {dailyItems[0] && (
+                    <Card className="border-wisdom-blue/20 bg-gray-900">
+                      <CardHeader className="bg-zinc-300">
+                        <CardTitle className="flex items-center gap-2 text-gray-950">
+                          <BookOpen className="h-5 w-5" />
+                          Proverb of the Day
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="bg-slate-900 rounded-xl">
+                        <WisdomCard item={dailyItems[0]} />
+                      </CardContent>
+                    </Card>
+                  )}
+                  {dailyItems[1] && (
+                    <Card className="border-wisdom-gold/20 bg-gray-900">
+                      <CardHeader className="bg-slate-100">
+                        <CardTitle className="flex items-center gap-2 text-zinc-950">
+                          <Quote className="h-5 w-5" />
+                          Quote of the Day
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="bg-slate-900 rounded-xl">
+                        <WisdomCard item={dailyItems[1]} />
+                      </CardContent>
+                    </Card>
+                  )}
+                  {dailyItems[2] && (
+                    <Card className="border-wisdom-cultural/20 bg-gray-900">
+                      <CardHeader className="bg-white">
+                        <CardTitle className="flex items-center gap-2 text-zinc-950">
+                          <MessageSquare className="h-5 w-5" />
+                          Idiom of the Day
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="bg-slate-950">
+                        <WisdomCard item={dailyItems[2]} />
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
+              )}
             </div>
 
             {/* Recently Added */}
             <div className="max-w-6xl mx-auto px-4 py-12">
               <h2 className="text-2xl font-bold mb-6 text-center">Recently Added</h2>
               <div className="grid md:grid-cols-3 gap-6">
-                {recentlyAdded.map(item => <WisdomCard key={item.id} item={item} />)}
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => <WisdomCardSkeleton key={i} />)
+                  : recentItems.map((item) => <WisdomCard key={item.id} item={item} />)
+                }
               </div>
             </div>
 
-            {/* --- Explore by Category (hidden on mobile) --- */}
+            {/* Explore by Category (hidden on mobile) */}
             <Card className="hidden md:block bg-gradient-to-r from-wisdom-blue/5 to-wisdom-gold/5 border-wisdom-gold/20 max-w-6xl mx-auto px-4 py-12">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold font-wisdom text-center mb-6">Explore by Category</h3>
@@ -227,39 +283,38 @@ const Index = () => {
                     <a href="/proverbs">
                       <BookOpen className="h-6 w-6" />
                       <span>Proverbs</span>
-                      <span className="text-xs text-muted-foreground">{totalProverbs ?? "Loading..."} items</span>
+                      <span className="text-xs text-muted-foreground">{counts.proverbs} items</span>
                     </a>
                   </Button>
-
                   <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                     <a href="/quotes">
                       <Quote className="h-6 w-6" />
                       <span>Quotes</span>
-                      <span className="text-xs text-muted-foreground">{quotesCount ?? "Loading..."} items</span>
+                      <span className="text-xs text-muted-foreground">{counts.quotes} items</span>
                     </a>
                   </Button>
-
                   <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                     <a href="/idioms">
                       <MessageSquare className="h-6 w-6" />
                       <span>Idioms</span>
-                      <span className="text-xs text-muted-foreground">{totalIdioms ?? "Loading..."} items</span>
+                      <span className="text-xs text-muted-foreground">{counts.idioms} items</span>
                     </a>
                   </Button>
-
                   <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                     <a href="/similes">
                       <Sparkles className="h-6 w-6" />
                       <span>Similes</span>
-                      <span className="text-xs text-muted-foreground">{similesCount ?? "Loading..."} items</span>
+                      <span className="text-xs text-muted-foreground">{counts.similes} items</span>
                     </a>
                   </Button>
                 </div>
               </CardContent>
             </Card>
-
-          </div>}
+          </div>
+        )}
       </section>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
