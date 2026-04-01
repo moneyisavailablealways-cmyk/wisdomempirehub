@@ -39,7 +39,7 @@ const getTypeColor = (type: string) => {
       return 'bg-ocean-slate text-primary-foreground';
   }
 };
-export function WisdomCard({
+export const WisdomCard = React.memo(function WisdomCard({
   item
 }: WisdomCardProps) {
   const { toast } = useToast();
