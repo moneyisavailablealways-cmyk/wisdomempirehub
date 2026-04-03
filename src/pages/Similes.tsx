@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { InfiniteWisdomGrid } from "@/components/InfiniteWisdomGrid";
-import { useWisdomFeed } from "@/hooks/useWisdomFeed";
+import { PaginatedWisdomGrid } from "@/components/PaginatedWisdomGrid";
+import { useWisdomPagination } from "@/hooks/useWisdomPagination";
 import { Search, Type } from "lucide-react";
 import { SEOHead } from '@/components/SEOHead';
 
@@ -25,8 +25,8 @@ const Similes = () => {
     debounceTimer.current = setTimeout(() => setDebouncedSearch(value), 300);
   }, []);
 
-  const { items, loading, loadingMore, error, hasMore, totalCount, subcategoryCounts, loadMore } =
-    useWisdomFeed('similes', debouncedSearch, activeSubcategory);
+  const { items, loading, error, currentPage, totalPages, totalCount, goToPage } =
+    useWisdomPagination('similes', debouncedSearch, activeSubcategory);
 
   const emptyMessage = useMemo(() => {
     if (debouncedSearch || activeSubcategory !== "all")
@@ -107,12 +107,12 @@ const Similes = () => {
           </div>
         </div>
 
-        <InfiniteWisdomGrid
+        <PaginatedWisdomGrid
           items={items}
           loading={loading}
-          loadingMore={loadingMore}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
           emptyIcon={<Type className="h-16 w-16 text-muted-foreground mx-auto" />}
           emptyTitle="No Similes Found"
           emptyMessage={emptyMessage}

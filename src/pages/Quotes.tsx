@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { InfiniteWisdomGrid } from "@/components/InfiniteWisdomGrid";
-import { useWisdomFeed } from "@/hooks/useWisdomFeed";
+import { PaginatedWisdomGrid } from "@/components/PaginatedWisdomGrid";
+import { useWisdomPagination } from "@/hooks/useWisdomPagination";
 import { Search, Quote } from "lucide-react";
 import { SEOHead } from '@/components/SEOHead';
 
@@ -25,8 +25,8 @@ const Quotes = () => {
     debounceTimer.current = setTimeout(() => setDebouncedSearch(value), 300);
   }, []);
 
-  const { items, loading, loadingMore, error, hasMore, totalCount, subcategoryCounts, loadMore } =
-    useWisdomFeed('quotes', debouncedSearch, activeSubcategory);
+  const { items, loading, error, currentPage, totalPages, totalCount, goToPage } =
+    useWisdomPagination('quotes', debouncedSearch, activeSubcategory);
 
   const emptyMessage = useMemo(() => {
     if (debouncedSearch || activeSubcategory !== "all")
@@ -107,12 +107,12 @@ const Quotes = () => {
           </div>
         </div>
 
-        <InfiniteWisdomGrid
+        <PaginatedWisdomGrid
           items={items}
           loading={loading}
-          loadingMore={loadingMore}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
           emptyIcon={<Quote className="h-16 w-16 text-muted-foreground mx-auto" />}
           emptyTitle="No Quotes Found"
           emptyMessage={emptyMessage}
