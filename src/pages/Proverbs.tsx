@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AIAssistant } from "@/components/AIAssistant";
 import { DownloadButton } from "@/components/DownloadButton";
-import { InfiniteWisdomGrid } from "@/components/InfiniteWisdomGrid";
-import { useWisdomFeed } from "@/hooks/useWisdomFeed";
+import { PaginatedWisdomGrid } from "@/components/PaginatedWisdomGrid";
+import { useWisdomPagination } from "@/hooks/useWisdomPagination";
 import { Search, BookOpen } from "lucide-react";
 import { SEOHead } from '@/components/SEOHead';
 
@@ -18,7 +18,6 @@ const Proverbs = () => {
   const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // Debounce search input
   const debounceTimer = React.useRef<ReturnType<typeof setTimeout>>();
   const handleSearchChange = React.useCallback((value: string) => {
     setSearchTerm(value);
@@ -26,8 +25,8 @@ const Proverbs = () => {
     debounceTimer.current = setTimeout(() => setDebouncedSearch(value), 300);
   }, []);
 
-  const { items, loading, loadingMore, error, hasMore, totalCount, subcategoryCounts, loadMore } =
-    useWisdomFeed('proverbs', debouncedSearch, activeSubcategory);
+  const { items, loading, error, currentPage, totalPages, totalCount, goToPage } =
+    useWisdomPagination('proverbs', debouncedSearch, activeSubcategory);
 
   const emptyMessage = useMemo(() => {
     if (debouncedSearch || activeSubcategory !== "all")
@@ -119,12 +118,12 @@ const Proverbs = () => {
           </div>
         </div>
 
-        <InfiniteWisdomGrid
+        <PaginatedWisdomGrid
           items={items}
           loading={loading}
-          loadingMore={loadingMore}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
           emptyIcon={<BookOpen className="h-16 w-16 text-muted-foreground mx-auto" />}
           emptyTitle="No Proverbs Found"
           emptyMessage={emptyMessage}
