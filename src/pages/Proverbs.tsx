@@ -102,9 +102,6 @@ const Proverbs = () => {
                 onClick={() => setActiveSubcategory(sub)}
               >
                 {sub}
-                <Badge variant="secondary" className="ml-2">
-                  {subcategoryCounts[sub] || 0}
-                </Badge>
               </Button>
             ))}
           </div>
