@@ -25,6 +25,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import FAQ from "./pages/FAQ";
 import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { RobotsTxt } from "./pages/RobotsTxt";
 import { SitemapXml } from "./pages/SitemapXml";
@@ -62,6 +63,7 @@ const App = () => {
                       <Route path="/terms" element={<Terms />} />
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/auth" element={<Auth />} />
+                      <Route path="/profile" element={<Profile />} />
                       <Route path="/robots.txt" element={<RobotsTxt />} />
                       <Route path="/sitemap.xml" element={<SitemapXml />} />
                       <Route path="*" element={<NotFound />} />
